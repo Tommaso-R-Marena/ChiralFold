@@ -1,0 +1,352 @@
+{
+  "results": [
+    {
+      "pdb_id": "1ABI",
+      "year": 1992,
+      "resolution": 2.3,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": true,
+      "deposition_date": "1992-08-24"
+    },
+    {
+      "pdb_id": "1BG0",
+      "year": 1998,
+      "resolution": 1.86,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": true,
+      "deposition_date": "1998-06-03"
+    },
+    {
+      "pdb_id": "1D7T",
+      "year": 1999,
+      "resolution": null,
+      "method": "SOLUTION NMR",
+      "has_error": true,
+      "deposition_date": "1999-10-19"
+    },
+    {
+      "pdb_id": "1HHZ",
+      "year": 2000,
+      "resolution": 0.99,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": true,
+      "deposition_date": "2000-12-29"
+    },
+    {
+      "pdb_id": "1KO0",
+      "year": 2001,
+      "resolution": 2.2,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": true,
+      "deposition_date": "2001-12-19"
+    },
+    {
+      "pdb_id": "1MCB",
+      "year": 1993,
+      "resolution": 2.7,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": true,
+      "deposition_date": "1993-02-25"
+    },
+    {
+      "pdb_id": "1OF6",
+      "year": 2003,
+      "resolution": 2.1,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": true,
+      "deposition_date": "2003-04-08"
+    },
+    {
+      "pdb_id": "1P52",
+      "year": 2003,
+      "resolution": 1.9,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": true,
+      "deposition_date": "2003-04-24"
+    },
+    {
+      "pdb_id": "1UHG",
+      "year": 2003,
+      "resolution": 1.9,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": true,
+      "deposition_date": "2003-07-03"
+    },
+    {
+      "pdb_id": "1XT7",
+      "year": 2004,
+      "resolution": null,
+      "method": "SOLUTION NMR",
+      "has_error": true,
+      "deposition_date": "2004-10-21"
+    },
+    {
+      "pdb_id": "2AOU",
+      "year": 2005,
+      "resolution": 2.3,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": true,
+      "deposition_date": "2005-08-14"
+    },
+    {
+      "pdb_id": "2ATS",
+      "year": 2005,
+      "resolution": 1.9,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": true,
+      "deposition_date": "2005-08-26"
+    },
+    {
+      "pdb_id": "148L",
+      "year": 1993,
+      "resolution": 1.9,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1993-10-27"
+    },
+    {
+      "pdb_id": "173D",
+      "year": 1994,
+      "resolution": 3.0,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1994-04-18"
+    },
+    {
+      "pdb_id": "185D",
+      "year": 1994,
+      "resolution": null,
+      "method": "SOLUTION NMR",
+      "has_error": false,
+      "deposition_date": "1994-08-10"
+    },
+    {
+      "pdb_id": "193D",
+      "year": 1994,
+      "resolution": null,
+      "method": "SOLUTION NMR",
+      "has_error": false,
+      "deposition_date": "1994-09-30"
+    },
+    {
+      "pdb_id": "1A7Y",
+      "year": 1998,
+      "resolution": 0.94,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1998-03-19"
+    },
+    {
+      "pdb_id": "1A7Z",
+      "year": 1998,
+      "resolution": 0.95,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1998-03-19"
+    },
+    {
+      "pdb_id": "1AJ1",
+      "year": 1997,
+      "resolution": null,
+      "method": "SOLUTION NMR",
+      "has_error": false,
+      "deposition_date": "1997-05-14"
+    },
+    {
+      "pdb_id": "1AL4",
+      "year": 1997,
+      "resolution": 1.13,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1997-06-11"
+    },
+    {
+      "pdb_id": "1ALX",
+      "year": 1997,
+      "resolution": 1.2,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1997-06-05"
+    },
+    {
+      "pdb_id": "1ALZ",
+      "year": 1997,
+      "resolution": 0.86,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1997-06-06"
+    },
+    {
+      "pdb_id": "1AN1",
+      "year": 1997,
+      "resolution": 2.03,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1997-06-26"
+    },
+    {
+      "pdb_id": "1AQ7",
+      "year": 1997,
+      "resolution": 2.2,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1997-08-07"
+    },
+    {
+      "pdb_id": "1AV2",
+      "year": 1997,
+      "resolution": 1.4,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1997-09-23"
+    },
+    {
+      "pdb_id": "1B0Q",
+      "year": 1998,
+      "resolution": null,
+      "method": "SOLUTION NMR",
+      "has_error": false,
+      "deposition_date": "1998-11-12"
+    },
+    {
+      "pdb_id": "1B74",
+      "year": 1999,
+      "resolution": 2.3,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1999-01-27"
+    },
+    {
+      "pdb_id": "1BCK",
+      "year": 1998,
+      "resolution": 1.8,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1998-04-30"
+    },
+    {
+      "pdb_id": "1BDK",
+      "year": 1995,
+      "resolution": null,
+      "method": "SOLUTION NMR",
+      "has_error": false,
+      "deposition_date": "1995-07-28"
+    },
+    {
+      "pdb_id": "1BDW",
+      "year": 1998,
+      "resolution": 1.7,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1998-05-11"
+    },
+    {
+      "pdb_id": "1BFW",
+      "year": 1998,
+      "resolution": null,
+      "method": "SOLUTION NMR",
+      "has_error": false,
+      "deposition_date": "1998-05-22"
+    },
+    {
+      "pdb_id": "1BZV",
+      "year": 1998,
+      "resolution": null,
+      "method": "SOLUTION NMR",
+      "has_error": false,
+      "deposition_date": "1998-11-04"
+    },
+    {
+      "pdb_id": "1C0P",
+      "year": 1999,
+      "resolution": 1.2,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1999-07-19"
+    },
+    {
+      "pdb_id": "1C4B",
+      "year": 1999,
+      "resolution": null,
+      "method": "SOLUTION NMR",
+      "has_error": false,
+      "deposition_date": "1999-08-02"
+    },
+    {
+      "pdb_id": "1C4D",
+      "year": 1999,
+      "resolution": 2.0,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1999-06-04"
+    },
+    {
+      "pdb_id": "1C5F",
+      "year": 1999,
+      "resolution": 2.47,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1999-11-22"
+    },
+    {
+      "pdb_id": "1CFA",
+      "year": 1996,
+      "resolution": null,
+      "method": "SOLUTION NMR",
+      "has_error": false,
+      "deposition_date": "1996-09-21"
+    },
+    {
+      "pdb_id": "1CRN_D_MIRROR",
+      "year": null,
+      "resolution": null,
+      "method": "",
+      "has_error": false,
+      "deposition_date": ""
+    },
+    {
+      "pdb_id": "1CSA",
+      "year": 1992,
+      "resolution": null,
+      "method": "SOLUTION NMR",
+      "has_error": false,
+      "deposition_date": "1992-02-24"
+    },
+    {
+      "pdb_id": "1CVQ",
+      "year": 1999,
+      "resolution": null,
+      "method": "SOLUTION NMR",
+      "has_error": false,
+      "deposition_date": "1999-08-24"
+    },
+    {
+      "pdb_id": "1CW8",
+      "year": 1999,
+      "resolution": null,
+      "method": "SOLUTION NMR",
+      "has_error": false,
+      "deposition_date": "1999-08-26"
+    },
+    {
+      "pdb_id": "1CWA",
+      "year": 1995,
+      "resolution": 2.1,
+      "method": "X-RAY DIFFRACTION",
+      "has_error": false,
+      "deposition_date": "1995-09-06"
+    }
+  ],
+  "stats": {
+    "error_year_mean": 2000.5,
+    "error_year_median": 2002,
+    "correct_year_mean": 1996.9,
+    "correct_year_median": 1997,
+    "year_mannwhitney_U": 278.0,
+    "year_mannwhitney_p": 0.0027301821909713852,
+    "error_res_mean": 2.02,
+    "correct_res_mean": 1.72,
+    "res_mannwhitney_U": 111.5,
+    "res_mannwhitney_p": 0.19058477455168865
+  }
+}

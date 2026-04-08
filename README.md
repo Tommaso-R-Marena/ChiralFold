@@ -187,6 +187,8 @@ Independently verified (no ChiralFold code — numpy + raw PDB coordinates only)
 
 Full dataset: `results/d_residue_verification.csv` (1,678 rows with raw coordinates).
 
+**Correlation analysis:** All 12 error structures were deposited between 1992 and 2005. Zero errors in structures deposited after 2005, consistent with the 2006–2008 wwPDB remediation effort that systematically corrected stereochemistry assignments. Deposition year significantly predicts errors (Mann-Whitney U=278, p=0.0027). Resolution does not (p=0.19) — errors span 0.99–2.70 Å, indicating a labeling problem rather than a data quality problem.
+
 ### Planarity Fix
 
 - D-peptides: 39% → 94% within 6° of planar
