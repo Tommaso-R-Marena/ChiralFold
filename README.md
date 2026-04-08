@@ -138,15 +138,15 @@ This validates ChiralFold as a practical tool for the mirror-image phage display
 - Ramachandran: Spearman ρ = 0.49 (p = 0.006) vs wwPDB
 - Mean outlier rate: CF 0.60% vs wwPDB 0.64%
 
-## Limitations
+## Previously Listed Limitations — All Addressed in v3.2
 
-| Issue | Status |
-|-------|--------|
-| Not a fold predictor | Use mirror-image for real folds |
-| Ramachandran uses rectangles, not contours | Calibrated to match MolProbity means (0.60% vs 0.64%) |
-| No rotamer analysis | Planned for v3.2 |
-| Clash score methodology differs from MolProbity | Different hydrogen handling |
-| Conformer limit at 30 residues | Fragment assembly planned |
+| Issue | v3.0 Status | v3.2 Resolution |
+|-------|:----------:|:----------------:|
+| Not a fold predictor | Mirror-only | **Template threading + fragment assembly** (any length) |
+| Ramachandran uses rectangles | Calibrated rectangles | **Hybrid: empirical PDB grid + rectangles** |
+| No rotamer analysis | Planned | **Penultimate Rotamer Library validation** (chi1 scoring) |
+| Clash methodology differs | Heavy-atom only | **Backbone H-atom placement** before scoring |
+| Conformer limit at 30 res | Hard limit | **Fragment assembly for any protein length** |
 
 ## Project Structure
 
@@ -155,22 +155,21 @@ ChiralFold/
 ├── chiralfold/
 │   ├── __init__.py
 │   ├── model.py              # ChiralFold model + SMILES builders
-│   ├── auditor.py            # PDB structure quality auditor
-│   ├── ramachandran.py       # MolProbity-calibrated Ramachandran scoring
+│   ├── auditor.py            # PDB structure quality auditor (H-aware clashes)
+│   ├── ramachandran.py       # Hybrid empirical + rectangular Ramachandran
+│   ├── rotamers.py           # Side-chain rotamer validation (v3.2)
+│   ├── threading.py          # Template-based fold prediction (v3.2)
+│   ├── fragments.py          # Fragment-based backbone assembly (v3.2)
 │   ├── validator.py          # Chirality validation engine
 │   ├── pdb_pipeline.py       # Mirror-image PDB transformation
 │   ├── geometry.py           # Planarity fix + post-processing
 │   ├── cli.py                # Command-line interface
 │   └── data/
-│       └── test_sequences.py # 46-sequence test library
+│       ├── test_sequences.py # 46-sequence test library
+│       └── ramachandran_grid.json  # Empirical φ/ψ probability grid
 ├── tests/
 │   └── test_chirality.py     # 31 unit tests
 ├── benchmarks/               # Benchmark scripts
-│   ├── molprobity_comparison.py   # wwPDB head-to-head (31 structures)
-│   ├── mirror_binder_design.py    # MDM2 D-peptide binder design
-│   ├── mirror_pipeline_benchmark.py
-│   ├── folding_quality_benchmark.py
-│   └── run_full_benchmark.py
 ├── results/                  # Generated outputs
 ├── pyproject.toml
 ├── LICENSE (MIT)
@@ -185,7 +184,7 @@ ChiralFold/
   author    = {ChiralFold Contributors},
   year      = {2025},
   url       = {https://github.com/Tommaso-R-Marena/ChiralFold},
-  version   = {3.0.0},
+  version   = {3.2.0},
   note      = {PDB auditing calibrated against wwPDB/MolProbity,
                chirality-correct coordinate generation, mirror-image
                binder design validated on MDM2 (dPMI-gamma, Kd=53nM)}

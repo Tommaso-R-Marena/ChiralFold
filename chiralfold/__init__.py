@@ -65,6 +65,9 @@ from .auditor import (
     audit_pdb,
     format_report,
 )
+from .rotamers import validate_rotamers
+from .threading import thread_sequence, thread_and_mirror, find_template
+from .fragments import assemble_protein, predict_secondary_structure
 
 __all__ = [
     'ChiralFold',
@@ -87,4 +90,10 @@ __all__ = [
     'filter_conformers_by_ramachandran',
     'audit_pdb',
     'format_report',
+    'validate_rotamers',
+    'thread_sequence',
+    'thread_and_mirror',
+    'find_template',
+    'assemble_protein',
+    'predict_secondary_structure',
 ]

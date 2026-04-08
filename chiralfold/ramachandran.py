@@ -126,10 +126,80 @@ def _in_any_region(phi: float, psi: float,
     return False
 
 
+# ═══════════════════════════════════════════════════════════════════════════
+# Empirical probability grid (built from PDB data)
+# ═══════════════════════════════════════════════════════════════════════════
+
+_EMPIRICAL_GRID = None
+_EMPIRICAL_THRESHOLDS = None
+
+
+def _load_empirical_grid():
+    """Load the empirical Ramachandran probability grid from PDB data."""
+    global _EMPIRICAL_GRID, _EMPIRICAL_THRESHOLDS
+    if _EMPIRICAL_GRID is not None:
+        return True
+
+    import json
+    import os
+    grid_path = os.path.join(os.path.dirname(__file__), 'data', 'ramachandran_grid.json')
+    thresh_path = os.path.join(os.path.dirname(__file__), 'data', 'ramachandran_thresholds.json')
+
+    if not os.path.exists(grid_path):
+        return False
+
+    try:
+        with open(grid_path) as f:
+            data = json.load(f)
+        _EMPIRICAL_GRID = {
+            'counts': np.array(data['counts']),
+            'phi_edges': np.array(data['phi_edges']),
+            'psi_edges': np.array(data['psi_edges']),
+        }
+        with open(thresh_path) as f:
+            _EMPIRICAL_THRESHOLDS = json.load(f)
+        return True
+    except Exception:
+        return False
+
+
+def _score_empirical(phi: float, psi: float) -> str:
+    """Score using the empirical probability grid."""
+    if _EMPIRICAL_GRID is None:
+        return None
+
+    grid = _EMPIRICAL_GRID['counts']
+    phi_edges = _EMPIRICAL_GRID['phi_edges']
+    psi_edges = _EMPIRICAL_GRID['psi_edges']
+
+    # Find bin indices
+    phi_idx = np.searchsorted(phi_edges, phi) - 1
+    psi_idx = np.searchsorted(psi_edges, psi) - 1
+
+    if phi_idx < 0 or phi_idx >= grid.shape[0]:
+        return 'outlier'
+    if psi_idx < 0 or psi_idx >= grid.shape[1]:
+        return 'outlier'
+
+    prob = grid[phi_idx, psi_idx]
+    thresh = _EMPIRICAL_THRESHOLDS
+
+    if prob >= thresh['favored']:
+        return 'favored'
+    elif prob > 0:
+        return 'allowed'
+    else:
+        return 'outlier'
+
+
 def score_ramachandran(phi: float, psi: float,
                        residue_type: str = 'general') -> str:
     """
     Classify a (φ, ψ) point as 'favored', 'allowed', or 'outlier'.
+
+    Uses a hybrid approach:
+      1. Empirical probability grid from PDB data (when available)
+      2. MolProbity-calibrated rectangular regions (fallback)
 
     Args:
         phi: Backbone φ dihedral angle in degrees [-180, 180].
@@ -148,6 +218,25 @@ def score_ramachandran(phi: float, psi: float,
         phi, psi = -phi, -psi
         residue_type = residue_type[2:]
 
+    # Try empirical grid first (for general residues)
+    if residue_type == 'general':
+        _load_empirical_grid()
+        emp = _score_empirical(phi, psi)
+        if emp is not None:
+            # Combine empirical with rectangular: take the more generous result
+            rect = _score_rectangular(phi, psi, residue_type)
+            # If either says favored, it's favored
+            if emp == 'favored' or rect == 'favored':
+                return 'favored'
+            elif emp == 'allowed' or rect == 'allowed':
+                return 'allowed'
+            return 'outlier'
+
+    return _score_rectangular(phi, psi, residue_type)
+
+
+def _score_rectangular(phi: float, psi: float, residue_type: str) -> str:
+    """Score using rectangular region definitions."""
     if residue_type == 'glycine':
         fav, alw = _GLY_FAVORED, _GLY_ALLOWED
     elif residue_type == 'proline':

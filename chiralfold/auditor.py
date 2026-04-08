@@ -789,19 +789,82 @@ def _are_bonded_or_angled(a: _Atom, b: _Atom) -> bool:
 _are_bonded = _are_bonded_or_angled
 
 
+def _add_backbone_hydrogens(atoms: List[_Atom]) -> List[_Atom]:
+    """
+    Estimate backbone amide H positions for clash detection.
+
+    Places H atoms along the N-C(prev) direction at 1.02 Å from N.
+    This matches MolProbity's approach of adding H before clash scoring.
+    """
+    # Build residue lookup
+    residues: Dict[Tuple[str, int], Dict[str, _Atom]] = {}
+    for a in atoms:
+        key = (a.chain, a.resseq)
+        if key not in residues:
+            residues[key] = {}
+        residues[key][a.name.strip()] = a
+
+    new_h_atoms = []
+    max_serial = max((a.serial for a in atoms), default=0)
+    h_serial = max_serial + 1
+
+    sorted_keys = sorted(residues.keys())
+    for idx, key in enumerate(sorted_keys):
+        res = residues[key]
+        n_atom = res.get('N')
+        ca_atom = res.get('CA')
+        if n_atom is None or ca_atom is None:
+            continue
+        # Skip if H already present
+        if 'H' in res or 'HN' in res:
+            continue
+        # Skip first residue (no preceding C)
+        if idx == 0:
+            continue
+        prev_key = sorted_keys[idx - 1]
+        prev_c = residues.get(prev_key, {}).get('C')
+        if prev_c is None:
+            continue
+
+        # Place H opposite to C(prev) direction from N, at 1.02 A
+        n_pos = np.array([n_atom.x, n_atom.y, n_atom.z])
+        c_pos = np.array([prev_c.x, prev_c.y, prev_c.z])
+        ca_pos = np.array([ca_atom.x, ca_atom.y, ca_atom.z])
+
+        # H is roughly in the plane of C-N-CA, opposite to C
+        cn_vec = n_pos - c_pos
+        cn_vec = cn_vec / (np.linalg.norm(cn_vec) + 1e-12)
+        nca_vec = ca_pos - n_pos
+        nca_vec = nca_vec / (np.linalg.norm(nca_vec) + 1e-12)
+        # Bisector direction
+        h_dir = -(cn_vec + nca_vec)
+        h_dir = h_dir / (np.linalg.norm(h_dir) + 1e-12)
+        h_pos = n_pos + h_dir * 1.02
+
+        h_atom = _Atom(
+            record='ATOM', serial=h_serial, name=' H  ', altloc=' ',
+            resname=n_atom.resname, chain=n_atom.chain,
+            resseq=n_atom.resseq, icode=n_atom.icode,
+            x=float(h_pos[0]), y=float(h_pos[1]), z=float(h_pos[2]),
+            element='H',
+        )
+        new_h_atoms.append(h_atom)
+        h_serial += 1
+
+    return atoms + new_h_atoms
+
+
 def _check_clashes(atoms: List[_Atom]) -> dict:
     """
-    Detect steric clashes between non-bonded heavy atoms.
+    Detect steric clashes between non-bonded atoms.
 
     Two atoms clash when their distance < (rvdw_A + rvdw_B - 0.4) Å.
-    Hydrogens are included if present.
+    Backbone amide hydrogens are added if not present (MolProbity-compatible).
 
     Clash score = clashes per 1000 atoms (MolProbity convention).
     """
-    # Sort atoms by chain/residue so nearby atoms are adjacent in list
-    heavy = [a for a in atoms if a.element_upper not in ("H", "D", "")]
-    # Include H atoms if present (they can clash too in high-resolution structures)
-    all_atoms_for_check = atoms  # include H
+    # Add backbone hydrogens if not present (MolProbity does this)
+    all_atoms_for_check = _add_backbone_hydrogens(atoms)
 
     n_atoms = len(atoms)
     if n_atoms < 2:
