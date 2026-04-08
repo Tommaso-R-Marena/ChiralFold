@@ -195,7 +195,9 @@ Independently verified (no ChiralFold code — numpy + raw PDB coordinates only)
 
 Regardless of type, all 21 mismatches are real annotation inconsistencies in the PDB. The signed volume method detects all error types without requiring knowledge of biological context.
 
-Full dataset: `results/d_residue_verification.csv` (1,678 rows with raw coordinates). Classification: `results/error_classification.json`.
+Full dataset: `results/d_residue_verification.csv` (1,678 rows with raw coordinates). Classification: `results/error_classification.json`. Per-structure reclassification evidence: `results/error_table_verified.csv`.
+
+> **Benchmark Reproducibility:** All 12 reclassifications are independently verifiable from `results/error_table_verified.csv` (signed volumes, B-factors, ALTLOC flags, biological evidence) and `results/error_classification.json` (category breakdown and method). No ChiralFold code is required — only numpy and raw PDB coordinate files from RCSB.
 
 **Bulletproof verification:** Five independent checks confirm the findings: (1) Sign convention validated on 24/24 known-correct D-residues in 3IWY (all negative volumes); (2) 1KO0 reclassified as borderline (vol=+0.12, ALTLOC B, B=32.3 — inconclusive); (3) 1OF6 confirmed across all 8 chains (all L-coordinates, consistent with L-Tyr biological role); (4) 1ABI internal control passes cleanly (DPN:1 vol=-2.60 correct vs DPN:56 vol=+2.49 error); (5) Full re-verification of all 12 structures with biological context cross-referencing. See `benchmarks/bulletproof_verification.py` and `results/bulletproof_outputs/`.
 
