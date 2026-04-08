@@ -1,0 +1,402 @@
+[
+  {
+    "pdb_id": "1EJG",
+    "resolution": 0.54,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 1.15,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "2VB1",
+    "resolution": 0.65,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 6.17,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "1US0",
+    "resolution": 0.66,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 12.02,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "2OL9",
+    "resolution": 0.85,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 0.0,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "3NIR",
+    "resolution": 0.48,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 25.32,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "1CRN",
+    "resolution": 1.5,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 0.0,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "2LZM",
+    "resolution": 1.7,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.62,
+    "clashscore_wwpdb": 11.35,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "1L2Y",
+    "resolution": null,
+    "method": "SOLUTION NMR",
+    "rama_outliers_wwpdb": 0.73,
+    "clashscore_wwpdb": null,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "3WBM",
+    "resolution": 2.0,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 4.16,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "4LZT",
+    "resolution": 0.95,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 2.46,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "2QMT",
+    "resolution": 1.05,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 14.3,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "1A6M",
+    "resolution": 1.0,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 9.18,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "4CI0",
+    "resolution": 3.36,
+    "method": "ELECTRON MICROSCOPY",
+    "rama_outliers_wwpdb": 0.11,
+    "clashscore_wwpdb": 118.28,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "3AYX",
+    "resolution": 1.18,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 3.66,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "5B3L",
+    "resolution": 1.8,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 6.75,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "1UBQ",
+    "resolution": 1.8,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 10.56,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "1SHG",
+    "resolution": 1.8,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 1.82,
+    "clashscore_wwpdb": 11.55,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "3IWY",
+    "resolution": 1.93,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.62,
+    "clashscore_wwpdb": 9.56,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "1YCR",
+    "resolution": 2.6,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 1.06,
+    "clashscore_wwpdb": 14.43,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "2RGF",
+    "resolution": null,
+    "method": "SOLUTION NMR",
+    "rama_outliers_wwpdb": 3.16,
+    "clashscore_wwpdb": 24.87,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "4HHB",
+    "resolution": 1.74,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 1.24,
+    "clashscore_wwpdb": 141.11,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "1IGT",
+    "resolution": 2.8,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 3.67,
+    "clashscore_wwpdb": 21.27,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "5HHD",
+    "resolution": 2.1,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 1.21,
+    "clashscore_wwpdb": 6.03,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "2AKE",
+    "resolution": 3.1,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 1.08,
+    "clashscore_wwpdb": 24.95,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "3BLM",
+    "resolution": 2.0,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 10.86,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "3J3Q",
+    "resolution": null,
+    "method": "ELECTRON MICROSCOPY",
+    "rama_outliers_wwpdb": null,
+    "clashscore_wwpdb": null,
+    "downloaded": false
+  },
+  {
+    "pdb_id": "1AON",
+    "resolution": 3.0,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 5.82,
+    "clashscore_wwpdb": 63.48,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "4V5D",
+    "resolution": 3.5,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 12.4,
+    "clashscore_wwpdb": 38.75,
+    "downloaded": false
+  },
+  {
+    "pdb_id": "2HHB",
+    "resolution": 1.74,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 3.31,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "3PQR",
+    "resolution": 2.85,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.6,
+    "clashscore_wwpdb": 11.29,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "1DKG",
+    "resolution": 2.8,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 3.43,
+    "clashscore_wwpdb": 50.8,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "3OGO",
+    "resolution": 2.8,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.15,
+    "clashscore_wwpdb": 13.2,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "5T89",
+    "resolution": 4.0,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 2.65,
+    "clashscore_wwpdb": 13.26,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "6VXX",
+    "resolution": 2.8,
+    "method": "ELECTRON MICROSCOPY",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 0.71,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "7BV2",
+    "resolution": 2.5,
+    "method": "ELECTRON MICROSCOPY",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 5.31,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "1D3Z",
+    "resolution": null,
+    "method": "SOLUTION NMR",
+    "rama_outliers_wwpdb": null,
+    "clashscore_wwpdb": 2.39,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "2KOD",
+    "resolution": null,
+    "method": "SOLUTION NMR",
+    "rama_outliers_wwpdb": 2.64,
+    "clashscore_wwpdb": 27.1,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "1G6J",
+    "resolution": null,
+    "method": "SOLUTION NMR",
+    "rama_outliers_wwpdb": 0.5,
+    "clashscore_wwpdb": 18.61,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "5PO5",
+    "resolution": 1.439,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 3.84,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "2N3G",
+    "resolution": null,
+    "method": "SOLUTION NMR",
+    "rama_outliers_wwpdb": null,
+    "clashscore_wwpdb": 12.02,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "1TV0",
+    "resolution": null,
+    "method": "SOLUTION NMR",
+    "rama_outliers_wwpdb": 1.54,
+    "clashscore_wwpdb": 4.35,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "2JXR",
+    "resolution": 2.4,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.92,
+    "clashscore_wwpdb": 25.58,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "1J8B",
+    "resolution": 1.75,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 2.22,
+    "clashscore_wwpdb": 14.02,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "6I2T",
+    "resolution": 5.7,
+    "method": "ELECTRON MICROSCOPY",
+    "rama_outliers_wwpdb": 0.71,
+    "clashscore_wwpdb": 7.55,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "2RVD",
+    "resolution": null,
+    "method": "SOLUTION NMR",
+    "rama_outliers_wwpdb": 5.0,
+    "clashscore_wwpdb": 0.35,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "7K3G",
+    "resolution": null,
+    "method": "SOLID-STATE NMR",
+    "rama_outliers_wwpdb": 1.67,
+    "clashscore_wwpdb": 11.62,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "7A4M",
+    "resolution": 1.22,
+    "method": "ELECTRON MICROSCOPY",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 2.28,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "8FZK",
+    "resolution": 2.1,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 7.57,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "6W41",
+    "resolution": 3.084,
+    "method": "X-RAY DIFFRACTION",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 5.36,
+    "downloaded": true
+  },
+  {
+    "pdb_id": "5VOS",
+    "resolution": 1.42,
+    "method": "ELECTRON CRYSTALLOGRAPHY",
+    "rama_outliers_wwpdb": 0.0,
+    "clashscore_wwpdb": 0.0,
+    "downloaded": true
+  }
+]
