@@ -1,13 +1,13 @@
-PDB,Residue,Chain,Position,Signed_Volume,B_factor_CA,ALTLOC,Standard_Naming,Confirmed,Error_Type,Evidence
-1ABI,DPN,I,56,+2.49,44.5,No,Yes,Confirmed,Stereochem,"Hirulog peptide: D-Phe by design; internal control DPN:1 vol=-2.60 correct"
-1BG0,DAR,A,403,+2.58,N/A,N/A,Yes,Confirmed,CCD-Code,"Arginine kinase substrate is L-Arg (not in SEQRES; standalone ligand)"
-1D7T,DTY,A,4,+1.85,N/A,N/A,Yes,Confirmed,Stereochem,"Contryphan [D-Tyr4]: D-Tyr biologically expected (NMR structure)"
-1HHZ,DAL,E,1,+2.70,N/A,N/A,Yes,Confirmed,Stereochem,"Cell wall pentapeptide D-Ala; 0.99A atomic resolution"
-1KO0,DLY,A,542,+0.12,32.3,B,Yes,Borderline,Borderline,"Title says D-L-lysine (racemic); near-zero volume inconclusive"
-1MCB,DHI,P,3,+2.60,N/A,N/A,Yes,Confirmed,Mislabel,"COMPND says L-HIS explicitly; DHI should be HIS"
-1OF6,DTY,A-H,1369-1370,+2.51 to +2.67,33.5,No,Yes,Confirmed,CCD-Code,"DAHP synthase allosteric inhibitor is L-Tyr; 8 copies; DTY should be TYR"
-1P52,DAR,A,403,+2.54,N/A,N/A,Yes,Confirmed,CCD-Code,"Arginine kinase E314D mutant; substrate is L-Arg"
-1UHG,DSN,D,164,+2.21,N/A,N/A,Yes,Confirmed,Mislabel,"Ovalbumin is L-protein; no biological reason for D-Ser"
-1XT7,DSG,A,3,+2.55,N/A,N/A,Yes,Confirmed,Stereochem,"Daptomycin antibiotic: D-Asn biologically required"
-2AOU,DCY,A,248,+2.67,N/A,N/A,Yes,Confirmed,Mislabel,"Histamine methyltransferase is L-protein; no reason for D-Cys"
-2ATS,DLY,A,3001-3003,+2.56 to +2.59,N/A,N/A,No,Confirmed,CCD-Code,"Title says (S)-lysine = L-Lys; 3 copies; DLY should be LYS"
+PDB,Residue,Chain,Position,Signed_Volume,B_factor_CA,ALTLOC,Standard_Naming,Confirmed,Error_Type,Evidence,CCD_stereo_confirmed
+1ABI,DPN,I,56,+2.49,44.5,No,Yes,Confirmed,Stereochem,"Hirulog peptide: D-Phe by design; internal control DPN:1 vol=-2.60 correct",N/A
+1BG0,DAR,A,403,+2.58,N/A,N/A,Yes,Confirmed,CCD-Code,"Arginine kinase substrate is L-Arg (not in SEQRES; standalone ligand)","Yes (wwPDB CCD: ARG; InChI /t4-/m0 = S-config = L-Arg)"
+1D7T,DTY,A,4,+1.85,N/A,N/A,Yes,Confirmed,Stereochem,"Contryphan [D-Tyr4]: D-Tyr biologically expected (NMR structure)",N/A
+1HHZ,DAL,E,1,+2.70,N/A,N/A,Yes,Confirmed,Stereochem,"Cell wall pentapeptide D-Ala; 0.99A atomic resolution",N/A
+1KO0,DLY,A,542,+0.12,32.3,B,Yes,Borderline,Borderline,"Title says D-L-lysine (racemic); near-zero volume inconclusive",N/A
+1MCB,DHI,P,3,+2.60,N/A,N/A,Yes,Confirmed,Mislabel,"COMPND says L-HIS explicitly; DHI should be HIS",N/A
+1OF6,DTY,A-H,1369-1370,+2.51 to +2.67,33.5,No,Yes,Confirmed,CCD-Code,"DAHP synthase allosteric inhibitor is L-Tyr; 8 copies; DTY should be TYR","Yes (wwPDB CCD: TYR; InChI /t8-/m0 = S-config = L-Tyr)"
+1P52,DAR,A,403,+2.54,N/A,N/A,Yes,Confirmed,CCD-Code,"Arginine kinase E314D mutant; substrate is L-Arg","Yes (wwPDB CCD: ARG; InChI /t4-/m0 = S-config = L-Arg)"
+1UHG,DSN,D,164,+2.21,N/A,N/A,Yes,Confirmed,Mislabel,"Ovalbumin is L-protein; no biological reason for D-Ser",N/A
+1XT7,DSG,A,3,+2.55,N/A,N/A,Yes,Confirmed,Stereochem,"Daptomycin antibiotic: D-Asn biologically required",N/A
+2AOU,DCY,A,248,+2.67,N/A,N/A,Yes,Confirmed,Mislabel,"Histamine methyltransferase is L-protein; no reason for D-Cys",N/A
+2ATS,DLY,A,3001-3003,+2.56 to +2.59,N/A,N/A,No,Confirmed,CCD-Code,"Title says (S)-lysine = L-Lys; 3 copies; DLY should be LYS","Yes (wwPDB CCD: LYS; InChI /t5-/m0 = S-config = L-Lys)"
