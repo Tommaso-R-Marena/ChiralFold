@@ -1,0 +1,43 @@
+{
+  "total_mismatches": 21,
+  "type_a_ccd_misassignment": {
+    "errors": 13,
+    "structures": 4,
+    "description": "Non-polymer ligand with wrong D-form CCD code (molecule is L-form)",
+    "pdbs": [
+      "1BG0",
+      "1OF6",
+      "1P52",
+      "2ATS"
+    ]
+  },
+  "type_b_residue_mislabel": {
+    "errors": 3,
+    "structures": 3,
+    "description": "Polymer residue labeled with D-code in L-protein or where L-form is specified",
+    "pdbs": [
+      "1MCB",
+      "1UHG",
+      "2AOU"
+    ]
+  },
+  "type_c_genuine_stereochem": {
+    "errors": 4,
+    "structures": 4,
+    "description": "Biology requires D-stereochemistry but deposited coordinates show L",
+    "pdbs": [
+      "1ABI",
+      "1D7T",
+      "1HHZ",
+      "1XT7"
+    ]
+  },
+  "borderline": {
+    "errors": 1,
+    "structures": 1,
+    "description": "Inconclusive (near-zero signed volume, racemic crystallization)",
+    "pdbs": [
+      "1KO0"
+    ]
+  }
+}

@@ -25,7 +25,7 @@
 \maketitle
 
 \begin{abstract}
-We present ChiralFold, a general-purpose protein stereochemistry toolkit that provides chirality-correct coordinate generation, PDB structure auditing, and mirror-image L$\leftrightarrow$D transformation. An independent verification of 1,677 D-amino acid residues across 231 PDB files --- using only the signed tetrahedron volume at each C$_\alpha$ --- identified 21 chirality errors (1.3\% error rate) in 12 deposited structures where C$_\alpha$ coordinates show L-stereochemistry despite D-amino acid labels. Bulletproof verification with five independent checks confirms 20 errors in 11 structures, with one borderline case (1KO0, signed volume $+0.12$). All 12 error-containing structures were deposited between 1992 and 2005, with zero errors in post-2005 entries (Mann--Whitney $U=278$, $p=0.0027$), consistent with the 2006--2008 wwPDB remediation. Resolution does not predict errors ($p=0.19$); errors span 0.99--2.70~\AA, indicating a labeling problem rather than a data quality problem. ChiralFold's auditor, calibrated against wwPDB/MolProbity validation reports on 31 structures (Ramachandran outlier Spearman $\rho=0.49$, $p=0.006$), fills a gap in existing validation pipelines: MolProbity does not check D-amino acid stereochemistry. The toolkit also includes an AlphaFold~3 chirality correction pipeline addressing the documented 51\% violation rate on D-peptides \citep{childs2025}, and a mirror-image binder design workflow validated on the MDM2:dPMI-$\gamma$ system ($K_d=53$~nM). ChiralFold is available as a pip-installable Python package at \url{https://github.com/Tommaso-R-Marena/ChiralFold}.
+We present ChiralFold, a general-purpose protein stereochemistry toolkit that provides chirality-correct coordinate generation, PDB structure auditing, and mirror-image L$\leftrightarrow$D transformation. An independent verification of 1,677 D-amino acid residues across 231 PDB files --- using only the signed tetrahedron volume at each C$_\alpha$ --- identified 21 D-label/L-coordinate mismatches (1.3\%) in 12 deposited structures. Cross-referencing against deposition metadata, COMPND records, and primary literature classifies these as: 4 genuine stereochemistry errors (biology requires D, coordinates show L), 13 CCD code misassignments (L-form ligand with D-code), 3 polymer residue mislabels, and 1 borderline case. All 12 error-containing structures were deposited between 1992 and 2005, with zero errors in post-2005 entries (Mann--Whitney $U=278$, $p=0.0027$), consistent with the 2006--2008 wwPDB remediation. Resolution does not predict errors ($p=0.19$); errors span 0.99--2.70~\AA, indicating a labeling problem rather than a data quality problem. ChiralFold's auditor, calibrated against wwPDB/MolProbity validation reports on 31 structures (Ramachandran outlier Spearman $\rho=0.49$, $p=0.006$), fills a gap in existing validation pipelines: MolProbity does not check D-amino acid stereochemistry. The toolkit also includes an AlphaFold~3 chirality correction pipeline addressing the documented 51\% violation rate on D-peptides \citep{childs2025}, and a mirror-image binder design workflow validated on the MDM2:dPMI-$\gamma$ system ($K_d=53$~nM). ChiralFold is available as a pip-installable Python package at \url{https://github.com/Tommaso-R-Marena/ChiralFold}.
 \end{abstract}
 
 \section{Introduction}
@@ -68,40 +68,48 @@ The L$\leftrightarrow$D transformation reflects all atomic coordinates across a 
 
 \subsection{D-Amino Acid Chirality Errors in the PDB}
 
-We verified 1,677 D-amino acid residues with complete backbone atoms (N, C$_\alpha$, C, C$_\beta$) across 231 PDB files. Of these, 1,656 (98.7\%) showed correct D-chirality (negative signed volume) and 21 (1.3\%) showed L-chirality (positive signed volume) despite being labeled as D-amino acids.
+We verified 1,677 D-amino acid residues with complete backbone atoms (N, C$_\alpha$, C, C$_\beta$) across 231 PDB files. Of these, 1,656 (98.7\%) showed correct D-chirality (negative signed volume) and 21 (1.3\%) showed L-chirality (positive signed volume) despite D-amino acid labels.
 
-The 21 errors occur in 12 PDB structures:
+The 21 mismatches occur in 12 PDB structures (Table~\ref{tab:errors}). Cross-referencing each case against deposition records, COMPND fields, SEQRES, and primary literature reveals three distinct error modes:
 
 \begin{table}[ht]
 \centering
-\caption{The 12 PDB structures containing D-amino acid chirality errors. Signed volume is in \AA$^3$; positive values indicate L-stereochemistry at the C$_\alpha$.}
+\caption{D-label/L-coordinate mismatches in the PDB, classified by error type. Signed volume is in \AA$^3$; positive values indicate L-stereochemistry at C$_\alpha$.}
 \label{tab:errors}
-\begin{tabular}{llllllll}
+\begin{tabular}{lllllllll}
 \toprule
-PDB ID & Residue & Chain & Position & Signed Vol.\ & Resolution & Dep.\ Date & Errors \\
+PDB ID & Residue & Chain & Pos & Signed Vol.\ & Res.\ & Dep.\ & Err.\ & Type \\
 \midrule
-1ABI & DPN & I & 56 & $+2.49$ & 2.30~\AA & 1992 & 1 \\
-1BG0 & DAR & A & 403 & $+2.58$ & 1.86~\AA & 1998 & 1 \\
-1D7T & DTY & A & 4 & $+1.85$ & NMR & 1999 & 1 \\
-1HHZ & DAL & E & 1 & $+2.70$ & 0.99~\AA & 2000 & 1 \\
-1KO0$^\dagger$ & DLY & A & 542 & $+0.12$ & 2.20~\AA & 2001 & 1 \\
-1MCB & DHI & P & 3 & $+2.60$ & 2.70~\AA & 1993 & 1 \\
-1OF6 & DTY & A--H & 1369--1370 & $+2.51$ to $+2.67$ & 2.10~\AA & 2003 & 8 \\
-1P52 & DAR & A & 403 & $+2.54$ & 1.90~\AA & 2003 & 1 \\
-1UHG & DSN & D & 164 & $+2.21$ & 1.90~\AA & 2003 & 1 \\
-1XT7 & DSG & A & 3 & $+2.55$ & NMR & 2004 & 1 \\
-2AOU & DCY & A & 248 & $+2.67$ & 2.30~\AA & 2005 & 1 \\
-2ATS & DLY & A & 3001--3003 & $+2.56$ to $+2.59$ & 1.90~\AA & 2005 & 3 \\
+1ABI & DPN & I & 56 & $+2.49$ & 2.30~\AA & 1992 & 1 & Stereochem$^a$ \\
+1BG0 & DAR & A & 403 & $+2.58$ & 1.86~\AA & 1998 & 1 & CCD$^b$ \\
+1D7T & DTY & A & 4 & $+1.85$ & NMR & 1999 & 1 & Stereochem$^a$ \\
+1HHZ & DAL & E & 1 & $+2.70$ & 0.99~\AA & 2000 & 1 & Stereochem$^a$ \\
+1KO0 & DLY & A & 542 & $+0.12$ & 2.20~\AA & 2001 & 1 & Borderline$^d$ \\
+1MCB & DHI & P & 3 & $+2.60$ & 2.70~\AA & 1993 & 1 & Mislabel$^c$ \\
+1OF6 & DTY & A--H & 1369 & $+2.51$--$+2.67$ & 2.10~\AA & 2003 & 8 & CCD$^b$ \\
+1P52 & DAR & A & 403 & $+2.54$ & 1.90~\AA & 2003 & 1 & CCD$^b$ \\
+1UHG & DSN & D & 164 & $+2.21$ & 1.90~\AA & 2003 & 1 & Mislabel$^c$ \\
+1XT7 & DSG & A & 3 & $+2.55$ & NMR & 2004 & 1 & Stereochem$^a$ \\
+2AOU & DCY & A & 248 & $+2.67$ & 2.30~\AA & 2005 & 1 & Mislabel$^c$ \\
+2ATS & DLY & A & 3001 & $+2.56$--$+2.59$ & 1.90~\AA & 2005 & 3 & CCD$^b$ \\
 \bottomrule
 \end{tabular}
 
 \smallskip
-\noindent$^\dagger$Borderline: near-zero signed volume ($+0.12$), alternate conformer B, $B$-factor 32.3~\AA$^2$. Classified as inconclusive.
+\noindent$^a$\textbf{Stereochem}: biology requires D-stereochemistry, coordinates show L (4 errors, 4 structures). $^b$\textbf{CCD}: non-polymer ligand with wrong D-form Chemical Component Dictionary code; molecule is L-form (13 errors, 4 structures). $^c$\textbf{Mislabel}: polymer residue with D-code in L-protein or where L-form is specified in COMPND (3 errors, 3 structures). $^d$\textbf{Borderline}: near-zero signed volume ($+0.12$), alternate conformer B, $B$-factor 32.3~\AA$^2$, racemic crystallization conditions.
 \end{table}
+
+\textbf{Stereochem errors} (4 errors in 4 structures) are the most concerning: the biological context requires D-stereochemistry but the deposited coordinates show L. These include 1ABI (hirulog peptide with D-Phe by design), 1D7T (engineered contryphan with explicit [D-Tyr4]), 1HHZ (cell wall pentapeptide D-Ala at 0.99~\AA\ atomic resolution), and 1XT7 (daptomycin antibiotic with D-Asn).
+
+\textbf{CCD code misassignments} (13 errors in 4 structures) involve non-polymer ligands labeled with D-form Chemical Component Dictionary codes when the crystallized molecule is L-form. For example, PDB 1OF6 (DAHP synthase) is co-crystallized with L-tyrosine, its natural allosteric inhibitor, but uses DTY (D-tyrosine) instead of TYR (L-tyrosine) as the ligand code. The coordinates correctly model L-stereochemistry. Similarly, 2ATS is titled ``co-crystallised with (S)-lysine'' (i.e., L-lysine) but uses DLY (D-lysine).
+
+\textbf{Polymer residue mislabels} (3 errors in 3 structures) occur when a standard L-residue in a regular protein is labeled with a D-amino acid code. For example, 1MCB explicitly states ``L-HIS'' in its COMPND record but uses DHI (D-histidine) in the SEQRES.
+
+Regardless of error type, all 21 mismatches represent real annotation inconsistencies that the signed volume method detects without requiring knowledge of biological context.
 
 \subsection{Robustness Verification}
 
-To ensure the findings are not artifacts of sign convention or implementation, we performed five independent checks. First, we computed signed tetrahedron volumes for all 24 D-amino acid residues in 3IWY (experimentally confirmed D-stereochemistry); every correctly built D-residue produced a negative signed volume, confirming the convention. Second, we examined the borderline case 1KO0 DLY:542 (signed volume $+0.12$), finding that its near-zero magnitude, alternate conformer B, and moderate $B$-factor (32.3~\AA$^2$) warrant classification as inconclusive rather than a confident error. Third, we verified the 1OF6 systematic error across all 8 chains, confirming that all DTY residues use standard atom naming (N, C$_\alpha$, C, C$_\beta$) and all produce positive signed volumes ($+2.51$ to $+2.67$), with no correctly built D-residues elsewhere in the structure to serve as internal controls. Fourth, we reconfirmed the 1ABI internal control: two DPN residues in the same structure with opposite signed volumes (position~1: $-2.60$, D-correct; position~56: $+2.49$, L-error), identical atom naming, and no alternate conformations, providing a clean within-structure discrimination test. Based on these checks, we classify 11 of 12 error-containing structures as confirmed, with 1KO0 flagged as borderline. The revised count is \textbf{20 confirmed errors in 11 structures, plus 1 borderline case}.
+We performed five independent checks to validate the findings. First, signed tetrahedron volumes for all 24 D-amino acid residues in 3IWY (experimentally confirmed D-stereochemistry) produced negative values, confirming the sign convention. Second, 1KO0 DLY:542 (vol~$+0.12$) was reclassified as borderline given its near-zero magnitude and racemic crystallization conditions. Third, the 1OF6 DTY entries were confirmed across all 8 chains as L-coordinates consistent with L-tyrosine's biological role as the allosteric inhibitor of DAHP synthase. Fourth, the 1ABI internal control was reconfirmed (DPN:1 vol~$-2.60$ D-correct; DPN:56 vol~$+2.49$ L-error). Fifth, all 12 error structures were cross-referenced against deposition metadata and primary literature to classify error types.
 
 \subsection{Errors Correlate with Pre-Remediation Deposition}
 
@@ -125,9 +133,11 @@ The p53:MDM2 crystal structure (PDB 1YCR) was mirrored to generate a D-peptide b
 
 \section{Discussion}
 
-The 1.3\% error rate in deposited D-amino acid stereochemistry (20 confirmed errors plus 1 borderline case across 1,677 residues) is small but systematic. The temporal clustering before 2006 suggests these errors were introduced during an era when D-amino acid validation was not part of standard deposition pipelines. The wwPDB remediation addressed many stereochemistry issues but these D-residue errors persisted because no existing tool specifically validated D-amino acid C$_\alpha$ chirality.
+The 1.3\% mismatch rate in deposited D-amino acid annotations (21 mismatches across 1,677 residues) encompasses three error modes, all systematic. The four genuine stereochemistry errors (1ABI, 1D7T, 1HHZ, 1XT7) are the most consequential: in each case, the biology explicitly requires D-stereochemistry but the deposited C$_\alpha$ coordinates are L-configured. The CCD code misassignments (1BG0, 1OF6, 1P52, 2ATS), while less severe, indicate that depositors frequently confuse L- and D-form Chemical Component Dictionary codes for non-polymer ligands --- a problem that automated validation could prevent. The polymer residue mislabels (1MCB, 1UHG, 2AOU) show the reverse problem: D-amino acid codes used for standard L-residues.
 
-The 1HHZ case is particularly illustrative: at 0.99~\AA\ resolution, the electron density is unambiguous, yet the residue is mislabeled. This rules out resolution as a confound and points to a convention/software error during deposition.
+The temporal clustering before 2006 suggests these errors were introduced during an era when D-amino acid validation was not part of standard deposition pipelines. The wwPDB remediation addressed many stereochemistry issues but these D-residue errors persisted because no existing tool specifically validated D-amino acid C$_\alpha$ chirality.
+
+The 1HHZ case is particularly illustrative: at 0.99~\AA\ resolution, the electron density unambiguously shows L-alanine, yet the residue is labeled as D-Ala (DAL) in a cell wall pentapeptide where D-Ala is biologically required. This rules out resolution as a confound and confirms a coordinate-level modeling error.
 
 ChiralFold fills this validation gap as a lightweight, pip-installable Python tool. While it does not replace MolProbity for comprehensive structure validation, it provides the only available programmatic D-amino acid chirality check and a mirror-image coordinate generation pipeline relevant to the growing field of D-peptide drug design.
 

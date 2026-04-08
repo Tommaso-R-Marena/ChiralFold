@@ -12,7 +12,7 @@ ChiralFold provides `pip install`-able stereochemistry validation and coordinate
 
 **Mirror-image binder design** — Converted the p53:MDM2 crystal structure (PDB 1YCR) into a D-peptide therapeutic candidate that preserves the Phe19/Trp23/Leu26 binding triad as D-amino acids — the same hotspot the experimental dPMI-γ (Kd = 53 nM) uses. All backbone φ angles exactly sign-inverted, 0.0 Å coordinate error.
 
-**PDB-wide D-residue survey** — Audited 200 PDB structures containing D-amino acids. Found 21 D-AA chirality errors in 12 structures (20 confirmed, 1 borderline) — deposited coordinates inconsistent with the labeled D-stereochemistry. Bulletproof-verified with 5 independent checks using only numpy and raw PDB files. MolProbity does not flag these.
+**PDB-wide D-residue survey** — Audited 200 PDB structures containing D-amino acids. Found 21 D-label/L-coordinate mismatches in 12 structures: 4 genuine stereochemistry errors (biology requires D, coordinates show L), 13 CCD code misassignments (L-molecule labeled with D-code), 3 polymer residue mislabels, and 1 borderline. All cross-referenced against biological context and primary literature. MolProbity does not flag any of these.
 
 **AF3 chirality correction** — Automatic detection and correction of stereochemistry violations in AlphaFold 3 outputs, directly addressing the 51% violation rate documented by Childs et al. (2025).
 
@@ -168,26 +168,36 @@ Fisher's exact test: p < 6.7×10⁻¹⁴⁴. 31 PDB structures audited: 30/31 = 
 
 ### PDB-Wide D-Residue Chirality Verification
 
-Independently verified (no ChiralFold code — numpy + raw PDB coordinates only) 1,677 D-amino acid residues across 231 PDB files. Found **21 genuine chirality errors in 12 structures** where the deposited Cα coordinates show L-stereochemistry despite being labeled as D-amino acids. Error rate: 1.3%. These errors are invisible to MolProbity.
+Independently verified (no ChiralFold code — numpy + raw PDB coordinates only) 1,677 D-amino acid residues across 231 PDB files. Found **21 D-label/L-coordinate mismatches in 12 structures** — cases where deposited Cα coordinates show L-stereochemistry despite D-amino acid labels. Error rate: 1.3%. All are invisible to MolProbity.
 
-| PDB | Residue | Chain | Pos | Signed Volume | Notes |
-|-----|---------|:-----:|:---:|:-------------:|-------|
-| 1ABI | DPN | I | 56 | +2.49 | D-Phe labeled, L-coordinates |
-| 1BG0 | DAR | A | 403 | +2.58 | D-Arg labeled, L-coordinates |
-| 1D7T | DTY | A | 4 | +1.85 | D-Tyr labeled, L-coordinates |
-| 1HHZ | DAL | E | 1 | +2.70 | D-Ala labeled, L-coordinates |
-| 1KO0 | DLY | A | 542 | +0.12 | **Borderline** — near-zero volume, ALTLOC B, B=32.3 |
-| 1MCB | DHI | P | 3 | +2.60 | D-His labeled, L-coordinates |
-| 1OF6 | DTY | A-H | 1369-1370 | +2.51 to +2.67 | 8 errors across 8 chains |
-| 1P52 | DAR | A | 403 | +2.54 | D-Arg labeled, L-coordinates |
-| 1UHG | DSN | D | 164 | +2.21 | D-Ser labeled, L-coordinates |
-| 1XT7 | DSG | A | 3 | +2.55 | D-Asn labeled, L-coordinates |
-| 2AOU | DCY | A | 248 | +2.67 | D-Cys labeled, L-coordinates |
-| 2ATS | DLY | A | 3001-3003 | +2.56 to +2.59 | 3 errors in one structure |
+**Error classification (cross-referenced against deposition remarks, COMPND records, biological context, and primary literature):**
 
-Full dataset: `results/d_residue_verification.csv` (1,678 rows with raw coordinates).
+| PDB | Residue | Chain | Pos | Signed Volume | Error Type | Evidence |
+|-----|---------|:-----:|:---:|:-------------:|:----------:|----------|
+| 1ABI | DPN | I | 56 | +2.49 | **Stereochem** | Hirulog D-Phe by design; internal control DPN:1 correct (vol=-2.60) |
+| 1BG0 | DAR | A | 403 | +2.58 | CCD-Code | Arginine kinase substrate is L-Arg; standalone ligand |
+| 1D7T | DTY | A | 4 | +1.85 | **Stereochem** | Contryphan [D-Tyr4] explicitly designed; NMR structure |
+| 1HHZ | DAL | E | 1 | +2.70 | **Stereochem** | Cell wall pentapeptide D-Ala; 0.99 Å atomic resolution |
+| 1KO0 | DLY | A | 542 | +0.12 | Borderline | Title says "D,L-lysine" (racemic); ALTLOC B, B=32.3 |
+| 1MCB | DHI | P | 3 | +2.60 | Mislabel | COMPND says "L-HIS" explicitly; DHI should be HIS |
+| 1OF6 | DTY | A-H | 1369-1370 | +2.51 to +2.67 | CCD-Code | DAHP synthase inhibitor is L-Tyr ([Nature 2023](https://doi.org/10.1038/s42004-023-00946-x)); 8 ligand copies |
+| 1P52 | DAR | A | 403 | +2.54 | CCD-Code | Arginine kinase mutant; substrate is L-Arg |
+| 1UHG | DSN | D | 164 | +2.21 | Mislabel | Ovalbumin is an L-protein; no biological reason for D-Ser |
+| 1XT7 | DSG | A | 3 | +2.55 | **Stereochem** | Daptomycin antibiotic: D-Asn biologically required |
+| 2AOU | DCY | A | 248 | +2.67 | Mislabel | Histamine methyltransferase is L-protein; DCY should be CYS |
+| 2ATS | DLY | A | 3001-3003 | +2.56 to +2.59 | CCD-Code | Title says "(S)-lysine" = L-Lys; 3 ligand copies |
 
-**Bulletproof verification:** Five independent checks confirm the findings: (1) Sign convention validated on 24/24 known-correct D-residues in 3IWY (all negative volumes); (2) 1KO0 reclassified as borderline (vol=+0.12, ALTLOC B, B=32.3 — inconclusive); (3) 1OF6 systematic error confirmed across all 8 chains (standard naming, no internal D-controls); (4) 1ABI internal control passes cleanly (DPN:1 vol=-2.60 correct vs DPN:56 vol=+2.49 error, no ALTLOCs); (5) Full re-verification of all 12 structures. Revised count: **20 confirmed errors in 11 structures + 1 borderline case (1KO0)**. See `benchmarks/bulletproof_verification.py` and `results/bulletproof_outputs/`.
+**Error type breakdown:**
+- **CCD-Code** (13 errors, 4 structures): Non-polymer ligand labeled with D-form CCD code when the crystallized molecule is L-form. The coordinates correctly model L-stereochemistry; only the chemical component code is wrong.
+- **Mislabel** (3 errors, 3 structures): Polymer residue labeled with D-amino acid code in a context where L is biologically correct (L-protein, or COMPND record specifying L-form).
+- **Stereochem** (4 errors, 4 structures): **Most concerning** — the biology requires D-stereochemistry but the deposited coordinates show L. These are genuine coordinate-level errors.
+- **Borderline** (1 error, 1 structure): Near-zero signed volume from racemic crystallization conditions.
+
+Regardless of type, all 21 mismatches are real annotation inconsistencies in the PDB. The signed volume method detects all error types without requiring knowledge of biological context.
+
+Full dataset: `results/d_residue_verification.csv` (1,678 rows with raw coordinates). Classification: `results/error_classification.json`.
+
+**Bulletproof verification:** Five independent checks confirm the findings: (1) Sign convention validated on 24/24 known-correct D-residues in 3IWY (all negative volumes); (2) 1KO0 reclassified as borderline (vol=+0.12, ALTLOC B, B=32.3 — inconclusive); (3) 1OF6 confirmed across all 8 chains (all L-coordinates, consistent with L-Tyr biological role); (4) 1ABI internal control passes cleanly (DPN:1 vol=-2.60 correct vs DPN:56 vol=+2.49 error); (5) Full re-verification of all 12 structures with biological context cross-referencing. See `benchmarks/bulletproof_verification.py` and `results/bulletproof_outputs/`.
 
 **Correlation analysis:** All 12 error structures were deposited between 1992 and 2005. Zero errors in structures deposited after 2005, consistent with the 2006–2008 wwPDB remediation effort that systematically corrected stereochemistry assignments. Deposition year significantly predicts errors (Mann-Whitney U=278, p=0.0027). Resolution does not (p=0.19) — errors span 0.99–2.70 Å, indicating a labeling problem rather than a data quality problem.
 
@@ -279,7 +289,7 @@ Residues: 189. Chirality: 181 correct, 0 wrong, 8 Gly (100.0%). Ramachandran: 95
 Buried Surface Area: 1,980 Å². Shape Complementarity: 0.933. Hydrogen bonds: 10. Interface score: 61.9/100.
 
 **D-Residue Verification (1,677 residues, independent of ChiralFold):**
-21 chirality errors in 12 PDB structures (20 confirmed + 1 borderline). Error rate: 1.3%. Bulletproof-verified using 5 independent checks with only numpy and raw PDB coordinates (no ChiralFold code). Sign convention validated on 24/24 known-correct D-residues. 1KO0 flagged as borderline (vol=+0.12). All other errors have volumes +1.85 to +2.70, well above the discrimination threshold. Full dataset: `results/d_residue_verification.csv`. Verification details: `results/error_table_verified.csv` and `results/bulletproof_outputs/`.
+21 D-label/L-coordinate mismatches in 12 PDB structures. Error rate: 1.3%. Classified by biological context: 4 genuine stereochemistry errors (coordinates modeled as L where D is required), 13 CCD code misassignments (L-form ligand with D-code), 3 polymer residue mislabels, 1 borderline. All verified using only numpy and raw PDB coordinates (no ChiralFold code). Classification cross-referenced against COMPND records, SEQRES, deposition titles, and primary literature. Full dataset: `results/d_residue_verification.csv`. Classification: `results/error_classification.json`.
 
 **Batch Audit (validated against this README):**
 1UBQ: 100% chirality, 97.3% Rama favored, 96.0% planarity, score 78.6.
