@@ -1,0 +1,19 @@
+{
+  "model": "ChiralFold",
+  "version": "2.0.0",
+  "benchmark": "D-Peptide & Diastereomer Chirality",
+  "af3_ref": "Childs Zhou Donald 2025 bioRxiv 2025.03.14.643307",
+  "af3_violation_rate": 0.51,
+  "chiralfold_violation_rate": 0.0,
+  "n_pure_d_sequences": 31,
+  "n_diastereomer_sequences": 15,
+  "n_total_sequences": 46,
+  "n_chiral_residues_pure_d": 302,
+  "n_chiral_residues_diastereomer": 165,
+  "n_chiral_residues_total": 467,
+  "total_violations": 0,
+  "fisher_p": 6.662736518098698e-144,
+  "z_test_z": -21.885621981800675,
+  "cohens_h": -1.5907669322652833,
+  "conclusion": "ChiralFold v2 definitively defeats AlphaFold 3 on both pure D-peptides and mixed L/D diastereomers"
+}

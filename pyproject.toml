@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "chiralfold"
+version = "2.0.0"
+description = "Chirality-preserving peptide structure prediction — defeats AlphaFold 3 on D-peptides and diastereomers"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "ChiralFold Contributors"},
+]
+keywords = ["chirality", "peptide", "D-amino-acid", "diastereomer", "structure-prediction", "alphafold"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Chemistry",
+]
+dependencies = [
+    "numpy>=1.21",
+    "rdkit>=2023.3",
+    "scipy>=1.7",
+    "pandas>=1.3",
+    "matplotlib>=3.5",
+    "seaborn>=0.11",
+    "scikit-learn>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+]
+
+[project.scripts]
+chiralfold = "chiralfold.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Tommaso-R-Marena/ChiralFold"
+Repository = "https://github.com/Tommaso-R-Marena/ChiralFold"
+Issues = "https://github.com/Tommaso-R-Marena/ChiralFold/issues"
+
+[tool.setuptools.packages.find]
+include = ["chiralfold*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
