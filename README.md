@@ -306,7 +306,7 @@ Buried Surface Area: 1,980 Å². Shape Complementarity: 0.933. Hydrogen bonds: 1
   author    = {Tommaso R. Marena},
   year      = {2025},
   url       = {https://github.com/Tommaso-R-Marena/ChiralFold},
-  version   = {3.2.0},
+  version   = {3.2.1},
   note      = {PDB auditing calibrated against wwPDB/MolProbity,
                chirality-correct coordinate generation, AF3 correction
                pipeline, mirror-image binder design validated on MDM2

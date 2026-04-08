@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chiralfold"
-version = "3.2.0"
+version = "3.2.1"
 description = "Chirality-preserving peptide structure prediction — defeats AlphaFold 3 on D-peptides and diastereomers"
 readme = "README.md"
 license = {text = "MIT"}
