@@ -1,0 +1,22 @@
+PDB_ID,Residue_Code,Chain,Position,Signed_Volume,B_Factor_CA,ALTLOC,Has_OXT,In_SEQRES,ATOM_Lines,HETATM_Lines,Error_Type,Correct_Label
+1ABI,DPN,I,56,+2.49,44.5,No,False,True,0,22,Stereochem,DPN (D-Phe) — label is correct; coordinates are wrong
+1BG0,DAR,A,403,+2.58,9.0,No,True,False,0,12,CCD-Code,ARG (L-Arg) — should use L-form CCD code
+1D7T,DTY,A,4,+1.85,0.0,No,False,True,0,420,Stereochem,DTY (D-Tyr) — label is correct; coordinates are wrong
+1HHZ,DAL,E,1,+2.70,19.4,"A,B",False,True,0,43,Stereochem,DAL (D-Ala) — label is correct; coordinates are wrong
+1KO0,DLY,A,542,+0.12,32.3,B,True,False,0,10,Borderline,Ambiguous — racemic conditions; could be LYS (L-Lys) from the racemic mix
+1MCB,DHI,P,3,+2.60,0.0,No,False,True,0,10,Mislabel,HIS (L-His) — COMPND says L-HIS; DHI is wrong residue code
+1OF6,DTY,A,1370,+2.57,33.5,No,True,False,0,104,CCD-Code,"TYR (L-Tyr) — allosteric inhibitor is L-tyrosine, not D-tyrosine"
+1OF6,DTY,B,1370,+2.61,34.6,No,True,False,0,104,CCD-Code,"TYR (L-Tyr) — allosteric inhibitor is L-tyrosine, not D-tyrosine"
+1OF6,DTY,C,1371,+2.57,34.6,No,True,False,0,104,CCD-Code,"TYR (L-Tyr) — allosteric inhibitor is L-tyrosine, not D-tyrosine"
+1OF6,DTY,D,1370,+2.63,32.1,No,True,False,0,104,CCD-Code,"TYR (L-Tyr) — allosteric inhibitor is L-tyrosine, not D-tyrosine"
+1OF6,DTY,E,1370,+2.59,34.2,No,True,False,0,104,CCD-Code,"TYR (L-Tyr) — allosteric inhibitor is L-tyrosine, not D-tyrosine"
+1OF6,DTY,F,1370,+2.53,40.1,No,True,False,0,104,CCD-Code,"TYR (L-Tyr) — allosteric inhibitor is L-tyrosine, not D-tyrosine"
+1OF6,DTY,G,1369,+2.51,41.5,No,True,False,0,104,CCD-Code,"TYR (L-Tyr) — allosteric inhibitor is L-tyrosine, not D-tyrosine"
+1OF6,DTY,H,1369,+2.67,38.0,No,True,False,0,104,CCD-Code,"TYR (L-Tyr) — allosteric inhibitor is L-tyrosine, not D-tyrosine"
+1P52,DAR,A,403,+2.54,20.2,No,False,False,0,11,CCD-Code,ARG (L-Arg) — should use L-form CCD code
+1UHG,DSN,D,164,+2.21,38.8,No,False,True,0,72,Mislabel,SER (L-Ser) — standard L-protein; DSN is wrong residue code
+1XT7,DSG,A,3,+2.55,0.0,No,False,True,0,14,Stereochem,DSG (D-Asn) — label is correct; coordinates are wrong
+2AOU,DCY,A,248,+2.67,54.0,No,False,True,0,6,Mislabel,CYS (L-Cys) — standard L-protein; DCY is wrong residue code
+2ATS,DLY,A,3001,+2.59,15.5,No,True,False,0,30,CCD-Code,LYS (L-Lys) — title says '(S)-lysine'; DLY is wrong CCD code
+2ATS,DLY,A,3002,+2.58,15.3,No,True,False,0,30,CCD-Code,LYS (L-Lys) — title says '(S)-lysine'; DLY is wrong CCD code
+2ATS,DLY,A,3003,+2.56,47.3,No,True,False,0,30,CCD-Code,LYS (L-Lys) — title says '(S)-lysine'; DLY is wrong CCD code
