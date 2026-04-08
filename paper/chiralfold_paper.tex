@@ -133,13 +133,13 @@ The p53:MDM2 crystal structure (PDB 1YCR) was mirrored to generate a D-peptide b
 
 \section{Discussion}
 
-The 1.3\% mismatch rate in deposited D-amino acid annotations (21 mismatches across 1,677 residues) encompasses three error modes, all systematic. The four genuine stereochemistry errors (1ABI, 1D7T, 1HHZ, 1XT7) are the most consequential: in each case, the biology explicitly requires D-stereochemistry but the deposited C$_\alpha$ coordinates are L-configured. The CCD code misassignments (1BG0, 1OF6, 1P52, 2ATS), while less severe, indicate that depositors frequently confuse L- and D-form Chemical Component Dictionary codes for non-polymer ligands --- a problem that automated validation could prevent. The polymer residue mislabels (1MCB, 1UHG, 2AOU) show the reverse problem: D-amino acid codes used for standard L-residues.
+The signed tetrahedron volume at C$_\alpha$ --- computed from four backbone atom positions with no force field or external dependencies --- is sufficient to distinguish three structurally and operationally distinct categories of D-amino acid annotation error, none of which require biological context to detect. The four genuine stereochemistry errors (1ABI, 1D7T, 1HHZ, 1XT7) are the most consequential: in each case the biology unambiguously constrains the residue to D-configuration, yet the deposited C$_\alpha$ coordinates show L-stereochemistry with signed volumes between $+1.85$ and $+2.70$~\AA$^3$. The 1HHZ case is particularly telling --- at 0.99~\AA\ atomic resolution, where electron density is unambiguous, D-Ala at position~1 of the cell wall pentapeptide carries a signed volume of $+2.70$, the largest positive value in the dataset, in a context where D-alanine is a biosynthetic requirement of peptidoglycan cross-linking conserved across bacterial phyla \citep{miyamoto2021,cava2011}. The 13 CCD code misassignments (1BG0, 1OF6, 1P52, 2ATS) define a second error mode: here the coordinates correctly model L-stereochemistry, but the depositor selected the D-form Chemical Component Dictionary code for a ligand that is unambiguously L-form by biological function. The 3 polymer residue mislabels (1MCB, 1UHG, 2AOU) represent the mirror of this: D-amino acid codes applied to standard residues in L-proteins, in some cases despite an explicit COMPND record specifying the L-form.
 
-The temporal clustering before 2006 suggests these errors were introduced during an era when D-amino acid validation was not part of standard deposition pipelines. The wwPDB remediation addressed many stereochemistry issues but these D-residue errors persisted because no existing tool specifically validated D-amino acid C$_\alpha$ chirality.
+The CCD misassignment category has a different remediation pathway from the other two. Because the coordinates are correct and only the three-letter code is wrong, the fix is a metadata change at the annotation level --- not a coordinate re-refinement. More importantly, this error mode is systematic rather than incidental: depositors selecting chemical component codes for small-molecule ligands during deposition must navigate a namespace in which L-tyrosine (TYR) and D-tyrosine (DTY) are distinct codes that differ by a single letter prefix, with no automated check that the selected code matches the stereochemistry of the deposited model. The 2ATS entry makes this failure mode concrete: the depositor's own title field reads ``co-crystallised with (S)-lysine'' --- unambiguous chemical notation for L-lysine --- yet DLY (D-lysine) was used as the ligand code for all three copies of the molecule, and this inconsistency persisted in the archive for two decades. This is not a human judgment error; it is a deposition pipeline gap, and it is therefore addressable upstream by automated cross-validation of CCD code stereochemistry against deposited coordinates at the point of submission, analogous to how existing tools flag bond-length outliers before a structure is accepted \citep{shao2015,outcome2016}.
 
-The 1HHZ case is particularly illustrative: at 0.99~\AA\ resolution, the electron density unambiguously shows L-alanine, yet the residue is labeled as D-Ala (DAL) in a cell wall pentapeptide where D-Ala is biologically required. This rules out resolution as a confound and confirms a coordinate-level modeling error.
+The genuine stereochemistry errors and polymer mislabels require a different framing. In these cases the coordinate error is the finding: the deposited atoms place C$_\alpha$ in the L-configuration in a biochemical context that demands D. The four genuine errors span antibiotic natural products (daptomycin, 1XT7), engineered peptide toxins (contryphan, 1D7T), synthetic therapeutic peptides (hirulog, 1ABI), and a bacterial metabolic substrate (cell wall D-Ala, 1HHZ) --- contexts drawn from entirely different areas of structural biology, deposited over a thirteen-year window, all of which share the property that the D-requirement is not inferred from a model but is established by biosynthetic logic or explicit experimental design. The fact that resolution does not predict error rate (Mann--Whitney $p=0.19$), while deposition year does ($p=0.0027$), indicates that these were labeling and convention errors introduced during an era when D-amino acid chirality was not part of any standard validation pipeline --- and that they survived the 2006--2008 wwPDB remediation effort \citep{henrick2008} because that remediation had no D-specific chirality check to deploy.
 
-ChiralFold fills this validation gap as a lightweight, pip-installable Python tool. While it does not replace MolProbity for comprehensive structure validation, it provides the only available programmatic D-amino acid chirality check and a mirror-image coordinate generation pipeline relevant to the growing field of D-peptide drug design.
+ChiralFold fills this validation gap as a lightweight, pip-installable Python tool whose auditor is calibrated against wwPDB/MolProbity reports on 31 structures across three experimental modalities. It is not a competitor to MolProbity, which remains stronger in Ramachandran contour precision, rotamer completeness, and decades of community refinement \citep{chen2010,lovell2003}. Rather, it addresses a specific blind spot: MolProbity validates C$_\alpha$ chirality for standard L-amino acids but does not extend this check to D-labeled residues, so the 21 annotation inconsistencies reported here are invisible to existing pipelines. The method is reproducible without ChiralFold itself --- the independent verification script uses only numpy and raw PDB coordinates --- and the full dataset is available for re-analysis. As D-amino acid structures grow in the PDB, driven by mirror-image phage display, D-peptide therapeutics, and structural studies of bacterial natural products, a systematic and programmatic means of verifying D-residue annotations becomes correspondingly more necessary.
 
 \section{Data Availability}
 
@@ -178,6 +178,30 @@ Henrick K et~al.
 \newblock Remediation of the protein data bank archive.
 \newblock \textit{Nucleic Acids Res} 36:D426--D433 (2008).
 \newblock \href{https://doi.org/10.1093/nar/gkm937}{doi:10.1093/nar/gkm937}
+
+\bibitem[Shao et~al.(2015)]{shao2015}
+Shao C et~al.
+\newblock The chemical component dictionary: complete descriptions of constituent molecules in experimentally determined 3D macromolecules in the Protein Data Bank.
+\newblock \textit{Bioinformatics} 31:1274--1278 (2015).
+\newblock \href{https://doi.org/10.1093/bioinformatics/btu789}{doi:10.1093/bioinformatics/btu789}
+
+\bibitem[Outcome et~al.(2016)]{outcome2016}
+Berman H et~al.
+\newblock Outcome of the First wwPDB/CCDC/D3R Ligand Validation Workshop.
+\newblock \textit{Structure} 24:502--508 (2016).
+\newblock \href{https://doi.org/10.1016/j.str.2016.02.017}{doi:10.1016/j.str.2016.02.017}
+
+\bibitem[Miyamoto and Homma(2021)]{miyamoto2021}
+Miyamoto T, Homma H.
+\newblock D-Amino acid metabolism in bacteria.
+\newblock \textit{J Biochem} 170:5--13 (2021).
+\newblock \href{https://doi.org/10.1093/jb/mvab043}{doi:10.1093/jb/mvab043}
+
+\bibitem[Cava et~al.(2011)]{cava2011}
+Cava F et~al.
+\newblock Distinct pathways for modification of the bacterial cell wall by non-canonical D-amino acids.
+\newblock \textit{EMBO J} 30:3442--3453 (2011).
+\newblock \href{https://doi.org/10.1038/emboj.2011.246}{doi:10.1038/emboj.2011.246}
 
 \end{thebibliography}
 
