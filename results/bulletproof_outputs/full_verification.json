@@ -1,0 +1,144 @@
+{
+  "check1_convention_passed": true,
+  "check1_n_residues": 24,
+  "check2_1ko0_recommendation": "INCONCLUSIVE (near-zero volume, moderate B-factor)",
+  "check3_1of6_confirmed": 8,
+  "check3_1of6_total": 8,
+  "check4_1abi_discrimination": true,
+  "final_confirmed": 11,
+  "final_borderline": 1,
+  "verified_rows": [
+    {
+      "PDB": "1ABI",
+      "Residue": "DPN",
+      "Chain": "I",
+      "Position": 56,
+      "Signed_Volume": "+2.49",
+      "B_factor_CA": "44.5",
+      "ALTLOC": "No",
+      "Standard_Naming": "Yes",
+      "Confirmed": "Confirmed"
+    },
+    {
+      "PDB": "1BG0",
+      "Residue": "DAR",
+      "Chain": "A",
+      "Position": 403,
+      "Signed_Volume": "+2.58",
+      "B_factor_CA": "N/A",
+      "ALTLOC": "N/A",
+      "Standard_Naming": "Yes",
+      "Confirmed": "Confirmed"
+    },
+    {
+      "PDB": "1D7T",
+      "Residue": "DTY",
+      "Chain": "A",
+      "Position": 4,
+      "Signed_Volume": "+1.85",
+      "B_factor_CA": "N/A",
+      "ALTLOC": "N/A",
+      "Standard_Naming": "Yes",
+      "Confirmed": "Confirmed"
+    },
+    {
+      "PDB": "1HHZ",
+      "Residue": "DAL",
+      "Chain": "E",
+      "Position": 1,
+      "Signed_Volume": "+2.70",
+      "B_factor_CA": "N/A",
+      "ALTLOC": "N/A",
+      "Standard_Naming": "Yes",
+      "Confirmed": "Confirmed"
+    },
+    {
+      "PDB": "1KO0",
+      "Residue": "DLY",
+      "Chain": "A",
+      "Position": 542,
+      "Signed_Volume": "+0.12",
+      "B_factor_CA": "32.3",
+      "ALTLOC": "B",
+      "Standard_Naming": "Yes",
+      "Confirmed": "Borderline"
+    },
+    {
+      "PDB": "1MCB",
+      "Residue": "DHI",
+      "Chain": "P",
+      "Position": 3,
+      "Signed_Volume": "+2.60",
+      "B_factor_CA": "N/A",
+      "ALTLOC": "N/A",
+      "Standard_Naming": "Yes",
+      "Confirmed": "Confirmed"
+    },
+    {
+      "PDB": "1OF6",
+      "Residue": "DTY",
+      "Chain": "A-H",
+      "Position": "1369-1370",
+      "Signed_Volume": "+2.51 to +2.67",
+      "B_factor_CA": "33.5",
+      "ALTLOC": "No",
+      "Standard_Naming": "Yes",
+      "Confirmed": "Confirmed"
+    },
+    {
+      "PDB": "1P52",
+      "Residue": "DAR",
+      "Chain": "A",
+      "Position": 403,
+      "Signed_Volume": "+2.54",
+      "B_factor_CA": "N/A",
+      "ALTLOC": "N/A",
+      "Standard_Naming": "Yes",
+      "Confirmed": "Confirmed"
+    },
+    {
+      "PDB": "1UHG",
+      "Residue": "DSN",
+      "Chain": "D",
+      "Position": 164,
+      "Signed_Volume": "+2.21",
+      "B_factor_CA": "N/A",
+      "ALTLOC": "N/A",
+      "Standard_Naming": "Yes",
+      "Confirmed": "Confirmed"
+    },
+    {
+      "PDB": "1XT7",
+      "Residue": "DSG",
+      "Chain": "A",
+      "Position": 3,
+      "Signed_Volume": "+2.55",
+      "B_factor_CA": "N/A",
+      "ALTLOC": "N/A",
+      "Standard_Naming": "Yes",
+      "Confirmed": "Confirmed"
+    },
+    {
+      "PDB": "2AOU",
+      "Residue": "DCY",
+      "Chain": "A",
+      "Position": 248,
+      "Signed_Volume": "+2.67",
+      "B_factor_CA": "N/A",
+      "ALTLOC": "N/A",
+      "Standard_Naming": "Yes",
+      "Confirmed": "Confirmed"
+    },
+    {
+      "PDB": "2ATS",
+      "Residue": "DLY",
+      "Chain": "A",
+      "Position": "3001-3003",
+      "Signed_Volume": "+2.56 to +2.59",
+      "B_factor_CA": "N/A",
+      "ALTLOC": "N/A",
+      "Standard_Naming": "No",
+      "Confirmed": "Confirmed"
+    }
+  ]
+}

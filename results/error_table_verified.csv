@@ -1,0 +1,13 @@
+PDB,Residue,Chain,Position,Signed_Volume,B_factor_CA,ALTLOC,Standard_Naming,Confirmed
+1ABI,DPN,I,56,+2.49,44.5,No,Yes,Confirmed
+1BG0,DAR,A,403,+2.58,N/A,N/A,Yes,Confirmed
+1D7T,DTY,A,4,+1.85,N/A,N/A,Yes,Confirmed
+1HHZ,DAL,E,1,+2.70,N/A,N/A,Yes,Confirmed
+1KO0,DLY,A,542,+0.12,32.3,B,Yes,Borderline
+1MCB,DHI,P,3,+2.60,N/A,N/A,Yes,Confirmed
+1OF6,DTY,A-H,1369-1370,+2.51 to +2.67,33.5,No,Yes,Confirmed
+1P52,DAR,A,403,+2.54,N/A,N/A,Yes,Confirmed
+1UHG,DSN,D,164,+2.21,N/A,N/A,Yes,Confirmed
+1XT7,DSG,A,3,+2.55,N/A,N/A,Yes,Confirmed
+2AOU,DCY,A,248,+2.67,N/A,N/A,Yes,Confirmed
+2ATS,DLY,A,3001-3003,+2.56 to +2.59,N/A,N/A,No,Confirmed

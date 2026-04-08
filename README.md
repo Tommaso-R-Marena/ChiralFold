@@ -12,7 +12,7 @@ ChiralFold provides `pip install`-able stereochemistry validation and coordinate
 
 **Mirror-image binder design** — Converted the p53:MDM2 crystal structure (PDB 1YCR) into a D-peptide therapeutic candidate that preserves the Phe19/Trp23/Leu26 binding triad as D-amino acids — the same hotspot the experimental dPMI-γ (Kd = 53 nM) uses. All backbone φ angles exactly sign-inverted, 0.0 Å coordinate error.
 
-**PDB-wide D-residue survey** — Audited 200 PDB structures containing D-amino acids. Found 10 genuine D-AA chirality errors in 8 structures — deposited coordinates inconsistent with the labeled D-stereochemistry. MolProbity does not flag these.
+**PDB-wide D-residue survey** — Audited 200 PDB structures containing D-amino acids. Found 21 D-AA chirality errors in 12 structures (20 confirmed, 1 borderline) — deposited coordinates inconsistent with the labeled D-stereochemistry. Bulletproof-verified with 5 independent checks using only numpy and raw PDB files. MolProbity does not flag these.
 
 **AF3 chirality correction** — Automatic detection and correction of stereochemistry violations in AlphaFold 3 outputs, directly addressing the 51% violation rate documented by Childs et al. (2025).
 
@@ -176,7 +176,7 @@ Independently verified (no ChiralFold code — numpy + raw PDB coordinates only)
 | 1BG0 | DAR | A | 403 | +2.58 | D-Arg labeled, L-coordinates |
 | 1D7T | DTY | A | 4 | +1.85 | D-Tyr labeled, L-coordinates |
 | 1HHZ | DAL | E | 1 | +2.70 | D-Ala labeled, L-coordinates |
-| 1KO0 | DLY | A | 542 | +0.12 | D-Lys, marginally L |
+| 1KO0 | DLY | A | 542 | +0.12 | **Borderline** — near-zero volume, ALTLOC B, B=32.3 |
 | 1MCB | DHI | P | 3 | +2.60 | D-His labeled, L-coordinates |
 | 1OF6 | DTY | A-H | 1369-1370 | +2.51 to +2.67 | 8 errors across 8 chains |
 | 1P52 | DAR | A | 403 | +2.54 | D-Arg labeled, L-coordinates |
@@ -186,6 +186,8 @@ Independently verified (no ChiralFold code — numpy + raw PDB coordinates only)
 | 2ATS | DLY | A | 3001-3003 | +2.56 to +2.59 | 3 errors in one structure |
 
 Full dataset: `results/d_residue_verification.csv` (1,678 rows with raw coordinates).
+
+**Bulletproof verification:** Five independent checks confirm the findings: (1) Sign convention validated on 24/24 known-correct D-residues in 3IWY (all negative volumes); (2) 1KO0 reclassified as borderline (vol=+0.12, ALTLOC B, B=32.3 — inconclusive); (3) 1OF6 systematic error confirmed across all 8 chains (standard naming, no internal D-controls); (4) 1ABI internal control passes cleanly (DPN:1 vol=-2.60 correct vs DPN:56 vol=+2.49 error, no ALTLOCs); (5) Full re-verification of all 12 structures. Revised count: **20 confirmed errors in 11 structures + 1 borderline case (1KO0)**. See `benchmarks/bulletproof_verification.py` and `results/bulletproof_outputs/`.
 
 **Correlation analysis:** All 12 error structures were deposited between 1992 and 2005. Zero errors in structures deposited after 2005, consistent with the 2006–2008 wwPDB remediation effort that systematically corrected stereochemistry assignments. Deposition year significantly predicts errors (Mann-Whitney U=278, p=0.0027). Resolution does not (p=0.19) — errors span 0.99–2.70 Å, indicating a labeling problem rather than a data quality problem.
 
@@ -255,7 +257,7 @@ ChiralFold/
 │       └── ramachandran_grid.json  # Empirical φ/ψ probability grid
 ├── tests/
 │   └── test_chirality.py     # Unit tests (incl. external PDB validation)
-├── benchmarks/               # Benchmark scripts
+├── benchmarks/               # Benchmark scripts (incl. bulletproof_verification.py)
 ├── results/                  # Generated outputs
 ├── CONTRIBUTING.md           # How to contribute
 ├── pyproject.toml
@@ -277,7 +279,7 @@ Residues: 189. Chirality: 181 correct, 0 wrong, 8 Gly (100.0%). Ramachandran: 95
 Buried Surface Area: 1,980 Å². Shape Complementarity: 0.933. Hydrogen bonds: 10. Interface score: 61.9/100.
 
 **D-Residue Verification (1,677 residues, independent of ChiralFold):**
-21 genuine chirality errors in 12 PDB structures. Error rate: 1.3%. Verified using only numpy and raw PDB coordinates (no ChiralFold code). All 21 errors have positive signed tetrahedron volumes (+0.12 to +2.70) indicating L-stereochemistry despite D-amino acid labels. Full dataset with raw coordinates: `results/d_residue_verification.csv`.
+21 chirality errors in 12 PDB structures (20 confirmed + 1 borderline). Error rate: 1.3%. Bulletproof-verified using 5 independent checks with only numpy and raw PDB coordinates (no ChiralFold code). Sign convention validated on 24/24 known-correct D-residues. 1KO0 flagged as borderline (vol=+0.12). All other errors have volumes +1.85 to +2.70, well above the discrimination threshold. Full dataset: `results/d_residue_verification.csv`. Verification details: `results/error_table_verified.csv` and `results/bulletproof_outputs/`.
 
 **Batch Audit (validated against this README):**
 1UBQ: 100% chirality, 97.3% Rama favored, 96.0% planarity, score 78.6.

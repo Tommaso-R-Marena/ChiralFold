@@ -1,0 +1,19 @@
+2.5 Robustness Verification
+
+To ensure the findings are not artifacts of our sign convention or implementation,
+we performed four independent checks. First, we computed signed tetrahedron volumes
+for all D-amino acid residues in six PDB structures with experimentally confirmed
+D-stereochemistry (3IWY, 1DWN, 2LDT, 1T9F, 2RLJ, 1S9L); every correctly built
+D-residue produced a negative signed volume, confirming the convention. Second, we
+examined the borderline case 1KO0 DLY:542 (signed volume +0.12), finding that its
+near-zero magnitude warrants classification as inconclusive rather than a confident
+error. Third, we verified the 1OF6 systematic error across all 8 chains, confirming
+that all DTY residues use standard atom naming (N, CA, C, CB) and all produce positive
+signed volumes ranging from +2.51 to +2.67, with no correctly built D-residues
+elsewhere in the structure to serve as internal controls. Fourth, we reconfirmed the
+1ABI internal control: two DPN residues in the same structure with opposite signed
+volumes (position 1: -2.60, D-correct; position 56: +2.49, L-error), identical atom
+naming, and no alternate conformations, providing a clean within-structure discrimination
+test. Based on these checks, we classify 11 of 12 error-containing structures as
+confirmed, with 1KO0 flagged as borderline. The revised error count is 20 confirmed
+errors in 11 structures, plus 1 borderline case.

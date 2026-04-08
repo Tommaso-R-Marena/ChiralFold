@@ -1,0 +1,218 @@
+[
+  {
+    "pdb_id": "3IWY",
+    "resname": "DAS",
+    "chain": "B",
+    "resnum": 1,
+    "altloc": "",
+    "signed_volume": -2.7342,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DTR",
+    "chain": "B",
+    "resnum": 2,
+    "altloc": "",
+    "signed_volume": -2.5369,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DTR",
+    "chain": "B",
+    "resnum": 3,
+    "altloc": "",
+    "signed_volume": -2.5747,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DPR",
+    "chain": "B",
+    "resnum": 4,
+    "altloc": "",
+    "signed_volume": -1.0972,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DLE",
+    "chain": "B",
+    "resnum": 5,
+    "altloc": "",
+    "signed_volume": -2.4561,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DAL",
+    "chain": "B",
+    "resnum": 6,
+    "altloc": "",
+    "signed_volume": -2.5116,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DPN",
+    "chain": "B",
+    "resnum": 7,
+    "altloc": "",
+    "signed_volume": -2.6437,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DGL",
+    "chain": "B",
+    "resnum": 8,
+    "altloc": "",
+    "signed_volume": -2.6738,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DAL",
+    "chain": "B",
+    "resnum": 9,
+    "altloc": "",
+    "signed_volume": -2.5149,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DLE",
+    "chain": "B",
+    "resnum": 10,
+    "altloc": "",
+    "signed_volume": -2.3764,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DLE",
+    "chain": "B",
+    "resnum": 11,
+    "altloc": "",
+    "signed_volume": -2.5718,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DAR",
+    "chain": "B",
+    "resnum": 12,
+    "altloc": "",
+    "signed_volume": -2.3251,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DAS",
+    "chain": "D",
+    "resnum": 1,
+    "altloc": "",
+    "signed_volume": -2.6525,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DTR",
+    "chain": "D",
+    "resnum": 2,
+    "altloc": "",
+    "signed_volume": -2.4977,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DTR",
+    "chain": "D",
+    "resnum": 3,
+    "altloc": "",
+    "signed_volume": -2.5146,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DPR",
+    "chain": "D",
+    "resnum": 4,
+    "altloc": "",
+    "signed_volume": -1.6248,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DLE",
+    "chain": "D",
+    "resnum": 5,
+    "altloc": "",
+    "signed_volume": -2.2589,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DAL",
+    "chain": "D",
+    "resnum": 6,
+    "altloc": "",
+    "signed_volume": -2.5703,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DPN",
+    "chain": "D",
+    "resnum": 7,
+    "altloc": "",
+    "signed_volume": -2.6459,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DGL",
+    "chain": "D",
+    "resnum": 8,
+    "altloc": "",
+    "signed_volume": -2.3284,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DAL",
+    "chain": "D",
+    "resnum": 9,
+    "altloc": "",
+    "signed_volume": -2.4757,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DLE",
+    "chain": "D",
+    "resnum": 10,
+    "altloc": "",
+    "signed_volume": -2.3609,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DLE",
+    "chain": "D",
+    "resnum": 11,
+    "altloc": "",
+    "signed_volume": -2.499,
+    "status": "D-correct"
+  },
+  {
+    "pdb_id": "3IWY",
+    "resname": "DAR",
+    "chain": "D",
+    "resnum": 12,
+    "altloc": "",
+    "signed_volume": -2.5193,
+    "status": "D-correct"
+  }
+]
