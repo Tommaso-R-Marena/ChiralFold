@@ -7,17 +7,20 @@ mixed L/D diastereomers, compared to AlphaFold 3's 51% violation rate.
 
 Quick start::
 
-    from chiralfold import ChiralFold
+    from chiralfold import ChiralFold, MirrorImagePredictor
 
     model = ChiralFold()
 
-    # Pure D-peptide
+    # Pure D-peptide (with planarity fix)
     result = model.predict('AFWKELDR')
 
     # Mixed L/D diastereomer
     result = model.predict('AFWKELDR', chirality_pattern='DLDLDLDL')
 
-    # Mirror-image transformation
+    # Mirror-image PDB transformation (highest quality)
+    MirrorImagePredictor.from_pdb_id('1SHG', 'D_SH3.pdb')
+
+    # Mirror-image from coordinates
     import numpy as np
     l_coords = np.random.randn(100, 3)
     result = model.predict_from_mirror(l_coords, 'AEAAAKEAAA')
@@ -27,7 +30,7 @@ Reference:
     Folding Problem for D-Peptides?" bioRxiv 2025.03.14.643307
 """
 
-__version__ = "2.1.0"
+__version__ = "2.2.0"
 __author__ = "ChiralFold Contributors"
 
 from .model import (
@@ -44,6 +47,16 @@ from .validator import (
     validate_3d_chirality,
     validate_diastereomer,
 )
+from .pdb_pipeline import (
+    mirror_pdb,
+    mirror_pdb_string,
+    fetch_and_mirror,
+    validate_mirror,
+)
+from .geometry import (
+    enforce_peptide_planarity,
+    measure_planarity_quality,
+)
 
 __all__ = [
     'ChiralFold',
@@ -56,4 +69,10 @@ __all__ = [
     'validate_smiles_chirality',
     'validate_3d_chirality',
     'validate_diastereomer',
+    'mirror_pdb',
+    'mirror_pdb_string',
+    'fetch_and_mirror',
+    'validate_mirror',
+    'enforce_peptide_planarity',
+    'measure_planarity_quality',
 ]

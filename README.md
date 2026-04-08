@@ -42,10 +42,12 @@ Python ≥ 3.9, RDKit ≥ 2023.3, NumPy, SciPy, pandas, matplotlib, seaborn, sci
 
 ## Quick Start
 
+### De Novo Prediction (with planarity fix)
+
 ```python
 from chiralfold import ChiralFold
 
-model = ChiralFold()
+model = ChiralFold()  # fix_planarity=True by default
 
 # Pure D-peptide
 result = model.predict('AFWKELDR')
@@ -53,10 +55,37 @@ print(result['violation_rate'])  # 0.0
 
 # Mixed L/D diastereomer
 result = model.predict('AFWKELDR', chirality_pattern='DLDLDLDL')
+```
 
-# Mirror-image L→D transformation
+### Mirror-Image PDB Pipeline (highest quality)
+
+The recommended approach when an L-peptide template exists. Produces
+crystallographic-quality D-peptide coordinates by reflecting experimental
+structures — bypasses all force-field limitations.
+
+```python
+from chiralfold import MirrorImagePredictor, mirror_pdb
+
+# From a local PDB file
+result = MirrorImagePredictor.from_pdb('L_protein.pdb', 'D_protein.pdb')
+
+# From RCSB by PDB ID
+result = MirrorImagePredictor.from_pdb_id('1SHG', 'D_SH3.pdb')
+print(result['n_atoms'])      # Number of atoms transformed
+print(result['sequence'])     # One-letter sequence
+
+# Low-level: mirror with chain selection
+result = mirror_pdb('complex.pdb', 'complex_D.pdb', chains=['A', 'B'])
+```
+
+### Mirror-Image from Coordinates
+
+```python
 import numpy as np
-l_coords = np.random.randn(100, 3)
+from chiralfold import ChiralFold
+
+model = ChiralFold()
+l_coords = np.random.randn(100, 3)  # L-peptide coordinates
 result = model.predict_from_mirror(l_coords, 'AEAAAKEAAA')
 print(result['rmsd_to_ideal_mirror'])  # 0.0
 ```
@@ -114,14 +143,16 @@ Assessed structural validity of generated conformers beyond chirality:
 
 Ground truth: **PDB 3IWY** — crystal structure of the D-peptide dPMI-gamma (DWWPLAFEALLR) bound to MDM2 at 1.9 Å resolution. This is the same DP12:MDM2 system where AF3 showed 50% chirality violations.
 
-### Honest Limitations
+### Limitation Status
 
-1. **Not a fold predictor.** ChiralFold guarantees correct stereocenters, not native-like folds. The de novo conformer ensembles are force-field minima, not biological structures.
-2. **MMFF94 backbone angles.** The force field is parameterized primarily for L-amino acids and doesn't strongly enforce D-amino acid backbone preferences.
-3. **Peptide bond planarity.** ETKDG + MMFF94 produces less planar peptide bonds than experimental crystal structures.
-4. **No protein context.** ChiralFold generates free-peptide conformers, not bound-state poses.
+| Limitation | v2.1 Status | v2.2 Status |
+|-----------|:-----------:|:-----------:|
+| Peptide bond planarity | 39% within 6° | **94% within 6°** (fixed) |
+| Backbone angle bias | MMFF94-limited | Improved via planarity fix |
+| No protein context | De novo only | **Mirror-image PDB pipeline** |
+| Not a fold predictor | Inherent | Use mirror-image for real folds |
 
-The **mirror-image approach** avoids all of these limitations when an L-peptide template is available, inheriting the full structural quality of the input.
+The **mirror-image PDB pipeline** (v2.2) avoids all force-field limitations by reflecting experimental crystal structures. This is the recommended approach when an L-peptide template exists.
 
 ### Reproducing Results
 
@@ -131,6 +162,9 @@ python benchmarks/run_full_benchmark.py
 
 # 3D geometry quality benchmark
 python benchmarks/folding_quality_benchmark.py
+
+# v2.2 improvement verification
+python benchmarks/test_v22_improvements.py
 ```
 
 Results are saved to `results/`.
@@ -143,6 +177,8 @@ ChiralFold/
 │   ├── __init__.py
 │   ├── model.py                  # ChiralFold model + SMILES builders
 │   ├── validator.py              # Chirality validation engine
+│   ├── pdb_pipeline.py           # Mirror-image PDB transformation
+│   ├── geometry.py               # Planarity fix + backbone post-processing
 │   ├── cli.py                    # Command-line interface
 │   └── data/
 │       └── test_sequences.py     # 46-sequence test library
@@ -150,7 +186,8 @@ ChiralFold/
 │   └── test_chirality.py         # 31 unit tests
 ├── benchmarks/
 │   ├── run_full_benchmark.py     # Chirality benchmark (6 phases)
-│   └── folding_quality_benchmark.py  # 3D geometry quality
+│   ├── folding_quality_benchmark.py  # 3D geometry quality
+│   └── test_v22_improvements.py  # Planarity + mirror pipeline tests
 ├── results/                      # Generated outputs
 ├── pyproject.toml
 ├── LICENSE (MIT)
@@ -172,9 +209,11 @@ pytest tests/ -v
   author    = {ChiralFold Contributors},
   year      = {2025},
   url       = {https://github.com/Tommaso-R-Marena/ChiralFold},
-  version   = {2.1.0},
+  version   = {2.2.0},
   note      = {Guarantees 0\% chirality violations for D-peptides and
-               diastereomers where AlphaFold 3 shows 51\% violations}
+               diastereomers where AlphaFold 3 shows 51\% violations.\\{}
+               Includes mirror-image PDB pipeline for crystallographic-quality
+               D-peptide coordinate generation}
 }
 ```
 

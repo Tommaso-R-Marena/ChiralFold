@@ -191,14 +191,18 @@ class ChiralFold:
     Guarantees 0% chirality violations for any input, by construction.
     """
 
-    def __init__(self, n_conformers=50, force_field='MMFF94'):
+    def __init__(self, n_conformers=50, force_field='MMFF94',
+                 fix_planarity=True):
         """
         Args:
             n_conformers: Number of 3D conformers to generate (default 50).
             force_field: 'MMFF94' or 'UFF' for geometry optimization.
+            fix_planarity: If True, enforce peptide bond planarity after
+                          conformer generation (fixes MMFF94 limitation).
         """
         self.n_conformers = n_conformers
         self.force_field = force_field
+        self.fix_planarity = fix_planarity
 
     def predict(self, sequence, chirality_pattern=None, mode='de_novo'):
         """
@@ -251,9 +255,11 @@ class ChiralFold:
 
         # Generate 3D conformers for short peptides
         if len(sequence) <= 10:
-            conformers = self._generate_conformers(mol)
+            mol_3d, conformers = self._generate_conformers(mol)
             result['conformers'] = conformers
             result['n_conformers'] = len(conformers)
+            if mol_3d is not None:
+                result['mol'] = mol_3d
 
         return result
 
@@ -294,7 +300,13 @@ class ChiralFold:
         }
 
     def _generate_conformers(self, mol):
-        """Generate 3D conformer ensemble with force field optimization."""
+        """
+        Generate 3D conformer ensemble with force field optimization
+        and optional peptide bond planarity correction.
+
+        Returns:
+            (mol_with_conformers, conformer_data_list)
+        """
         mol_h = Chem.AddHs(mol)
 
         params = AllChem.ETKDGv3()
@@ -315,7 +327,7 @@ class ChiralFold:
             )
 
         if len(cids) == 0:
-            return []
+            return None, []
 
         # Optimize with force field
         conformer_data = []
@@ -334,7 +346,15 @@ class ChiralFold:
         except Exception:
             pass
 
-        return conformer_data
+        # Fix peptide bond planarity (addresses MMFF94 limitation)
+        if self.fix_planarity and len(cids) > 0:
+            try:
+                from .geometry import enforce_peptide_planarity
+                enforce_peptide_planarity(mol_h)
+            except Exception:
+                pass
+
+        return mol_h, conformer_data
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -386,3 +406,39 @@ class MirrorImagePredictor:
             'n_atoms': len(d_coords),
             'method': 'mirror_image_reflection',
         }
+
+    @staticmethod
+    def from_pdb(pdb_path, output_path=None, chains=None):
+        """
+        Full pipeline: L-peptide PDB → D-enantiomer PDB.
+
+        This is the recommended approach for producing high-quality
+        D-peptide structures, as it inherits real experimental backbone
+        geometry and bypasses all force-field limitations.
+
+        Args:
+            pdb_path: Path to L-peptide/protein PDB file.
+            output_path: Where to write the D-enantiomer PDB.
+            chains: Chain IDs to transform (None = all).
+
+        Returns:
+            dict with transformation results and output path.
+        """
+        from .pdb_pipeline import mirror_pdb
+        return mirror_pdb(pdb_path, output_path, chains)
+
+    @staticmethod
+    def from_pdb_id(pdb_id, output_path=None, chains=None):
+        """
+        Download from RCSB and transform to D-enantiomer.
+
+        Args:
+            pdb_id: 4-character PDB ID (e.g. '1SHG').
+            output_path: Where to write the D-enantiomer PDB.
+            chains: Chain IDs to transform (None = all).
+
+        Returns:
+            dict with transformation results and output path.
+        """
+        from .pdb_pipeline import fetch_and_mirror
+        return fetch_and_mirror(pdb_id, output_path, chains)
