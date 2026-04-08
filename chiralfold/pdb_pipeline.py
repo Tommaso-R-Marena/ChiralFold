@@ -39,6 +39,11 @@ L_TO_D_RESNAME = {
 D_TO_L_RESNAME = {v: k for k, v in L_TO_D_RESNAME.items()}
 D_TO_L_RESNAME['GLY'] = 'GLY'  # Glycine is achiral
 
+# Combined: any standard residue name → its enantiomer's name
+ENANTIOMER_RESNAME = {}
+ENANTIOMER_RESNAME.update(L_TO_D_RESNAME)
+ENANTIOMER_RESNAME.update(D_TO_L_RESNAME)
+
 # One-letter ↔ three-letter
 _ONE_TO_THREE = {
     'A': 'ALA', 'R': 'ARG', 'N': 'ASN', 'D': 'ASP', 'C': 'CYS',
@@ -170,10 +175,10 @@ def mirror_pdb(input_path, output_path=None, chains=None, axis='x',
                 else:
                     atom.z = -atom.z
 
-                # Rename residue L → D
-                if rename_residues and atom.resname in L_TO_D_RESNAME:
+                # Rename residues to enantiomeric names (L→D or D→L)
+                if rename_residues and atom.resname in ENANTIOMER_RESNAME:
                     old_name = atom.resname
-                    atom.resname = L_TO_D_RESNAME[old_name]
+                    atom.resname = ENANTIOMER_RESNAME[old_name]
                     if old_name != atom.resname:
                         n_renamed += 1
 

@@ -253,9 +253,15 @@ class ChiralFold:
             'conformers': [],
         }
 
-        # Generate 3D conformers for short peptides
-        if len(sequence) <= 10:
-            mol_3d, conformers = self._generate_conformers(mol)
+        # Generate 3D conformers
+        # v3: removed hard 10-residue limit; scales n_conformers adaptively
+        max_len = 30 if self.n_conformers <= 10 else 20
+        if len(sequence) <= max_len:
+            n_adj = self.n_conformers
+            if len(sequence) > 10:
+                # Reduce conformer count for longer peptides (slower generation)
+                n_adj = max(3, self.n_conformers // (1 + (len(sequence) - 10) // 5))
+            mol_3d, conformers = self._generate_conformers(mol, n_override=n_adj)
             result['conformers'] = conformers
             result['n_conformers'] = len(conformers)
             if mol_3d is not None:
@@ -299,7 +305,7 @@ class ChiralFold:
             ),
         }
 
-    def _generate_conformers(self, mol):
+    def _generate_conformers(self, mol, n_override=None):
         """
         Generate 3D conformer ensemble with force field optimization
         and optional peptide bond planarity correction.
@@ -307,15 +313,17 @@ class ChiralFold:
         Returns:
             (mol_with_conformers, conformer_data_list)
         """
+        n_confs = n_override if n_override is not None else self.n_conformers
         mol_h = Chem.AddHs(mol)
 
         params = AllChem.ETKDGv3()
         params.numThreads = 0
         params.randomSeed = 42
         params.pruneRmsThresh = 0.5
+        params.maxIterations = 500  # more iterations for longer peptides
 
         cids = AllChem.EmbedMultipleConfs(
-            mol_h, numConfs=self.n_conformers, params=params
+            mol_h, numConfs=n_confs, params=params
         )
 
         if len(cids) == 0:
@@ -323,7 +331,7 @@ class ChiralFold:
             params2.useRandomCoords = True
             params2.randomSeed = 42
             cids = AllChem.EmbedMultipleConfs(
-                mol_h, numConfs=self.n_conformers, params=params2
+                mol_h, numConfs=n_confs, params=params2
             )
 
         if len(cids) == 0:

@@ -30,7 +30,7 @@ Reference:
     Folding Problem for D-Peptides?" bioRxiv 2025.03.14.643307
 """
 
-__version__ = "2.2.0"
+__version__ = "3.0.0"
 __author__ = "ChiralFold Contributors"
 
 from .model import (
@@ -57,6 +57,14 @@ from .geometry import (
     enforce_peptide_planarity,
     measure_planarity_quality,
 )
+from .ramachandran import (
+    score_ramachandran,
+    filter_conformers_by_ramachandran,
+)
+from .auditor import (
+    audit_pdb,
+    format_report,
+)
 
 __all__ = [
     'ChiralFold',
@@ -75,4 +83,8 @@ __all__ = [
     'validate_mirror',
     'enforce_peptide_planarity',
     'measure_planarity_quality',
+    'score_ramachandran',
+    'filter_conformers_by_ramachandran',
+    'audit_pdb',
+    'format_report',
 ]
