@@ -31,7 +31,7 @@ Reference:
 """
 
 __version__ = "3.0.0"
-__author__ = "ChiralFold Contributors"
+__author__ = "Tommaso R. Marena"
 
 from .model import (
     ChiralFold,

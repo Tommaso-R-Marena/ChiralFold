@@ -249,7 +249,7 @@ ChiralFold/
 ```bibtex
 @software{chiralfold2025,
   title     = {ChiralFold: General-Purpose Protein Stereochemistry Toolkit},
-  author    = {ChiralFold Contributors},
+  author    = {Tommaso R. Marena},
   year      = {2025},
   url       = {https://github.com/Tommaso-R-Marena/ChiralFold},
   version   = {3.2.0},
