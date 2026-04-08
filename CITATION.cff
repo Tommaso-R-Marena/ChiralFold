@@ -1,0 +1,81 @@
+cff-version: 1.2.0
+title: "ChiralFold: General-Purpose Protein Stereochemistry Toolkit"
+message: "If you use this software or dataset, please cite it as below."
+type: software
+authors:
+  - family-names: Marena
+    given-names: Tommaso R.
+    email: marena@cua.edu
+    affiliation: The Catholic University of America
+    orcid: ""
+repository-code: "https://github.com/Tommaso-R-Marena/ChiralFold"
+url: "https://github.com/Tommaso-R-Marena/ChiralFold"
+license: MIT
+version: "3.2.0"
+date-released: "2025-04-08"
+keywords:
+  - chirality
+  - stereochemistry
+  - D-amino-acid
+  - protein-structure
+  - PDB-validation
+  - mirror-image
+  - diastereomer
+  - AlphaFold
+  - drug-design
+abstract: >-
+  ChiralFold is a general-purpose protein stereochemistry toolkit for
+  chirality-correct structure generation, PDB auditing, and mirror-image
+  L↔D transformation. It includes a MolProbity-calibrated quality
+  auditor validated against wwPDB reports (Spearman ρ = 0.49, p = 0.006
+  on 31 structures), an AlphaFold 3 chirality correction pipeline, and
+  a mirror-image binder design workflow validated on MDM2 (dPMI-γ,
+  Kd = 53 nM). An independent verification of 1,677 D-amino acid
+  residues across 231 PDB files identified 21 genuine chirality errors
+  (1.3% error rate) in 12 deposited structures where Cα coordinates
+  show L-stereochemistry despite D-amino acid labels — errors invisible
+  to MolProbity. The verification dataset with raw coordinates is
+  included for independent reproduction.
+references:
+  - type: article
+    title: "Has AlphaFold 3 Solved the Protein Folding Problem for D-Peptides?"
+    authors:
+      - family-names: Childs
+        given-names: Cameron M.
+      - family-names: Zhou
+        given-names: Pei
+      - family-names: Donald
+        given-names: Bruce R.
+    journal: bioRxiv
+    year: 2025
+    doi: "10.1101/2025.03.14.643307"
+  - type: article
+    title: "D-peptide inhibitors of the p53-MDM2 interaction for targeted molecular therapy of malignant neoplasms"
+    authors:
+      - family-names: Liu
+        given-names: Meng
+      - family-names: Li
+        given-names: Chang
+      - family-names: Pazgier
+        given-names: Maciej
+      - family-names: Li
+        given-names: Chong
+      - family-names: Mao
+        given-names: Yibing
+      - family-names: Lv
+        given-names: Yongfang
+      - family-names: Gu
+        given-names: Bing
+      - family-names: Wei
+        given-names: Geng
+      - family-names: Yuan
+        given-names: Wuyuan
+      - family-names: Zhan
+        given-names: Changqing
+      - family-names: Lu
+        given-names: Wei-Yue
+      - family-names: Lu
+        given-names: Wuyuan
+    journal: "Proceedings of the National Academy of Sciences"
+    year: 2010
+    doi: "10.1073/pnas.1008930107"
