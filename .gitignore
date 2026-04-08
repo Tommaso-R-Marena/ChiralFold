@@ -11,3 +11,5 @@ build/
 .venv/
 venv/
 *.so
+results/*.pdb
+!results/*_D_mirror.pdb
