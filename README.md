@@ -255,10 +255,15 @@ Residues: 189. Chirality: 181 correct, 0 wrong, 8 Gly (100.0%). Ramachandran: 95
 0/478 chiral residues violated across DP19 (DEHELLETAARWFYEIAKR, PDB 7YH8), DP9 (LWQHEATWK, PDB 5N8T), DP12 (DWWPLAFEALLR, PDB 3IWY), and 26 L/D pattern variants.
 
 **MDM2 Interface Score (1YCR, p53:MDM2):**
-Buried Surface Area: 1,980 A^2. Shape Complementarity: 0.933. Hydrogen bonds: 10. Interface score: 61.9/100.
+Buried Surface Area: 1,980 Å². Shape Complementarity: 0.933. Hydrogen bonds: 10. Interface score: 61.9/100.
 
 **D-Residue Survey (200 PDB structures):**
 10 genuine D-AA chirality errors in 8 structures: 1ABI (DPN), 1BG0 (DAR), 1HHZ (DAL), 1MCB (DHI), 1P52 (DAR), 1XT7 (DSG), 2AOU (DCY), 2ATS (DLY x3).
+
+Manual verification of 3 flagged structures confirms errors are real:
+- 1ABI: DPN at position 56 (chain I) has signed volume +2.49 (L-like) while labeled D. (DPN at position 1 is correctly D with volume -2.60.)
+- 1BG0: DAR at position 403 (chain A) has signed volume +2.58 (L-like) while labeled D.
+- 2ATS: All three DLY residues (3001-3003, chain A) have signed volumes +2.56 to +2.59 (L-like) while labeled D.
 
 **Batch Audit (validated against this README):**
 1UBQ: 100% chirality, 97.3% Rama favored, 96.0% planarity, score 78.6.
