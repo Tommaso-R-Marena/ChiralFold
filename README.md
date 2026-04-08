@@ -166,9 +166,26 @@ Fisher's exact test: p < 6.7×10⁻¹⁴⁴. 31 PDB structures audited: 30/31 = 
 
 41 sequences using the real D-peptide sequences from the Childs et al. (2025) PDB structures: DP19:L-19437 (DEHELLETAARWFYEIAKR, PDB 7YH8), DP9:Streptavidin (LWQHEATWK, PDB 5N8T), DP12:MDM2 (DWWPLAFEALLR, PDB 3IWY), plus L/D pattern variants. ChiralFold: 0/478 chiral residues violated. AF3: 50–52% per-residue violation rate on the same systems. See `benchmarks/childs2025_comparison.py`.
 
-### PDB-Wide D-Residue Survey
+### PDB-Wide D-Residue Chirality Verification
 
-Audited 200 PDB structures containing D-amino acid residues (from 1,291 total in RCSB). Found 10 genuine D-AA chirality errors in 8 structures where the deposited Cα coordinates are inconsistent with the labeled D-stereochemistry. These errors are invisible to MolProbity.
+Independently verified (no ChiralFold code — numpy + raw PDB coordinates only) 1,677 D-amino acid residues across 231 PDB files. Found **21 genuine chirality errors in 12 structures** where the deposited Cα coordinates show L-stereochemistry despite being labeled as D-amino acids. Error rate: 1.3%. These errors are invisible to MolProbity.
+
+| PDB | Residue | Chain | Pos | Signed Volume | Notes |
+|-----|---------|:-----:|:---:|:-------------:|-------|
+| 1ABI | DPN | I | 56 | +2.49 | D-Phe labeled, L-coordinates |
+| 1BG0 | DAR | A | 403 | +2.58 | D-Arg labeled, L-coordinates |
+| 1D7T | DTY | A | 4 | +1.85 | D-Tyr labeled, L-coordinates |
+| 1HHZ | DAL | E | 1 | +2.70 | D-Ala labeled, L-coordinates |
+| 1KO0 | DLY | A | 542 | +0.12 | D-Lys, marginally L |
+| 1MCB | DHI | P | 3 | +2.60 | D-His labeled, L-coordinates |
+| 1OF6 | DTY | A-H | 1369-1370 | +2.51 to +2.67 | 8 errors across 8 chains |
+| 1P52 | DAR | A | 403 | +2.54 | D-Arg labeled, L-coordinates |
+| 1UHG | DSN | D | 164 | +2.21 | D-Ser labeled, L-coordinates |
+| 1XT7 | DSG | A | 3 | +2.55 | D-Asn labeled, L-coordinates |
+| 2AOU | DCY | A | 248 | +2.67 | D-Cys labeled, L-coordinates |
+| 2ATS | DLY | A | 3001-3003 | +2.56 to +2.59 | 3 errors in one structure |
+
+Full dataset: `results/d_residue_verification.csv` (1,678 rows with raw coordinates).
 
 ### Planarity Fix
 
@@ -257,13 +274,8 @@ Residues: 189. Chirality: 181 correct, 0 wrong, 8 Gly (100.0%). Ramachandran: 95
 **MDM2 Interface Score (1YCR, p53:MDM2):**
 Buried Surface Area: 1,980 Å². Shape Complementarity: 0.933. Hydrogen bonds: 10. Interface score: 61.9/100.
 
-**D-Residue Survey (200 PDB structures):**
-10 genuine D-AA chirality errors in 8 structures: 1ABI (DPN), 1BG0 (DAR), 1HHZ (DAL), 1MCB (DHI), 1P52 (DAR), 1XT7 (DSG), 2AOU (DCY), 2ATS (DLY x3).
-
-Manual verification of 3 flagged structures confirms errors are real:
-- 1ABI: DPN at position 56 (chain I) has signed volume +2.49 (L-like) while labeled D. (DPN at position 1 is correctly D with volume -2.60.)
-- 1BG0: DAR at position 403 (chain A) has signed volume +2.58 (L-like) while labeled D.
-- 2ATS: All three DLY residues (3001-3003, chain A) have signed volumes +2.56 to +2.59 (L-like) while labeled D.
+**D-Residue Verification (1,677 residues, independent of ChiralFold):**
+21 genuine chirality errors in 12 PDB structures. Error rate: 1.3%. Verified using only numpy and raw PDB coordinates (no ChiralFold code). All 21 errors have positive signed tetrahedron volumes (+0.12 to +2.70) indicating L-stereochemistry despite D-amino acid labels. Full dataset with raw coordinates: `results/d_residue_verification.csv`.
 
 **Batch Audit (validated against this README):**
 1UBQ: 100% chirality, 97.3% Rama favored, 96.0% planarity, score 78.6.

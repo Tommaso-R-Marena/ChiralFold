@@ -1,0 +1,209 @@
+{
+  "description": "Independent D-amino acid chirality verification using signed tetrahedron volume",
+  "method": "signed_volume = dot(N-CA, cross(C-CA, CB-CA)). Negative = D, Positive = L.",
+  "code_used": "numpy only, no ChiralFold",
+  "pdb_files_scanned": 238,
+  "files_with_d_aa": 231,
+  "total_d_residues": 1678,
+  "checkable_residues": 1677,
+  "incomplete_residues": 1,
+  "d_correct": 1656,
+  "l_error": 21,
+  "flat_ambiguous": 0,
+  "error_rate_pct": 1.25,
+  "errors": [
+    {
+      "pdb_id": "1ABI",
+      "chain": "I",
+      "resnum": 56,
+      "resname": "DPN",
+      "one_letter": "F",
+      "signed_volume": 2.4884
+    },
+    {
+      "pdb_id": "1BG0",
+      "chain": "A",
+      "resnum": 403,
+      "resname": "DAR",
+      "one_letter": "R",
+      "signed_volume": 2.5832
+    },
+    {
+      "pdb_id": "1D7T",
+      "chain": "A",
+      "resnum": 4,
+      "resname": "DTY",
+      "one_letter": "Y",
+      "signed_volume": 1.8491
+    },
+    {
+      "pdb_id": "1HHZ",
+      "chain": "E",
+      "resnum": 1,
+      "resname": "DAL",
+      "one_letter": "A",
+      "signed_volume": 2.7037
+    },
+    {
+      "pdb_id": "1KO0",
+      "chain": "A",
+      "resnum": 542,
+      "resname": "DLY",
+      "one_letter": "K",
+      "signed_volume": 0.1156
+    },
+    {
+      "pdb_id": "1MCB",
+      "chain": "P",
+      "resnum": 3,
+      "resname": "DHI",
+      "one_letter": "H",
+      "signed_volume": 2.5975
+    },
+    {
+      "pdb_id": "1OF6",
+      "chain": "A",
+      "resnum": 1370,
+      "resname": "DTY",
+      "one_letter": "Y",
+      "signed_volume": 2.5687
+    },
+    {
+      "pdb_id": "1OF6",
+      "chain": "B",
+      "resnum": 1370,
+      "resname": "DTY",
+      "one_letter": "Y",
+      "signed_volume": 2.611
+    },
+    {
+      "pdb_id": "1OF6",
+      "chain": "C",
+      "resnum": 1371,
+      "resname": "DTY",
+      "one_letter": "Y",
+      "signed_volume": 2.5737
+    },
+    {
+      "pdb_id": "1OF6",
+      "chain": "D",
+      "resnum": 1370,
+      "resname": "DTY",
+      "one_letter": "Y",
+      "signed_volume": 2.6275
+    },
+    {
+      "pdb_id": "1OF6",
+      "chain": "E",
+      "resnum": 1370,
+      "resname": "DTY",
+      "one_letter": "Y",
+      "signed_volume": 2.5884
+    },
+    {
+      "pdb_id": "1OF6",
+      "chain": "F",
+      "resnum": 1370,
+      "resname": "DTY",
+      "one_letter": "Y",
+      "signed_volume": 2.5288
+    },
+    {
+      "pdb_id": "1OF6",
+      "chain": "G",
+      "resnum": 1369,
+      "resname": "DTY",
+      "one_letter": "Y",
+      "signed_volume": 2.5144
+    },
+    {
+      "pdb_id": "1OF6",
+      "chain": "H",
+      "resnum": 1369,
+      "resname": "DTY",
+      "one_letter": "Y",
+      "signed_volume": 2.6691
+    },
+    {
+      "pdb_id": "1P52",
+      "chain": "A",
+      "resnum": 403,
+      "resname": "DAR",
+      "one_letter": "R",
+      "signed_volume": 2.5364
+    },
+    {
+      "pdb_id": "1UHG",
+      "chain": "D",
+      "resnum": 164,
+      "resname": "DSN",
+      "one_letter": "S",
+      "signed_volume": 2.2136
+    },
+    {
+      "pdb_id": "1XT7",
+      "chain": "A",
+      "resnum": 3,
+      "resname": "DSG",
+      "one_letter": "N",
+      "signed_volume": 2.5501
+    },
+    {
+      "pdb_id": "2AOU",
+      "chain": "A",
+      "resnum": 248,
+      "resname": "DCY",
+      "one_letter": "C",
+      "signed_volume": 2.6722
+    },
+    {
+      "pdb_id": "2ATS",
+      "chain": "A",
+      "resnum": 3001,
+      "resname": "DLY",
+      "one_letter": "K",
+      "signed_volume": 2.5854
+    },
+    {
+      "pdb_id": "2ATS",
+      "chain": "A",
+      "resnum": 3002,
+      "resname": "DLY",
+      "one_letter": "K",
+      "signed_volume": 2.5778
+    },
+    {
+      "pdb_id": "2ATS",
+      "chain": "A",
+      "resnum": 3003,
+      "resname": "DLY",
+      "one_letter": "K",
+      "signed_volume": 2.5571
+    }
+  ],
+  "errors_by_type": {
+    "DTY": 9,
+    "DLY": 4,
+    "DAR": 2,
+    "DPN": 1,
+    "DAL": 1,
+    "DHI": 1,
+    "DSN": 1,
+    "DSG": 1,
+    "DCY": 1
+  },
+  "errors_by_structure": {
+    "1OF6": 8,
+    "2ATS": 3,
+    "1ABI": 1,
+    "1BG0": 1,
+    "1D7T": 1,
+    "1HHZ": 1,
+    "1KO0": 1,
+    "1MCB": 1,
+    "1P52": 1,
+    "1UHG": 1,
+    "1XT7": 1,
+    "2AOU": 1
+  }
+}
