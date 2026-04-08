@@ -1,0 +1,4 @@
+pdb_id,chirality_pct,rama_favored_pct,rama_outlier_pct,planarity_pct,clash_score,overall_score
+1UBQ,100.0,97.3,0.0,96.0,262.46,78.6
+1CRN,100.0,88.64,0.0,91.11,299.69,72.1
+1SHG,100.0,92.73,1.82,66.07,260.59,70.0

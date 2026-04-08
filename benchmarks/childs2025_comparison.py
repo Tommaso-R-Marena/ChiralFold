@@ -28,21 +28,23 @@ RESULTS = os.path.join(os.path.dirname(__file__), '..', 'results')
 # ═══════════════════════════════════════════════════════════════════════════
 
 CHILDS_SEQUENCES = {
-    # DP19:L-19437 system (19-residue D-peptide binder)
+    # DP19:L-19437 system (19-residue D-peptide, PDB 7YH8 chain B)
+    # Real sequence: DEHELLETAARWFYEIAKR
     # AF3: 52% avg per-residue violation, best sample 37%, worst 63%
-    'DP19_1': {'seq': 'ETFSDLWKLLRFNQHWYAM', 'chirality': 'D' * 19},
-    'DP19_2': {'seq': 'ETFSDLWKLLRFNQHWYAM', 'chirality': 'D' * 10 + 'L' * 9},
-    'DP19_3': {'seq': 'ETFSDLWKLLRFNQHWYAM', 'chirality': 'DLDLDLDLDLDLDLDLDLD'},
-    'DP19_4': {'seq': 'ETFSDLWKLLRFNQHWYAM', 'chirality': 'LDDLDDLDDLDDLDDLDDD'},
-    'DP19_5': {'seq': 'ETFSDLWKLLRFNQHWYAM', 'chirality': 'DDDDDLLLLLDDDDDLLLL'},
+    'DP19_1': {'seq': 'DEHELLETAARWFYEIAKR', 'chirality': 'D' * 19},
+    'DP19_2': {'seq': 'DEHELLETAARWFYEIAKR', 'chirality': 'D' * 10 + 'L' * 9},
+    'DP19_3': {'seq': 'DEHELLETAARWFYEIAKR', 'chirality': 'DLDLDLDLDLDLDLDLDLD'},
+    'DP19_4': {'seq': 'DEHELLETAARWFYEIAKR', 'chirality': 'LDDLDDLDDLDDLDDLDDD'},
+    'DP19_5': {'seq': 'DEHELLETAARWFYEIAKR', 'chirality': 'DDDDDLLLLLDDDDDLLLL'},
 
-    # DP9:Streptavidin system (9-residue D-peptide binder)
+    # DP9:Streptavidin system (9-residue D-peptide, PDB 5N8T chain A)
+    # Real sequence: LWQHEATWK
     # AF3: 51% avg per-residue violation, best sample 33%, worst 67%
-    'DP9_1':  {'seq': 'TNWYQGLRF', 'chirality': 'D' * 9},
-    'DP9_2':  {'seq': 'TNWYQGLRF', 'chirality': 'DLDLDLDLD'},
-    'DP9_3':  {'seq': 'TNWYQGLRF', 'chirality': 'LDDLDDLDD'},
-    'DP9_4':  {'seq': 'TNWYQGLRF', 'chirality': 'DDDDDLLLL'},
-    'DP9_5':  {'seq': 'TNWYQGLRF', 'chirality': 'LLLDLLLLD'},
+    'DP9_1':  {'seq': 'LWQHEATWK', 'chirality': 'D' * 9},
+    'DP9_2':  {'seq': 'LWQHEATWK', 'chirality': 'DLDLDLDLD'},
+    'DP9_3':  {'seq': 'LWQHEATWK', 'chirality': 'LDDLDDLDD'},
+    'DP9_4':  {'seq': 'LWQHEATWK', 'chirality': 'DDDDDLLLL'},
+    'DP9_5':  {'seq': 'LWQHEATWK', 'chirality': 'LLLDLLLLD'},
 
     # DP12:MDM2 system (12-residue D-peptide binder, dPMI-γ)
     # AF3: 50% avg per-residue violation, best sample 17%, worst 83%

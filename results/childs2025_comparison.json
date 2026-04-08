@@ -1,6 +1,6 @@
 {
   "n_sequences": 41,
-  "total_chiral_residues": 473,
+  "total_chiral_residues": 478,
   "total_violations": 0,
   "chiralfold_rate": 0.0,
   "af3_rate": 0.51,
@@ -8,7 +8,7 @@
   "per_sequence": [
     {
       "id": "DP19_1",
-      "seq": "ETFSDLWKLLRFNQHWYAM",
+      "seq": "DEHELLETAARWFYEIAKR",
       "chirality": "DDDDDDDDDDDDDDDDDDD",
       "n_chiral": 19,
       "violations": 0,
@@ -16,7 +16,7 @@
     },
     {
       "id": "DP19_2",
-      "seq": "ETFSDLWKLLRFNQHWYAM",
+      "seq": "DEHELLETAARWFYEIAKR",
       "chirality": "DDDDDDDDDDLLLLLLLLL",
       "n_chiral": 19,
       "violations": 0,
@@ -24,7 +24,7 @@
     },
     {
       "id": "DP19_3",
-      "seq": "ETFSDLWKLLRFNQHWYAM",
+      "seq": "DEHELLETAARWFYEIAKR",
       "chirality": "DLDLDLDLDLDLDLDLDLD",
       "n_chiral": 19,
       "violations": 0,
@@ -32,7 +32,7 @@
     },
     {
       "id": "DP19_4",
-      "seq": "ETFSDLWKLLRFNQHWYAM",
+      "seq": "DEHELLETAARWFYEIAKR",
       "chirality": "LDDLDDLDDLDDLDDLDDD",
       "n_chiral": 19,
       "violations": 0,
@@ -40,7 +40,7 @@
     },
     {
       "id": "DP19_5",
-      "seq": "ETFSDLWKLLRFNQHWYAM",
+      "seq": "DEHELLETAARWFYEIAKR",
       "chirality": "DDDDDLLLLLDDDDDLLLL",
       "n_chiral": 19,
       "violations": 0,
@@ -48,41 +48,41 @@
     },
     {
       "id": "DP9_1",
-      "seq": "TNWYQGLRF",
+      "seq": "LWQHEATWK",
       "chirality": "DDDDDDDDD",
-      "n_chiral": 8,
+      "n_chiral": 9,
       "violations": 0,
       "rate": 0.0
     },
     {
       "id": "DP9_2",
-      "seq": "TNWYQGLRF",
+      "seq": "LWQHEATWK",
       "chirality": "DLDLDLDLD",
-      "n_chiral": 8,
+      "n_chiral": 9,
       "violations": 0,
       "rate": 0.0
     },
     {
       "id": "DP9_3",
-      "seq": "TNWYQGLRF",
+      "seq": "LWQHEATWK",
       "chirality": "LDDLDDLDD",
-      "n_chiral": 8,
+      "n_chiral": 9,
       "violations": 0,
       "rate": 0.0
     },
     {
       "id": "DP9_4",
-      "seq": "TNWYQGLRF",
+      "seq": "LWQHEATWK",
       "chirality": "DDDDDLLLL",
-      "n_chiral": 8,
+      "n_chiral": 9,
       "violations": 0,
       "rate": 0.0
     },
     {
       "id": "DP9_5",
-      "seq": "TNWYQGLRF",
+      "seq": "LWQHEATWK",
       "chirality": "LLLDLLLLD",
-      "n_chiral": 8,
+      "n_chiral": 9,
       "violations": 0,
       "rate": 0.0
     },

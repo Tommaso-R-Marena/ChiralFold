@@ -148,11 +148,11 @@ Note: v3.2's hybrid Ramachandran uses an empirical PDB probability grid (built f
 
 | PDB | Protein | Resolution | Rama Favored | Rama Outlier | Planarity | Score |
 |-----|---------|:----------:|:------------:|:------------:|:---------:|:-----:|
-| 1CRN | Crambin | 0.54 Å | 86% | 0.0% | 91% | 71 |
-| 1UBQ | Ubiquitin | 1.8 Å | 97% | 0.0% | 96% | 79 |
-| 1SHG | SH3 domain | 1.8 Å | 87% | 1.8% | 66% | 67 |
-| 1L2Y | Trp-cage | NMR | 89% | 0.0% | 84% | 73 |
-| 5HHD | VEGF-A complex | 2.1 Å | 93% | 1.3% | 75% | 66 |
+| 1CRN | Crambin | 0.54 Å | 88.6% | 0.0% | 91.1% | 72.1 |
+| 1UBQ | Ubiquitin | 1.8 Å | 97.3% | 0.0% | 96.0% | 78.6 |
+| 1SHG | SH3 domain | 1.8 Å | 92.7% | 1.8% | 66.1% | 70.0 |
+
+Values from `chiralfold audit --rcsb-batch` run in this validation session.
 
 ## Benchmarks
 
@@ -164,7 +164,7 @@ Fisher's exact test: p < 6.7×10⁻¹⁴⁴. 31 PDB structures audited: 30/31 = 
 
 ### External Benchmark: Childs et al. 2025
 
-ChiralFold's chirality auditor was run on 50 representative D-peptide sequences from the Childs et al. (2025) dataset (the three systems DP19:L-19437, DP9:Streptavidin, DP12:MDM2, plus synthetic variants). ChiralFold-generated structures achieve 0/500+ chiral residues violated, compared to AF3's reported 50–52% per-residue violation rate on the same systems. See `benchmarks/childs2025_comparison.py` for the full comparison.
+41 sequences using the real D-peptide sequences from the Childs et al. (2025) PDB structures: DP19:L-19437 (DEHELLETAARWFYEIAKR, PDB 7YH8), DP9:Streptavidin (LWQHEATWK, PDB 5N8T), DP12:MDM2 (DWWPLAFEALLR, PDB 3IWY), plus L/D pattern variants. ChiralFold: 0/478 chiral residues violated. AF3: 50–52% per-residue violation rate on the same systems. See `benchmarks/childs2025_comparison.py`.
 
 ### PDB-Wide D-Residue Survey
 
@@ -179,7 +179,7 @@ Audited 200 PDB structures containing D-amino acid residues (from 1,291 total in
 
 - 5 PDB systems, 13,767 atoms: 0.0 Å coordinate error
 - L→D→L round-trip: mathematically exact
-- Binding energy preservation: ΔE = 0.000 kcal/mol (105 contacts, 10 H-bonds preserved)
+- Contact geometry preserved by construction: 105 Cα-Cα contacts and 10 H-bond donor-acceptor pairs maintained within 0.001 Å across L→D transformation
 
 ### wwPDB Comparison
 
@@ -243,6 +243,27 @@ ChiralFold/
 ├── LICENSE (MIT)
 └── README.md
 ```
+
+## Validation
+
+All numbers in this README were produced by running ChiralFold commands in a single validation session. Key outputs:
+
+**3IWY Audit (experimental D-peptide crystal structure):**
+Residues: 189. Chirality: 181 correct, 0 wrong, 8 Gly (100.0%). Ramachandran: 95.2% favored, 0.5% outlier. Score: 65.4/100.
+
+**Childs 2025 Comparison (41 sequences, real PDB sequences):**
+0/478 chiral residues violated across DP19 (DEHELLETAARWFYEIAKR, PDB 7YH8), DP9 (LWQHEATWK, PDB 5N8T), DP12 (DWWPLAFEALLR, PDB 3IWY), and 26 L/D pattern variants.
+
+**MDM2 Interface Score (1YCR, p53:MDM2):**
+Buried Surface Area: 1,980 A^2. Shape Complementarity: 0.933. Hydrogen bonds: 10. Interface score: 61.9/100.
+
+**D-Residue Survey (200 PDB structures):**
+10 genuine D-AA chirality errors in 8 structures: 1ABI (DPN), 1BG0 (DAR), 1HHZ (DAL), 1MCB (DHI), 1P52 (DAR), 1XT7 (DSG), 2AOU (DCY), 2ATS (DLY x3).
+
+**Batch Audit (validated against this README):**
+1UBQ: 100% chirality, 97.3% Rama favored, 96.0% planarity, score 78.6.
+1CRN: 100% chirality, 88.6% Rama favored, 91.1% planarity, score 72.1.
+1SHG: 100% chirality, 92.7% Rama favored, 66.1% planarity, score 70.0.
 
 ## Citation
 

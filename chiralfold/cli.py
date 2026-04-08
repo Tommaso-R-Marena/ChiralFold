@@ -170,7 +170,7 @@ def _cmd_audit(args):
         safe = {k: v for k, v in report.items() if k not in ('_atoms',)}
         print(json.dumps(safe, indent=2, default=str))
     else:
-        format_report(report)
+        print(format_report(report))
 
 
 def _audit_rcsb_batch(batch_file, output_csv):
@@ -278,13 +278,21 @@ def _cmd_score_interface(args):
     if args.json:
         print(json.dumps(result, indent=2, default=str))
     else:
-        print(f"Buried Surface Area:    {result.get('buried_surface_area', 0):.0f} Å²")
-        print(f"Shape Complementarity:  {result.get('shape_complementarity', 0):.3f}")
-        print(f"Hydrogen bonds:         {result.get('n_hbonds', 0)}")
-        print(f"Salt bridges:           {result.get('n_salt_bridges', 0)}")
-        print(f"Hydrophobic contacts:   {result.get('n_hydrophobic', 0)}")
-        print(f"Interface residues:     {result.get('n_interface_residues', 0)}")
-        print(f"Interface score:        {result.get('interface_score', 0):.1f}/100")
+        bsa = result.get('bsa', result.get('buried_surface_area', 0))
+        sc = result.get('shape_complementarity', {})
+        sc_val = sc.get('sc_fraction', 0) if isinstance(sc, dict) else sc
+        hb = result.get('hbonds', result.get('n_hbonds', 0))
+        sb = result.get('salt_bridges', result.get('n_salt_bridges', 0))
+        hc = result.get('hydrophobic_contacts', result.get('n_hydrophobic', 0))
+        n_pairs = result.get('n_interface_pairs', 0)
+        score = result.get('interface_score', 0)
+        print(f"Buried Surface Area:    {bsa:.0f} A^2")
+        print(f"Shape Complementarity:  {sc_val:.3f}")
+        print(f"Hydrogen bonds:         {hb}")
+        print(f"Salt bridges:           {sb}")
+        print(f"Hydrophobic contacts:   {hc}")
+        print(f"Interface pairs:        {n_pairs}")
+        print(f"Interface score:        {score:.1f}/100")
 
 
 def _cmd_mirror(args):
