@@ -1,0 +1,167 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage[margin=1in]{geometry}
+\usepackage{natbib}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+\title{ChiralFold: Systematic Detection of D-Amino Acid Stereochemistry Errors in the Protein Data Bank}
+\author{Tommaso R.\ Marena\\
+\textit{The Catholic University of America, Washington, DC}\\
+\texttt{marena@cua.edu}}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present ChiralFold, a general-purpose protein stereochemistry toolkit that provides chirality-correct coordinate generation, PDB structure auditing, and mirror-image L$\leftrightarrow$D transformation. An independent verification of 1,677 D-amino acid residues across 231 PDB files --- using only the signed tetrahedron volume at each C$_\alpha$ --- identified 21 genuine chirality errors (1.3\% error rate) in 12 deposited structures where C$_\alpha$ coordinates show L-stereochemistry despite D-amino acid labels. All 12 error-containing structures were deposited between 1992 and 2005, with zero errors in post-2005 entries (Mann--Whitney $U=278$, $p=0.0027$), consistent with the 2006--2008 wwPDB remediation. Resolution does not predict errors ($p=0.19$); errors span 0.99--2.70~\AA, indicating a labeling problem rather than a data quality problem. ChiralFold's auditor, calibrated against wwPDB/MolProbity validation reports on 31 structures (Ramachandran outlier Spearman $\rho=0.49$, $p=0.006$), fills a gap in existing validation pipelines: MolProbity does not check D-amino acid stereochemistry. The toolkit also includes an AlphaFold~3 chirality correction pipeline addressing the documented 51\% violation rate on D-peptides \citep{childs2025}, and a mirror-image binder design workflow validated on the MDM2:dPMI-$\gamma$ system ($K_d=53$~nM). ChiralFold is available as a pip-installable Python package at \url{https://github.com/Tommaso-R-Marena/ChiralFold}.
+\end{abstract}
+
+\section{Introduction}
+
+D-amino acids play an increasingly important role in drug design due to their resistance to proteolysis and improved bioavailability. Mirror-image phage display has produced D-peptide therapeutics with nanomolar affinity, including dPMI-$\gamma$ ($K_d=53$~nM against MDM2). However, computational tools for D-peptide structure prediction and validation remain underdeveloped.
+
+AlphaFold~3, the current state of the art for protein structure prediction, produces a 51\% per-residue chirality violation rate on D-peptides --- equivalent to random assignment \citep{childs2025}. This fundamental limitation arises from AF3's diffusion architecture, which denoises atom coordinates without enforcing hard stereochemical constraints.
+
+Existing validation tools also have a blind spot. MolProbity, the standard for PDB structure quality assessment, validates C$_\alpha$ chirality for standard L-amino acids but does not specifically check D-amino acid stereochemistry. This creates an opportunity for systematic errors in deposited D-amino acid coordinates to persist undetected.
+
+We present ChiralFold, a pip-installable Python toolkit that addresses both gaps: it provides guaranteed chirality-correct D-peptide coordinate generation and a comprehensive PDB auditor that validates D-amino acid stereochemistry. Using ChiralFold, we conducted the first systematic verification of D-amino acid chirality across the PDB.
+
+\section{Methods}
+
+\subsection{Signed Tetrahedron Volume}
+
+Chirality at each C$_\alpha$ is determined by the signed volume of the tetrahedron formed by the four substituents:
+
+\begin{equation}
+\text{signed\_volume} = (\mathbf{N} - \mathbf{C}_\alpha) \cdot \left[ (\mathbf{C} - \mathbf{C}_\alpha) \times (\mathbf{C}_\beta - \mathbf{C}_\alpha) \right]
+\end{equation}
+
+For L-amino acids (S-configuration), this volume is negative by CIP convention. For D-amino acids (R-configuration), it should also be negative when the residue is correctly built. A positive signed volume at a D-labeled residue indicates that the deposited coordinates have L-stereochemistry --- a chirality error.
+
+This method requires only the four backbone atom positions (N, C$_\alpha$, C, C$_\beta$) and uses no force field or external dependencies beyond numpy.
+
+\subsection{Independent Verification Protocol}
+
+To ensure our findings are not artifacts of ChiralFold's implementation, the D-residue verification was performed independently: the script uses only numpy for the cross product and dot product, parses PDB files with standard string operations, and imports no ChiralFold code. The verification script and full dataset are available in the repository.
+
+\subsection{PDB Auditor}
+
+ChiralFold's auditor validates six quality criteria: C$_\alpha$ chirality (signed volume), bond geometry (RMSD to Engh \& Huber ideal values), Ramachandran backbone dihedrals (hybrid empirical PDB grid + calibrated rectangular regions), peptide bond planarity ($\omega$ deviation from 180\textdegree), steric clashes (van der Waals overlap with backbone hydrogen placement), and a weighted composite score (0--100).
+
+\subsection{Mirror-Image Pipeline}
+
+The L$\leftrightarrow$D transformation reflects all atomic coordinates across a plane: $(x,y,z) \to (-x,y,z)$. This inverts all stereocenters ($\det(\mathbf{R}) = -1$), preserving bond lengths, bond angles, and torsion magnitudes exactly. Residue names are mapped to their D-amino acid equivalents (ALA$\to$DAL, TRP$\to$DTR, etc.).
+
+\section{Results}
+
+\subsection{D-Amino Acid Chirality Errors in the PDB}
+
+We verified 1,677 D-amino acid residues with complete backbone atoms (N, C$_\alpha$, C, C$_\beta$) across 231 PDB files. Of these, 1,656 (98.7\%) showed correct D-chirality (negative signed volume) and 21 (1.3\%) showed L-chirality (positive signed volume) despite being labeled as D-amino acids.
+
+The 21 errors occur in 12 PDB structures:
+
+\begin{table}[ht]
+\centering
+\caption{The 12 PDB structures containing D-amino acid chirality errors. Signed volume is in \AA$^3$; positive values indicate L-stereochemistry at the C$_\alpha$.}
+\label{tab:errors}
+\begin{tabular}{llllllll}
+\toprule
+PDB ID & Residue & Chain & Position & Signed Vol.\ & Resolution & Dep.\ Date & Errors \\
+\midrule
+1ABI & DPN & I & 56 & $+2.49$ & 2.30~\AA & 1992 & 1 \\
+1BG0 & DAR & A & 403 & $+2.58$ & 1.86~\AA & 1998 & 1 \\
+1D7T & DTY & A & 4 & $+1.85$ & NMR & 1999 & 1 \\
+1HHZ & DAL & E & 1 & $+2.70$ & 0.99~\AA & 2000 & 1 \\
+1KO0 & DLY & A & 542 & $+0.12$ & 2.20~\AA & 2001 & 1 \\
+1MCB & DHI & P & 3 & $+2.60$ & 2.70~\AA & 1993 & 1 \\
+1OF6 & DTY & A--H & 1369--1370 & $+2.51$ to $+2.67$ & 2.10~\AA & 2003 & 8 \\
+1P52 & DAR & A & 403 & $+2.54$ & 1.90~\AA & 2003 & 1 \\
+1UHG & DSN & D & 164 & $+2.21$ & 1.90~\AA & 2003 & 1 \\
+1XT7 & DSG & A & 3 & $+2.55$ & NMR & 2004 & 1 \\
+2AOU & DCY & A & 248 & $+2.67$ & 2.30~\AA & 2005 & 1 \\
+2ATS & DLY & A & 3001--3003 & $+2.56$ to $+2.59$ & 1.90~\AA & 2005 & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Errors Correlate with Pre-Remediation Deposition}
+
+All 12 error-containing structures were deposited between 1992 and 2005. Zero errors were found in structures deposited after 2005. Deposition year significantly predicts the presence of errors (Mann--Whitney $U=278$, $p=0.0027$). This temporal pattern is consistent with the 2006--2008 wwPDB remediation effort, which systematically corrected stereochemistry assignments across the archive but did not specifically address D-amino acid residue labeling.
+
+Resolution does not predict errors (Mann--Whitney $U=112$, $p=0.19$). The highest-resolution error structure is 1HHZ at 0.99~\AA\ --- an ultra-high-resolution structure where the electron density is unambiguous but the residue was labeled as D-Alanine (DAL) while the C$_\alpha$ coordinates show L-stereochemistry (signed volume $+2.70$). This confirms that the errors are labeling/convention problems, not data quality problems.
+
+\subsection{MolProbity Comparison}
+
+ChiralFold's auditor was benchmarked against wwPDB/MolProbity validation reports on 31 PDB structures spanning 0.48--3.4~\AA\ resolution (X-ray, NMR, cryo-EM). Ramachandran outlier percentages showed significant agreement (Spearman $\rho=0.49$, $p=0.006$), with ChiralFold reporting 0.60\% mean outliers vs wwPDB's 0.64\%.
+
+MolProbity is stronger in Ramachandran contour precision (data-derived from ${\sim}100$K structures vs ChiralFold's calibrated rectangles + empirical grid) and rotamer completeness. ChiralFold adds native D-amino acid chirality validation, which MolProbity does not provide.
+
+\subsection{AlphaFold 3 Chirality on Real D-Peptide Sequences}
+
+Using the actual D-peptide sequences from \citet{childs2025} --- DEHELLETAARWFYEIAKR (PDB 7YH8, DP19), LWQHEATWK (PDB 5N8T, DP9), and DWWPLAFEALLR (PDB 3IWY, DP12) --- ChiralFold produces 0/478 chirality violations across 41 sequence/pattern combinations. This 0\% rate is guaranteed by construction: each residue is built with explicit [C@H]/[C@@H] SMILES stereochemistry. AF3's 51\% rate reflects its diffusion model treating D-residues as noise.
+
+\subsection{Mirror-Image Binder Design}
+
+The p53:MDM2 crystal structure (PDB 1YCR) was mirrored to generate a D-peptide binder candidate. The binding triad (Phe19/Trp23/Leu26) is preserved as D-Phe/D-Trp/D-Leu --- the same hotspot residues that the experimental dPMI-$\gamma$ ($K_d=53$~nM, PDB 3IWY) uses. All 13 backbone $\varphi$ angles are exactly sign-inverted. Contact geometry is preserved by construction: 105 C$_\alpha$--C$_\alpha$ contacts and 10 H-bond donor--acceptor pairs maintained within 0.001~\AA\ across the L$\to$D transformation.
+
+\section{Discussion}
+
+The 1.3\% error rate in deposited D-amino acid stereochemistry is small but systematic. The temporal clustering before 2006 suggests these errors were introduced during an era when D-amino acid validation was not part of standard deposition pipelines. The wwPDB remediation addressed many stereochemistry issues but these D-residue errors persisted because no existing tool specifically validated D-amino acid C$_\alpha$ chirality.
+
+The 1HHZ case is particularly illustrative: at 0.99~\AA\ resolution, the electron density is unambiguous, yet the residue is mislabeled. This rules out resolution as a confound and points to a convention/software error during deposition.
+
+ChiralFold fills this validation gap as a lightweight, pip-installable Python tool. While it does not replace MolProbity for comprehensive structure validation, it provides the only available programmatic D-amino acid chirality check and a mirror-image coordinate generation pipeline relevant to the growing field of D-peptide drug design.
+
+\section{Data Availability}
+
+The complete verification dataset (1,678 rows with raw N/C$_\alpha$/C/C$_\beta$ coordinates for every D-amino acid residue) is available at: \url{https://github.com/Tommaso-R-Marena/ChiralFold/blob/master/results/d_residue_verification.csv}
+
+The independent verification script (no ChiralFold dependencies) is at: \url{https://github.com/Tommaso-R-Marena/ChiralFold/blob/master/benchmarks/independent_d_residue_verification.py}
+
+\begin{thebibliography}{5}
+
+\bibitem[Childs et~al.(2025)]{childs2025}
+Childs CM, Zhou P, Donald BR.
+\newblock Has AlphaFold 3 Solved the Protein Folding Problem for D-Peptides?
+\newblock \textit{bioRxiv} 2025.03.14.643307 (2025).
+\newblock \href{https://doi.org/10.1101/2025.03.14.643307}{doi:10.1101/2025.03.14.643307}
+
+\bibitem[Liu et~al.(2010)]{liu2010}
+Liu M et~al.
+\newblock D-peptide inhibitors of the p53--MDM2 interaction for targeted molecular therapy of malignant neoplasms.
+\newblock \textit{Proc Natl Acad Sci} 107:14321--14326 (2010).
+\newblock \href{https://doi.org/10.1073/pnas.1008930107}{doi:10.1073/pnas.1008930107}
+
+\bibitem[Chen et~al.(2010)]{chen2010}
+Chen VB et~al.
+\newblock MolProbity: all-atom structure validation for macromolecular crystallography.
+\newblock \textit{Acta Cryst} D66:12--21 (2010).
+\newblock \href{https://doi.org/10.1107/S0907444909042073}{doi:10.1107/S0907444909042073}
+
+\bibitem[Lovell et~al.(2003)]{lovell2003}
+Lovell SC et~al.
+\newblock Structure validation by C$_\alpha$ geometry: $\varphi$,$\psi$ and C$_\beta$ deviation.
+\newblock \textit{Proteins} 50:437--450 (2003).
+\newblock \href{https://doi.org/10.1002/prot.10286}{doi:10.1002/prot.10286}
+
+\bibitem[Henrick et~al.(2008)]{henrick2008}
+Henrick K et~al.
+\newblock Remediation of the protein data bank archive.
+\newblock \textit{Nucleic Acids Res} 36:D426--D433 (2008).
+\newblock \href{https://doi.org/10.1093/nar/gkm937}{doi:10.1093/nar/gkm937}
+
+\end{thebibliography}
+
+\end{document}
