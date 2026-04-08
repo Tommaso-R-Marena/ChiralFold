@@ -1,0 +1,24 @@
+{
+  "L_p53_L_MDM2": {
+    "energy_kcal": -55.98,
+    "contacts": 105,
+    "hbonds": 10
+  },
+  "D_p53_D_MDM2": {
+    "energy_kcal": -55.98,
+    "contacts": 105,
+    "hbonds": 10
+  },
+  "dpmi_gamma_L_MDM2": {
+    "energy_kcal": -38.28,
+    "contacts": 79,
+    "hbonds": 2,
+    "kd_experimental_nM": 53
+  },
+  "energy_preservation": {
+    "delta_E_kcal": 0.0,
+    "exact_match": true
+  },
+  "key_finding": "Mirror transformation preserves ALL interaction energies exactly (delta_E = 0.0 kcal/mol). D-p53:D-MDM2 has identical binding energy to L-p53:L-MDM2.",
+  "significance": "Computational proof that ChiralFold mirror pipeline preserves binding interface energetics \u2014 the foundation of mirror-image phage display."
+}

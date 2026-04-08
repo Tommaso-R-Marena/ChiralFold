@@ -1,0 +1,7309 @@
+{
+  "total_structures_attempted": 290,
+  "total_structures_audited": 200,
+  "total_with_perfect_chirality": 81,
+  "total_with_errors": 119,
+  "total_skipped_too_large": 14,
+  "total_skipped_download_fail": 0,
+  "total_skipped_timeout": 76,
+  "total_skipped_audit_error": 0,
+  "error_details": [
+    {
+      "pdb_id": "173D",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 75.0,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "185D",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 50.0,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 3,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 7,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 8,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "193D",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 50.0,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 3,
+          "resname": "NYB",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 4,
+          "resname": "CPC",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 7,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 8,
+          "resname": "CPC",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1A7Y",
+      "n_errors": 6,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 6,
+      "pct_correct": 75.0,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1A7Z",
+      "n_errors": 10,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 10,
+      "pct_correct": 37.5,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "CTH",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 3,
+          "resname": "POM",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 5,
+          "resname": "MAA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 9,
+          "resname": "H5M",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "CTH",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 3,
+          "resname": "POM",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 5,
+          "resname": "MAA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 9,
+          "resname": "H5M",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1ABI",
+      "n_errors": 1,
+      "n_d_residue_errors": 1,
+      "n_l_residue_errors": 0,
+      "pct_correct": 99.64,
+      "error_residues": [
+        {
+          "chain": "I",
+          "resseq": 56,
+          "resname": "DPN",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": true
+        }
+      ]
+    },
+    {
+      "pdb_id": "1AL4",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1ALX",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1ALZ",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "QIL",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1AQ7",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 99.5,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 3,
+          "resname": "XPR",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1AV2",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1BCK",
+      "n_errors": 6,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 6,
+      "pct_correct": 96.05,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1BDK",
+      "n_errors": 3,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 3,
+      "pct_correct": 66.67,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 4,
+          "resname": "HYP",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 6,
+          "resname": "TIH",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 9,
+          "resname": "OIC",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1BDW",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1BG0",
+      "n_errors": 1,
+      "n_d_residue_errors": 1,
+      "n_l_residue_errors": 0,
+      "pct_correct": 99.7,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 403,
+          "resname": "DAR",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": true
+        }
+      ]
+    },
+    {
+      "pdb_id": "1C4D",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1CSA",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 30.0,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 6,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1CWA",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 95.39,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 6,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1CWB",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 95.39,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "DMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 6,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1CWC",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 95.39,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 6,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 8,
+          "resname": "MNL",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1CWF",
+      "n_errors": 6,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 6,
+      "pct_correct": 96.05,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1CWH",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 95.42,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 6,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1CWI",
+      "n_errors": 6,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 6,
+      "pct_correct": 96.08,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1CWJ",
+      "n_errors": 6,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 6,
+      "pct_correct": 96.05,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1CWK",
+      "n_errors": 6,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 6,
+      "pct_correct": 96.05,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "TMD",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1CWL",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 95.39,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 6,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 8,
+          "resname": "MHL",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1CWM",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 95.39,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 6,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 8,
+          "resname": "IML",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1CYA",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 30.0,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 6,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1CYB",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 30.0,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 6,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1CYN",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 95.76,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 6,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1D7T",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 71.43,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 3,
+          "resname": "HYP",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 8,
+          "resname": "CY3",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1DFY",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 71.43,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 3,
+          "resname": "HYP",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 8,
+          "resname": "CY3",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1DFZ",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 71.43,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 3,
+          "resname": "HYP",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 8,
+          "resname": "CY3",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1DG0",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 71.43,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 3,
+          "resname": "HYP",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 8,
+          "resname": "CY3",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1DSC",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 75.0,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1DSD",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 75.0,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1DSR",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 80.0,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 2,
+          "resname": "AHB",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 8,
+          "resname": "ALO",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1E9W",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 56.25,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 6,
+          "resname": "BB9",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 8,
+          "resname": "DBU",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 10,
+          "resname": "TS9",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 11,
+          "resname": "BB9",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 13,
+          "resname": "BB9",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 16,
+          "resname": "DHA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 17,
+          "resname": "DHA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1FJA",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 75.0,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1FJM",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 99.64,
+      "error_residues": [
+        {
+          "chain": "M",
+          "resseq": 7,
+          "resname": "DAM",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "N",
+          "resseq": 7,
+          "resname": "DAM",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1FVM",
+      "n_errors": 18,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 18,
+      "pct_correct": 62.5,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "G",
+          "resseq": 1,
+          "resname": "DLS",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "H",
+          "resseq": 1,
+          "resname": "DLS",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "I",
+          "resseq": 1,
+          "resname": "DLS",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "J",
+          "resseq": 1,
+          "resname": "DLS",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "K",
+          "resseq": 1,
+          "resname": "DLS",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "L",
+          "resseq": 1,
+          "resname": "DLS",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1GMK",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1GO6",
+      "n_errors": 16,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 16,
+      "pct_correct": 69.23,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "G",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "G",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "I",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "I",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "K",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "K",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "M",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "M",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "O",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "O",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1GRM",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1HBT",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 99.62,
+      "error_residues": [
+        {
+          "chain": "I",
+          "resseq": 64,
+          "resname": "ALC",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1HHU",
+      "n_errors": 8,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 8,
+      "pct_correct": 71.43,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1HHY",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 71.43,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1HHZ",
+      "n_errors": 7,
+      "n_d_residue_errors": 1,
+      "n_l_residue_errors": 6,
+      "pct_correct": 73.08,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 6,
+          "resname": "OMY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 7,
+          "resname": "3FG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 1,
+          "resname": "DAL",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": true
+        }
+      ]
+    },
+    {
+      "pdb_id": "1I3W",
+      "n_errors": 8,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 8,
+      "pct_correct": 75.0,
+      "error_residues": [
+        {
+          "chain": "E",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "G",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "G",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "H",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "H",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1IHS",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 99.64,
+      "error_residues": [
+        {
+          "chain": "I",
+          "resseq": 3,
+          "resname": "OPR",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1IHT",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 99.62,
+      "error_residues": [
+        {
+          "chain": "I",
+          "resseq": 3,
+          "resname": "A5R",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1IKF",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 98.33,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 502,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 503,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 504,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 505,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 506,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 508,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 510,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1JNO",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1JO3",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1JO4",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1KQE",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 95.45,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 5,
+          "resname": "X5P",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 5,
+          "resname": "X5P",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1L1V",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 75.0,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1MAG",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1MCB",
+      "n_errors": 1,
+      "n_d_residue_errors": 1,
+      "n_l_residue_errors": 0,
+      "pct_correct": 99.75,
+      "error_residues": [
+        {
+          "chain": "P",
+          "resseq": 3,
+          "resname": "DHI",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": true
+        }
+      ]
+    },
+    {
+      "pdb_id": "1MHW",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 99.49,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 25,
+          "resname": "CSD",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 25,
+          "resname": "CSD",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1MIC",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1MIK",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 95.39,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 6,
+          "resname": "AA4",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1MNV",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 75.0,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1NG8",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.31,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1NRM",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1NRU",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1NT5",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "QPH",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "QPH",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1NT6",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "QPH",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "QPH",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1OLN",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 94.96,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 6,
+          "resname": "BB9",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 8,
+          "resname": "DBU",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 10,
+          "resname": "TS9",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 11,
+          "resname": "BB9",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 13,
+          "resname": "BB9",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 16,
+          "resname": "DHA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 17,
+          "resname": "DHA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1OVF",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 75.0,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1P52",
+      "n_errors": 1,
+      "n_d_residue_errors": 1,
+      "n_l_residue_errors": 0,
+      "pct_correct": 99.7,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 403,
+          "resname": "DAR",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": true
+        }
+      ]
+    },
+    {
+      "pdb_id": "1PFE",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 50.0,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 3,
+          "resname": "N2C",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 7,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 8,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1QFB",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 85.71,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 3,
+          "resname": "HYP",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1QFI",
+      "n_errors": 9,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 9,
+      "pct_correct": 62.5,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 3,
+          "resname": "DPL",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 3,
+          "resname": "DPL",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 3,
+          "resname": "DPL",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1QNG",
+      "n_errors": 7,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 7,
+      "pct_correct": 95.65,
+      "error_residues": [
+        {
+          "chain": "D",
+          "resseq": 202,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 203,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 204,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 205,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 206,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 208,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 210,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1QNH",
+      "n_errors": 14,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 14,
+      "pct_correct": 95.64,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 202,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 203,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 204,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 205,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 206,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 208,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 210,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 202,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 203,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 204,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 205,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 206,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 208,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 210,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1QUR",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 99.27,
+      "error_residues": [
+        {
+          "chain": "I",
+          "resseq": 47,
+          "resname": "00I",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "I",
+          "resseq": 64,
+          "resname": "ALC",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1RCQ",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 99.69,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 122,
+          "resname": "KCX",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1SN9",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 95.0,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 120,
+          "resname": "DBZ",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 220,
+          "resname": "DBZ",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 320,
+          "resname": "DBZ",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 420,
+          "resname": "DBZ",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1SNA",
+      "n_errors": 8,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 8,
+      "pct_correct": 90.0,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 113,
+          "resname": "MSO",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 120,
+          "resname": "DBZ",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 213,
+          "resname": "MSO",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 220,
+          "resname": "DBZ",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 313,
+          "resname": "MSO",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 320,
+          "resname": "DBZ",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 413,
+          "resname": "MSO",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 420,
+          "resname": "DBZ",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1SNE",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 90.0,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 118,
+          "resname": "MSO",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 120,
+          "resname": "DBZ",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 218,
+          "resname": "MSO",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 220,
+          "resname": "DBZ",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1SOC",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 87.5,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 8,
+          "resname": "THO",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1T5M",
+      "n_errors": 3,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 3,
+      "pct_correct": 72.73,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 5,
+          "resname": "THR",
+          "expected": "L",
+          "observed": "D",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 7,
+          "resname": "ORN",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 13,
+          "resname": "LME",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1T5N",
+      "n_errors": 3,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 3,
+      "pct_correct": 72.73,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 5,
+          "resname": "THR",
+          "expected": "L",
+          "observed": "D",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 7,
+          "resname": "ORN",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 13,
+          "resname": "LME",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1T7D",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 99.5,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 4,
+          "resname": "5PG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 4,
+          "resname": "5PG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1TK2",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 99.18,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 2,
+          "resname": "ORN",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 7,
+          "resname": "ORN",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1TMB",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 99.63,
+      "error_residues": [
+        {
+          "chain": "I",
+          "resseq": 63,
+          "resname": "TYS",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1TPS",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 99.51,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 252,
+          "resname": "YNM",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1UNJ",
+      "n_errors": 16,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 16,
+      "pct_correct": 75.0,
+      "error_residues": [
+        {
+          "chain": "E",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "K",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "K",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "L",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "L",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "Q",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "Q",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "R",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "R",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "W",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "W",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "X",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "X",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1UNM",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 75.0,
+      "error_residues": [
+        {
+          "chain": "E",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1VS2",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 50.0,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 3,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 7,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 8,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1VTG",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 50.0,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 3,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 7,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 8,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1W5U",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 92.86,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 1,
+          "resname": "FVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1WAW",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 99.7,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 1392,
+          "resname": "0AR",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1WB0",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 98.82,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 1388,
+          "resname": "VR0",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1389,
+          "resname": "MEA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1390,
+          "resname": "IAS",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 1391,
+          "resname": "IAS",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1WCO",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 94.29,
+      "error_residues": [
+        {
+          "chain": "N",
+          "resseq": 2,
+          "resname": "DBU",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "N",
+          "resseq": 5,
+          "resname": "DHA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1XOF",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 95.0,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 120,
+          "resname": "DBZ",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 220,
+          "resname": "DBZ",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1XQ7",
+      "n_errors": 21,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 21,
+      "pct_correct": 95.45,
+      "error_residues": [
+        {
+          "chain": "D",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 6,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 6,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 2,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 3,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 5,
+          "resname": "BMT",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 6,
+          "resname": "ABA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 8,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "F",
+          "resseq": 10,
+          "resname": "MLE",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1XT7",
+      "n_errors": 4,
+      "n_d_residue_errors": 1,
+      "n_l_residue_errors": 3,
+      "pct_correct": 63.64,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 3,
+          "resname": "DSG",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": true
+        },
+        {
+          "chain": "A",
+          "resseq": 7,
+          "resname": "ORN",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 13,
+          "resname": "LME",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 14,
+          "resname": "KYN",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1XVK",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 50.0,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 3,
+          "resname": "N2C",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 7,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 8,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1XVN",
+      "n_errors": 4,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 4,
+      "pct_correct": 50.0,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 3,
+          "resname": "N2C",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 7,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "B",
+          "resseq": 8,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1XVR",
+      "n_errors": 8,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 8,
+      "pct_correct": 50.0,
+      "error_residues": [
+        {
+          "chain": "D",
+          "resseq": 3,
+          "resname": "N2C",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 7,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 8,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 3,
+          "resname": "N2C",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 7,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "E",
+          "resseq": 8,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1XXZ",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 81.82,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 6,
+          "resname": "IAM",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 8,
+          "resname": "IYR",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1XY4",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 91.67,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 7,
+          "resname": "IAM",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1XY5",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 83.33,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 7,
+          "resname": "IAM",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 10,
+          "resname": "193",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1XY6",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 91.67,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 7,
+          "resname": "IAM",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1XY8",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 83.33,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 7,
+          "resname": "IAM",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 10,
+          "resname": "HHK",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1XY9",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 81.82,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 6,
+          "resname": "IAM",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 8,
+          "resname": "IYR",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "1YY2",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 88.89,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 1,
+          "resname": "PCA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "209D",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 75.0,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "2ADW",
+      "n_errors": 16,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 16,
+      "pct_correct": 50.0,
+      "error_residues": [
+        {
+          "chain": "H",
+          "resseq": 3,
+          "resname": "N2C",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "H",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "H",
+          "resseq": 7,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "H",
+          "resseq": 8,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "I",
+          "resseq": 3,
+          "resname": "N2C",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "I",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "I",
+          "resseq": 7,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "I",
+          "resseq": 8,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "J",
+          "resseq": 3,
+          "resname": "N2C",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "J",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "J",
+          "resseq": 7,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "J",
+          "resseq": 8,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "K",
+          "resseq": 3,
+          "resname": "N2C",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "K",
+          "resseq": 4,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "K",
+          "resseq": 7,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "K",
+          "resseq": 8,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "2AOU",
+      "n_errors": 3,
+      "n_d_residue_errors": 1,
+      "n_l_residue_errors": 2,
+      "pct_correct": 99.44,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 217,
+          "resname": "CSO",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 248,
+          "resname": "DCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": true
+        },
+        {
+          "chain": "B",
+          "resseq": 82,
+          "resname": "CSO",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "2APH",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 99.36,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 885,
+          "resname": "GMA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "D",
+          "resseq": 996,
+          "resname": "GMA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "2ATS",
+      "n_errors": 3,
+      "n_d_residue_errors": 3,
+      "n_l_residue_errors": 0,
+      "pct_correct": 99.44,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 3001,
+          "resname": "DLY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": true
+        },
+        {
+          "chain": "A",
+          "resseq": 3002,
+          "resname": "DLY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": true
+        },
+        {
+          "chain": "A",
+          "resseq": 3003,
+          "resname": "DLY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": true
+        }
+      ]
+    },
+    {
+      "pdb_id": "2AXI",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 98.98,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 23,
+          "resname": "6CW",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "2BDX",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 99.64,
+      "error_residues": [
+        {
+          "chain": "B",
+          "resseq": 7,
+          "resname": "MAA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "2D55",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 75.0,
+      "error_residues": [
+        {
+          "chain": "C",
+          "resseq": 5,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "C",
+          "resseq": 11,
+          "resname": "MVA",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "2DA8",
+      "n_errors": 2,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 2,
+      "pct_correct": 75.0,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 3,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        },
+        {
+          "chain": "A",
+          "resseq": 7,
+          "resname": "NCY",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    },
+    {
+      "pdb_id": "2DDE",
+      "n_errors": 1,
+      "n_d_residue_errors": 0,
+      "n_l_residue_errors": 1,
+      "pct_correct": 94.12,
+      "error_residues": [
+        {
+          "chain": "A",
+          "resseq": 15,
+          "resname": "BH2",
+          "expected": "D",
+          "observed": "L",
+          "is_d_residue": false
+        }
+      ]
+    }
+  ],
+  "all_audited": [
+    {
+      "pdb_id": "148L",
+      "n_residues": 170,
+      "n_atoms": 1363,
+      "overall_score": 72.7,
+      "n_correct": 154,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "173D",
+      "n_residues": 28,
+      "n_atoms": 416,
+      "overall_score": 33.8,
+      "n_correct": 6,
+      "n_wrong": 2,
+      "pct_correct": 75.0,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "185D",
+      "n_residues": 22,
+      "n_atoms": 516,
+      "overall_score": 59.6,
+      "n_correct": 4,
+      "n_wrong": 4,
+      "pct_correct": 50.0,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "193D",
+      "n_residues": 26,
+      "n_atoms": 656,
+      "overall_score": 51.1,
+      "n_correct": 4,
+      "n_wrong": 4,
+      "pct_correct": 50.0,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1A7Y",
+      "n_residues": 41,
+      "n_atoms": 314,
+      "overall_score": 37.0,
+      "n_correct": 18,
+      "n_wrong": 6,
+      "pct_correct": 75.0,
+      "n_violations": 6,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1A7Z",
+      "n_residues": 42,
+      "n_atoms": 306,
+      "overall_score": 45.5,
+      "n_correct": 6,
+      "n_wrong": 10,
+      "pct_correct": 37.5,
+      "n_violations": 10,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1ABI",
+      "n_residues": 305,
+      "n_atoms": 2457,
+      "overall_score": 66.3,
+      "n_correct": 274,
+      "n_wrong": 1,
+      "pct_correct": 99.64,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1AJ1",
+      "n_residues": 19,
+      "n_atoms": 252,
+      "overall_score": 43.2,
+      "n_correct": 17,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1AL4",
+      "n_residues": 42,
+      "n_atoms": 672,
+      "overall_score": 65.5,
+      "n_correct": 26,
+      "n_wrong": 2,
+      "pct_correct": 92.86,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1ALX",
+      "n_residues": 52,
+      "n_atoms": 669,
+      "overall_score": 62.4,
+      "n_correct": 26,
+      "n_wrong": 2,
+      "pct_correct": 92.86,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1ALZ",
+      "n_residues": 45,
+      "n_atoms": 668,
+      "overall_score": 69.9,
+      "n_correct": 26,
+      "n_wrong": 2,
+      "pct_correct": 92.86,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1AN1",
+      "n_residues": 264,
+      "n_atoms": 1924,
+      "overall_score": 68.4,
+      "n_correct": 234,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1AQ7",
+      "n_residues": 227,
+      "n_atoms": 1674,
+      "overall_score": 68.6,
+      "n_correct": 199,
+      "n_wrong": 1,
+      "pct_correct": 99.5,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1AV2",
+      "n_residues": 84,
+      "n_atoms": 1117,
+      "overall_score": 66.2,
+      "n_correct": 52,
+      "n_wrong": 4,
+      "pct_correct": 92.86,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1B0Q",
+      "n_residues": 13,
+      "n_atoms": 175,
+      "overall_score": 40.8,
+      "n_correct": 10,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1B74",
+      "n_residues": 253,
+      "n_atoms": 1962,
+      "overall_score": 70.0,
+      "n_correct": 230,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1BCK",
+      "n_residues": 176,
+      "n_atoms": 1643,
+      "overall_score": 67.0,
+      "n_correct": 146,
+      "n_wrong": 6,
+      "pct_correct": 96.05,
+      "n_violations": 6,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1BDK",
+      "n_residues": 10,
+      "n_atoms": 187,
+      "overall_score": 25.7,
+      "n_correct": 6,
+      "n_wrong": 3,
+      "pct_correct": 66.67,
+      "n_violations": 3,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1BDW",
+      "n_residues": 37,
+      "n_atoms": 292,
+      "overall_score": 70.5,
+      "n_correct": 26,
+      "n_wrong": 2,
+      "pct_correct": 92.86,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1BFW",
+      "n_residues": 20,
+      "n_atoms": 277,
+      "overall_score": 25.0,
+      "n_correct": 14,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1BG0",
+      "n_residues": 361,
+      "n_atoms": 2865,
+      "overall_score": 72.6,
+      "n_correct": 327,
+      "n_wrong": 1,
+      "pct_correct": 99.7,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1BZV",
+      "n_residues": 47,
+      "n_atoms": 366,
+      "overall_score": 55.2,
+      "n_correct": 43,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1C0P",
+      "n_residues": 367,
+      "n_atoms": 2854,
+      "overall_score": 72.5,
+      "n_correct": 329,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1C4B",
+      "n_residues": 13,
+      "n_atoms": 211,
+      "overall_score": 67.8,
+      "n_correct": 12,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1C4D",
+      "n_residues": 91,
+      "n_atoms": 584,
+      "overall_score": 59.1,
+      "n_correct": 52,
+      "n_wrong": 4,
+      "pct_correct": 92.86,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CFA",
+      "n_residues": 75,
+      "n_atoms": 1165,
+      "overall_score": 60.8,
+      "n_correct": 72,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1CSA",
+      "n_residues": 11,
+      "n_atoms": 196,
+      "overall_score": 36.1,
+      "n_correct": 3,
+      "n_wrong": 7,
+      "pct_correct": 30.0,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CVQ",
+      "n_residues": 9,
+      "n_atoms": 126,
+      "overall_score": 71.1,
+      "n_correct": 5,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1CW8",
+      "n_residues": 10,
+      "n_atoms": 129,
+      "overall_score": 72.8,
+      "n_correct": 5,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1CWA",
+      "n_residues": 176,
+      "n_atoms": 1351,
+      "overall_score": 65.0,
+      "n_correct": 145,
+      "n_wrong": 7,
+      "pct_correct": 95.39,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CWB",
+      "n_residues": 176,
+      "n_atoms": 1352,
+      "overall_score": 64.7,
+      "n_correct": 145,
+      "n_wrong": 7,
+      "pct_correct": 95.39,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CWC",
+      "n_residues": 176,
+      "n_atoms": 1352,
+      "overall_score": 68.2,
+      "n_correct": 145,
+      "n_wrong": 7,
+      "pct_correct": 95.39,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CWF",
+      "n_residues": 176,
+      "n_atoms": 1352,
+      "overall_score": 68.3,
+      "n_correct": 146,
+      "n_wrong": 6,
+      "pct_correct": 96.05,
+      "n_violations": 6,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CWH",
+      "n_residues": 176,
+      "n_atoms": 1353,
+      "overall_score": 65.5,
+      "n_correct": 146,
+      "n_wrong": 7,
+      "pct_correct": 95.42,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CWI",
+      "n_residues": 176,
+      "n_atoms": 1353,
+      "overall_score": 65.3,
+      "n_correct": 147,
+      "n_wrong": 6,
+      "pct_correct": 96.08,
+      "n_violations": 6,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CWJ",
+      "n_residues": 176,
+      "n_atoms": 1354,
+      "overall_score": 64.7,
+      "n_correct": 146,
+      "n_wrong": 6,
+      "pct_correct": 96.05,
+      "n_violations": 6,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CWK",
+      "n_residues": 176,
+      "n_atoms": 1354,
+      "overall_score": 65.1,
+      "n_correct": 146,
+      "n_wrong": 6,
+      "pct_correct": 96.05,
+      "n_violations": 6,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CWL",
+      "n_residues": 176,
+      "n_atoms": 1352,
+      "overall_score": 64.0,
+      "n_correct": 145,
+      "n_wrong": 7,
+      "pct_correct": 95.39,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CWM",
+      "n_residues": 176,
+      "n_atoms": 1351,
+      "overall_score": 65.0,
+      "n_correct": 145,
+      "n_wrong": 7,
+      "pct_correct": 95.39,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CWZ",
+      "n_residues": 10,
+      "n_atoms": 129,
+      "overall_score": 65.3,
+      "n_correct": 5,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1CYA",
+      "n_residues": 11,
+      "n_atoms": 196,
+      "overall_score": 41.2,
+      "n_correct": 3,
+      "n_wrong": 7,
+      "pct_correct": 30.0,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CYB",
+      "n_residues": 11,
+      "n_atoms": 196,
+      "overall_score": 30.5,
+      "n_correct": 3,
+      "n_wrong": 7,
+      "pct_correct": 30.0,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CYN",
+      "n_residues": 189,
+      "n_atoms": 1474,
+      "overall_score": 65.4,
+      "n_correct": 158,
+      "n_wrong": 7,
+      "pct_correct": 95.76,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1CZQ",
+      "n_residues": 64,
+      "n_atoms": 516,
+      "overall_score": 82.0,
+      "n_correct": 59,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1D0K",
+      "n_residues": 323,
+      "n_atoms": 2585,
+      "overall_score": 72.4,
+      "n_correct": 288,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1D7T",
+      "n_residues": 8,
+      "n_atoms": 118,
+      "overall_score": 60.3,
+      "n_correct": 5,
+      "n_wrong": 2,
+      "pct_correct": 71.43,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1DFY",
+      "n_residues": 8,
+      "n_atoms": 126,
+      "overall_score": 57.3,
+      "n_correct": 5,
+      "n_wrong": 2,
+      "pct_correct": 71.43,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1DFZ",
+      "n_residues": 8,
+      "n_atoms": 126,
+      "overall_score": 49.1,
+      "n_correct": 5,
+      "n_wrong": 2,
+      "pct_correct": 71.43,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1DG0",
+      "n_residues": 7,
+      "n_atoms": 117,
+      "overall_score": 42.7,
+      "n_correct": 5,
+      "n_wrong": 2,
+      "pct_correct": 71.43,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1DSC",
+      "n_residues": 27,
+      "n_atoms": 682,
+      "overall_score": 57.7,
+      "n_correct": 6,
+      "n_wrong": 2,
+      "pct_correct": 75.0,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1DSD",
+      "n_residues": 27,
+      "n_atoms": 682,
+      "overall_score": 47.7,
+      "n_correct": 6,
+      "n_wrong": 2,
+      "pct_correct": 75.0,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1DSR",
+      "n_residues": 20,
+      "n_atoms": 325,
+      "overall_score": 42.3,
+      "n_correct": 8,
+      "n_wrong": 2,
+      "pct_correct": 80.0,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1E9W",
+      "n_residues": 19,
+      "n_atoms": 114,
+      "overall_score": 29.1,
+      "n_correct": 9,
+      "n_wrong": 7,
+      "pct_correct": 56.25,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1EPR",
+      "n_residues": 331,
+      "n_atoms": 2443,
+      "overall_score": 61.5,
+      "n_correct": 293,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1ER8",
+      "n_residues": 338,
+      "n_atoms": 2462,
+      "overall_score": 62.6,
+      "n_correct": 300,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1EVA",
+      "n_residues": 7,
+      "n_atoms": 143,
+      "overall_score": 41.0,
+      "n_correct": 6,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1EVB",
+      "n_residues": 7,
+      "n_atoms": 143,
+      "overall_score": 35.0,
+      "n_correct": 5,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1F57",
+      "n_residues": 309,
+      "n_atoms": 2445,
+      "overall_score": 70.3,
+      "n_correct": 285,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1FJA",
+      "n_residues": 34,
+      "n_atoms": 730,
+      "overall_score": 67.6,
+      "n_correct": 12,
+      "n_wrong": 4,
+      "pct_correct": 75.0,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1FJM",
+      "n_residues": 603,
+      "n_atoms": 4727,
+      "overall_score": 70.5,
+      "n_correct": 550,
+      "n_wrong": 2,
+      "pct_correct": 99.64,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1FVM",
+      "n_residues": 72,
+      "n_atoms": 762,
+      "overall_score": 33.1,
+      "n_correct": 30,
+      "n_wrong": 18,
+      "pct_correct": 62.5,
+      "n_violations": 18,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1GMK",
+      "n_residues": 97,
+      "n_atoms": 583,
+      "overall_score": 66.1,
+      "n_correct": 52,
+      "n_wrong": 4,
+      "pct_correct": 92.86,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1GO6",
+      "n_residues": 91,
+      "n_atoms": 966,
+      "overall_score": 35.8,
+      "n_correct": 36,
+      "n_wrong": 16,
+      "pct_correct": 69.23,
+      "n_violations": 16,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1GO9",
+      "n_residues": 42,
+      "n_atoms": 669,
+      "overall_score": 72.5,
+      "n_correct": 40,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1GRM",
+      "n_residues": 32,
+      "n_atoms": 272,
+      "overall_score": 70.6,
+      "n_correct": 26,
+      "n_wrong": 2,
+      "pct_correct": 92.86,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1HBT",
+      "n_residues": 294,
+      "n_atoms": 2376,
+      "overall_score": 68.6,
+      "n_correct": 265,
+      "n_wrong": 1,
+      "pct_correct": 99.62,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1HHU",
+      "n_residues": 51,
+      "n_atoms": 878,
+      "overall_score": 41.8,
+      "n_correct": 20,
+      "n_wrong": 8,
+      "pct_correct": 71.43,
+      "n_violations": 8,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1HHY",
+      "n_residues": 23,
+      "n_atoms": 211,
+      "overall_score": 41.5,
+      "n_correct": 10,
+      "n_wrong": 4,
+      "pct_correct": 71.43,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1HHZ",
+      "n_residues": 41,
+      "n_atoms": 373,
+      "overall_score": 35.3,
+      "n_correct": 19,
+      "n_wrong": 7,
+      "pct_correct": 73.08,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1I3W",
+      "n_residues": 82,
+      "n_atoms": 1130,
+      "overall_score": 35.3,
+      "n_correct": 24,
+      "n_wrong": 8,
+      "pct_correct": 75.0,
+      "n_violations": 8,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1IC9",
+      "n_residues": 29,
+      "n_atoms": 459,
+      "overall_score": 53.0,
+      "n_correct": 27,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1ICL",
+      "n_residues": 29,
+      "n_atoms": 455,
+      "overall_score": 59.2,
+      "n_correct": 27,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1ICO",
+      "n_residues": 29,
+      "n_atoms": 456,
+      "overall_score": 60.3,
+      "n_correct": 27,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1IHS",
+      "n_residues": 310,
+      "n_atoms": 2415,
+      "overall_score": 63.8,
+      "n_correct": 273,
+      "n_wrong": 1,
+      "pct_correct": 99.64,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1IHT",
+      "n_residues": 302,
+      "n_atoms": 2362,
+      "overall_score": 65.9,
+      "n_correct": 263,
+      "n_wrong": 1,
+      "pct_correct": 99.62,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1IKF",
+      "n_residues": 453,
+      "n_atoms": 3479,
+      "overall_score": 65.9,
+      "n_correct": 413,
+      "n_wrong": 7,
+      "pct_correct": 98.33,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1IKI",
+      "n_residues": 347,
+      "n_atoms": 2629,
+      "overall_score": 72.8,
+      "n_correct": 316,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1JNO",
+      "n_residues": 32,
+      "n_atoms": 552,
+      "overall_score": 66.1,
+      "n_correct": 26,
+      "n_wrong": 2,
+      "pct_correct": 92.86,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1JO3",
+      "n_residues": 32,
+      "n_atoms": 544,
+      "overall_score": 62.7,
+      "n_correct": 26,
+      "n_wrong": 2,
+      "pct_correct": 92.86,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1JO4",
+      "n_residues": 32,
+      "n_atoms": 546,
+      "overall_score": 63.3,
+      "n_correct": 26,
+      "n_wrong": 2,
+      "pct_correct": 92.86,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1JY4",
+      "n_residues": 70,
+      "n_atoms": 1036,
+      "overall_score": 67.7,
+      "n_correct": 64,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1JY6",
+      "n_residues": 48,
+      "n_atoms": 720,
+      "overall_score": 66.8,
+      "n_correct": 46,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1JY9",
+      "n_residues": 20,
+      "n_atoms": 322,
+      "overall_score": 70.6,
+      "n_correct": 19,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1KO0",
+      "n_residues": 421,
+      "n_atoms": 3269,
+      "overall_score": 75.3,
+      "n_correct": 382,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1KQ0",
+      "n_residues": 358,
+      "n_atoms": 2782,
+      "overall_score": 69.1,
+      "n_correct": 326,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1KQE",
+      "n_residues": 48,
+      "n_atoms": 904,
+      "overall_score": 64.3,
+      "n_correct": 42,
+      "n_wrong": 2,
+      "pct_correct": 95.45,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1KR6",
+      "n_residues": 323,
+      "n_atoms": 2457,
+      "overall_score": 81.1,
+      "n_correct": 281,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1KRO",
+      "n_residues": 323,
+      "n_atoms": 2455,
+      "overall_score": 81.2,
+      "n_correct": 281,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1KS7",
+      "n_residues": 323,
+      "n_atoms": 2456,
+      "overall_score": 80.8,
+      "n_correct": 281,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1KTO",
+      "n_residues": 323,
+      "n_atoms": 2453,
+      "overall_score": 80.7,
+      "n_correct": 281,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1L1V",
+      "n_residues": 20,
+      "n_atoms": 457,
+      "overall_score": 66.6,
+      "n_correct": 6,
+      "n_wrong": 2,
+      "pct_correct": 75.0,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1LCM",
+      "n_residues": 7,
+      "n_atoms": 143,
+      "overall_score": 31.7,
+      "n_correct": 5,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1MAG",
+      "n_residues": 32,
+      "n_atoms": 552,
+      "overall_score": 64.1,
+      "n_correct": 26,
+      "n_wrong": 2,
+      "pct_correct": 92.86,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1MCB",
+      "n_residues": 437,
+      "n_atoms": 3251,
+      "overall_score": 60.0,
+      "n_correct": 399,
+      "n_wrong": 1,
+      "pct_correct": 99.75,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1MCC",
+      "n_residues": 438,
+      "n_atoms": 3251,
+      "overall_score": 60.2,
+      "n_correct": 400,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1MCD",
+      "n_residues": 438,
+      "n_atoms": 3247,
+      "overall_score": 61.5,
+      "n_correct": 400,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1MCE",
+      "n_residues": 438,
+      "n_atoms": 3256,
+      "overall_score": 58.8,
+      "n_correct": 401,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1MCF",
+      "n_residues": 439,
+      "n_atoms": 3261,
+      "overall_score": 59.7,
+      "n_correct": 402,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1MCI",
+      "n_residues": 436,
+      "n_atoms": 3242,
+      "overall_score": 57.6,
+      "n_correct": 399,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1MCJ",
+      "n_residues": 437,
+      "n_atoms": 3242,
+      "overall_score": 57.0,
+      "n_correct": 399,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1MCK",
+      "n_residues": 437,
+      "n_atoms": 3240,
+      "overall_score": 59.1,
+      "n_correct": 399,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1MCL",
+      "n_residues": 435,
+      "n_atoms": 3231,
+      "overall_score": 58.5,
+      "n_correct": 398,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1MCN",
+      "n_residues": 436,
+      "n_atoms": 3231,
+      "overall_score": 58.6,
+      "n_correct": 398,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1MCQ",
+      "n_residues": 436,
+      "n_atoms": 3231,
+      "overall_score": 57.9,
+      "n_correct": 398,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1MCR",
+      "n_residues": 435,
+      "n_atoms": 3231,
+      "overall_score": 56.6,
+      "n_correct": 398,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1MCS",
+      "n_residues": 437,
+      "n_atoms": 3251,
+      "overall_score": 57.0,
+      "n_correct": 400,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1MHW",
+      "n_residues": 446,
+      "n_atoms": 3482,
+      "overall_score": 68.8,
+      "n_correct": 388,
+      "n_wrong": 2,
+      "pct_correct": 99.49,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1MIC",
+      "n_residues": 32,
+      "n_atoms": 552,
+      "overall_score": 60.6,
+      "n_correct": 26,
+      "n_wrong": 2,
+      "pct_correct": 92.86,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1MIK",
+      "n_residues": 176,
+      "n_atoms": 1353,
+      "overall_score": 67.9,
+      "n_correct": 145,
+      "n_wrong": 7,
+      "pct_correct": 95.39,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1MNV",
+      "n_residues": 40,
+      "n_atoms": 542,
+      "overall_score": 33.6,
+      "n_correct": 12,
+      "n_wrong": 4,
+      "pct_correct": 75.0,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1NG8",
+      "n_residues": 32,
+      "n_atoms": 518,
+      "overall_score": 58.8,
+      "n_correct": 24,
+      "n_wrong": 2,
+      "pct_correct": 92.31,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1NRM",
+      "n_residues": 32,
+      "n_atoms": 552,
+      "overall_score": 59.5,
+      "n_correct": 26,
+      "n_wrong": 2,
+      "pct_correct": 92.86,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1NRQ",
+      "n_residues": 276,
+      "n_atoms": 2200,
+      "overall_score": 60.3,
+      "n_correct": 252,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1NRU",
+      "n_residues": 32,
+      "n_atoms": 552,
+      "overall_score": 58.2,
+      "n_correct": 26,
+      "n_wrong": 2,
+      "pct_correct": 92.86,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1NT5",
+      "n_residues": 32,
+      "n_atoms": 560,
+      "overall_score": 62.8,
+      "n_correct": 26,
+      "n_wrong": 2,
+      "pct_correct": 92.86,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1NT6",
+      "n_residues": 32,
+      "n_atoms": 554,
+      "overall_score": 61.5,
+      "n_correct": 26,
+      "n_wrong": 2,
+      "pct_correct": 92.86,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1NXN",
+      "n_residues": 10,
+      "n_atoms": 142,
+      "overall_score": 67.5,
+      "n_correct": 8,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1OLN",
+      "n_residues": 210,
+      "n_atoms": 2350,
+      "overall_score": 67.7,
+      "n_correct": 132,
+      "n_wrong": 7,
+      "pct_correct": 94.96,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1OVF",
+      "n_residues": 22,
+      "n_atoms": 527,
+      "overall_score": 54.0,
+      "n_correct": 6,
+      "n_wrong": 2,
+      "pct_correct": 75.0,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1P4N",
+      "n_residues": 345,
+      "n_atoms": 2778,
+      "overall_score": 72.3,
+      "n_correct": 320,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1P52",
+      "n_residues": 361,
+      "n_atoms": 2862,
+      "overall_score": 72.0,
+      "n_correct": 327,
+      "n_wrong": 1,
+      "pct_correct": 99.7,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1PB8",
+      "n_residues": 283,
+      "n_atoms": 2178,
+      "overall_score": 71.9,
+      "n_correct": 266,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1PCG",
+      "n_residues": 495,
+      "n_atoms": 3978,
+      "overall_score": 72.2,
+      "n_correct": 473,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1PEK",
+      "n_residues": 285,
+      "n_atoms": 2058,
+      "overall_score": 71.8,
+      "n_correct": 252,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1PFE",
+      "n_residues": 19,
+      "n_atoms": 238,
+      "overall_score": 33.9,
+      "n_correct": 4,
+      "n_wrong": 4,
+      "pct_correct": 50.0,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1PXQ",
+      "n_residues": 35,
+      "n_atoms": 462,
+      "overall_score": 73.2,
+      "n_correct": 28,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1QFB",
+      "n_residues": 9,
+      "n_atoms": 124,
+      "overall_score": 53.8,
+      "n_correct": 6,
+      "n_wrong": 1,
+      "pct_correct": 85.71,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1QFI",
+      "n_residues": 39,
+      "n_atoms": 305,
+      "overall_score": 39.8,
+      "n_correct": 15,
+      "n_wrong": 9,
+      "pct_correct": 62.5,
+      "n_violations": 9,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1QNG",
+      "n_residues": 181,
+      "n_atoms": 1399,
+      "overall_score": 67.3,
+      "n_correct": 154,
+      "n_wrong": 7,
+      "pct_correct": 95.65,
+      "n_violations": 7,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1QNH",
+      "n_residues": 361,
+      "n_atoms": 2775,
+      "overall_score": 68.6,
+      "n_correct": 307,
+      "n_wrong": 14,
+      "pct_correct": 95.64,
+      "n_violations": 14,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1QUR",
+      "n_residues": 303,
+      "n_atoms": 2472,
+      "overall_score": 68.3,
+      "n_correct": 273,
+      "n_wrong": 2,
+      "pct_correct": 99.27,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1RCQ",
+      "n_residues": 359,
+      "n_atoms": 2778,
+      "overall_score": 73.0,
+      "n_correct": 326,
+      "n_wrong": 1,
+      "pct_correct": 99.69,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1S4V",
+      "n_residues": 459,
+      "n_atoms": 3448,
+      "overall_score": 70.8,
+      "n_correct": 404,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1SN9",
+      "n_residues": 92,
+      "n_atoms": 728,
+      "overall_score": 77.5,
+      "n_correct": 76,
+      "n_wrong": 4,
+      "pct_correct": 95.0,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1SNA",
+      "n_residues": 93,
+      "n_atoms": 748,
+      "overall_score": 79.0,
+      "n_correct": 72,
+      "n_wrong": 8,
+      "pct_correct": 90.0,
+      "n_violations": 8,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1SNE",
+      "n_residues": 47,
+      "n_atoms": 368,
+      "overall_score": 81.4,
+      "n_correct": 36,
+      "n_wrong": 4,
+      "pct_correct": 90.0,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1SOC",
+      "n_residues": 8,
+      "n_atoms": 137,
+      "overall_score": 61.2,
+      "n_correct": 7,
+      "n_wrong": 1,
+      "pct_correct": 87.5,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1T5M",
+      "n_residues": 14,
+      "n_atoms": 213,
+      "overall_score": 38.4,
+      "n_correct": 8,
+      "n_wrong": 3,
+      "pct_correct": 72.73,
+      "n_violations": 3,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1T5N",
+      "n_residues": 14,
+      "n_atoms": 213,
+      "overall_score": 26.4,
+      "n_correct": 8,
+      "n_wrong": 3,
+      "pct_correct": 72.73,
+      "n_violations": 3,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1T7D",
+      "n_residues": 445,
+      "n_atoms": 3501,
+      "overall_score": 68.7,
+      "n_correct": 401,
+      "n_wrong": 2,
+      "pct_correct": 99.5,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1T8J",
+      "n_residues": 25,
+      "n_atoms": 386,
+      "overall_score": 43.5,
+      "n_correct": 22,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1TD4",
+      "n_residues": 103,
+      "n_atoms": 746,
+      "overall_score": 74.6,
+      "n_correct": 93,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1TK2",
+      "n_residues": 281,
+      "n_atoms": 1963,
+      "overall_score": 74.2,
+      "n_correct": 242,
+      "n_wrong": 2,
+      "pct_correct": 99.18,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1TKF",
+      "n_residues": 277,
+      "n_atoms": 2039,
+      "overall_score": 67.6,
+      "n_correct": 242,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1TKH",
+      "n_residues": 279,
+      "n_atoms": 2060,
+      "overall_score": 66.7,
+      "n_correct": 245,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1TKJ",
+      "n_residues": 281,
+      "n_atoms": 2064,
+      "overall_score": 74.2,
+      "n_correct": 245,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1TKQ",
+      "n_residues": 27,
+      "n_atoms": 478,
+      "overall_score": 62.8,
+      "n_correct": 25,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1TMB",
+      "n_residues": 296,
+      "n_atoms": 2405,
+      "overall_score": 66.8,
+      "n_correct": 269,
+      "n_wrong": 1,
+      "pct_correct": 99.63,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1TMT",
+      "n_residues": 300,
+      "n_atoms": 2415,
+      "overall_score": 69.9,
+      "n_correct": 274,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1TPS",
+      "n_residues": 232,
+      "n_atoms": 1702,
+      "overall_score": 67.9,
+      "n_correct": 204,
+      "n_wrong": 1,
+      "pct_correct": 99.51,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1UNJ",
+      "n_residues": 167,
+      "n_atoms": 2231,
+      "overall_score": 45.6,
+      "n_correct": 48,
+      "n_wrong": 16,
+      "pct_correct": 75.0,
+      "n_violations": 16,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1UNM",
+      "n_residues": 43,
+      "n_atoms": 572,
+      "overall_score": 34.4,
+      "n_correct": 12,
+      "n_wrong": 4,
+      "pct_correct": 75.0,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1UNO",
+      "n_residues": 18,
+      "n_atoms": 212,
+      "overall_score": 65.1,
+      "n_correct": 18,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1VBS",
+      "n_residues": 169,
+      "n_atoms": 1585,
+      "overall_score": 68.7,
+      "n_correct": 145,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1VS2",
+      "n_residues": 18,
+      "n_atoms": 237,
+      "overall_score": 19.6,
+      "n_correct": 4,
+      "n_wrong": 4,
+      "pct_correct": 50.0,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1VTG",
+      "n_residues": 16,
+      "n_atoms": 196,
+      "overall_score": 28.2,
+      "n_correct": 4,
+      "n_wrong": 4,
+      "pct_correct": 50.0,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1W5U",
+      "n_residues": 85,
+      "n_atoms": 566,
+      "overall_score": 69.5,
+      "n_correct": 52,
+      "n_wrong": 4,
+      "pct_correct": 92.86,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1W9N",
+      "n_residues": 31,
+      "n_atoms": 462,
+      "overall_score": 72.6,
+      "n_correct": 23,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1WAW",
+      "n_residues": 376,
+      "n_atoms": 2952,
+      "overall_score": 81.3,
+      "n_correct": 336,
+      "n_wrong": 1,
+      "pct_correct": 99.7,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1WB0",
+      "n_residues": 376,
+      "n_atoms": 2949,
+      "overall_score": 71.3,
+      "n_correct": 334,
+      "n_wrong": 4,
+      "pct_correct": 98.82,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1WCO",
+      "n_residues": 42,
+      "n_atoms": 639,
+      "overall_score": 54.2,
+      "n_correct": 33,
+      "n_wrong": 2,
+      "pct_correct": 94.29,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1XA0",
+      "n_residues": 640,
+      "n_atoms": 4819,
+      "overall_score": 67.7,
+      "n_correct": 564,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1XBH",
+      "n_residues": 13,
+      "n_atoms": 209,
+      "overall_score": 67.8,
+      "n_correct": 12,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1XOF",
+      "n_residues": 44,
+      "n_atoms": 371,
+      "overall_score": 82.4,
+      "n_correct": 38,
+      "n_wrong": 2,
+      "pct_correct": 95.0,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1XQ7",
+      "n_residues": 531,
+      "n_atoms": 4068,
+      "overall_score": 58.9,
+      "n_correct": 441,
+      "n_wrong": 21,
+      "pct_correct": 95.45,
+      "n_violations": 21,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1XT7",
+      "n_residues": 14,
+      "n_atoms": 217,
+      "overall_score": 58.7,
+      "n_correct": 7,
+      "n_wrong": 4,
+      "pct_correct": 63.64,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1XVK",
+      "n_residues": 19,
+      "n_atoms": 239,
+      "overall_score": 42.5,
+      "n_correct": 4,
+      "n_wrong": 4,
+      "pct_correct": 50.0,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1XVN",
+      "n_residues": 19,
+      "n_atoms": 238,
+      "overall_score": 51.1,
+      "n_correct": 4,
+      "n_wrong": 4,
+      "pct_correct": 50.0,
+      "n_violations": 4,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1XVR",
+      "n_residues": 34,
+      "n_atoms": 396,
+      "overall_score": 42.5,
+      "n_correct": 8,
+      "n_wrong": 8,
+      "pct_correct": 50.0,
+      "n_violations": 8,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1XXZ",
+      "n_residues": 11,
+      "n_atoms": 200,
+      "overall_score": 51.0,
+      "n_correct": 9,
+      "n_wrong": 2,
+      "pct_correct": 81.82,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1XY4",
+      "n_residues": 12,
+      "n_atoms": 221,
+      "overall_score": 56.2,
+      "n_correct": 11,
+      "n_wrong": 1,
+      "pct_correct": 91.67,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1XY5",
+      "n_residues": 12,
+      "n_atoms": 224,
+      "overall_score": 54.1,
+      "n_correct": 10,
+      "n_wrong": 2,
+      "pct_correct": 83.33,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1XY6",
+      "n_residues": 12,
+      "n_atoms": 209,
+      "overall_score": 52.1,
+      "n_correct": 11,
+      "n_wrong": 1,
+      "pct_correct": 91.67,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1XY8",
+      "n_residues": 12,
+      "n_atoms": 215,
+      "overall_score": 50.0,
+      "n_correct": 10,
+      "n_wrong": 2,
+      "pct_correct": 83.33,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1XY9",
+      "n_residues": 11,
+      "n_atoms": 190,
+      "overall_score": 50.9,
+      "n_correct": 9,
+      "n_wrong": 2,
+      "pct_correct": 81.82,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1Y9Q",
+      "n_residues": 180,
+      "n_atoms": 1422,
+      "overall_score": 71.5,
+      "n_correct": 169,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1YJ1",
+      "n_residues": 237,
+      "n_atoms": 1765,
+      "overall_score": 74.6,
+      "n_correct": 208,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1YL8",
+      "n_residues": 8,
+      "n_atoms": 138,
+      "overall_score": 59.5,
+      "n_correct": 8,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1YL9",
+      "n_residues": 9,
+      "n_atoms": 168,
+      "overall_score": 56.5,
+      "n_correct": 8,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1YY2",
+      "n_residues": 10,
+      "n_atoms": 172,
+      "overall_score": 54.1,
+      "n_correct": 8,
+      "n_wrong": 1,
+      "pct_correct": 88.89,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "1ZEA",
+      "n_residues": 436,
+      "n_atoms": 3380,
+      "overall_score": 70.6,
+      "n_correct": 403,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1ZMH",
+      "n_residues": 122,
+      "n_atoms": 982,
+      "overall_score": 60.9,
+      "n_correct": 108,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1ZMI",
+      "n_residues": 123,
+      "n_atoms": 975,
+      "overall_score": 60.5,
+      "n_correct": 108,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1ZMK",
+      "n_residues": 61,
+      "n_atoms": 476,
+      "overall_score": 68.8,
+      "n_correct": 54,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "1ZUE",
+      "n_residues": 42,
+      "n_atoms": 671,
+      "overall_score": 78.2,
+      "n_correct": 41,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "209D",
+      "n_residues": 27,
+      "n_atoms": 454,
+      "overall_score": 68.8,
+      "n_correct": 6,
+      "n_wrong": 2,
+      "pct_correct": 75.0,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "2ADW",
+      "n_residues": 74,
+      "n_atoms": 1565,
+      "overall_score": 39.6,
+      "n_correct": 16,
+      "n_wrong": 16,
+      "pct_correct": 50.0,
+      "n_violations": 16,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "2AOU",
+      "n_residues": 581,
+      "n_atoms": 4571,
+      "overall_score": 80.4,
+      "n_correct": 536,
+      "n_wrong": 3,
+      "pct_correct": 99.44,
+      "n_violations": 3,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "2AP8",
+      "n_residues": 20,
+      "n_atoms": 301,
+      "overall_score": 73.5,
+      "n_correct": 15,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "2APH",
+      "n_residues": 346,
+      "n_atoms": 2688,
+      "overall_score": 69.8,
+      "n_correct": 310,
+      "n_wrong": 2,
+      "pct_correct": 99.36,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "2ATS",
+      "n_residues": 591,
+      "n_atoms": 4347,
+      "overall_score": 65.7,
+      "n_correct": 537,
+      "n_wrong": 3,
+      "pct_correct": 99.44,
+      "n_violations": 3,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "2AXI",
+      "n_residues": 105,
+      "n_atoms": 887,
+      "overall_score": 77.9,
+      "n_correct": 97,
+      "n_wrong": 1,
+      "pct_correct": 98.98,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "2BDX",
+      "n_residues": 302,
+      "n_atoms": 2405,
+      "overall_score": 63.1,
+      "n_correct": 277,
+      "n_wrong": 1,
+      "pct_correct": 99.64,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "2D55",
+      "n_residues": 27,
+      "n_atoms": 453,
+      "overall_score": 50.3,
+      "n_correct": 6,
+      "n_wrong": 2,
+      "pct_correct": 75.0,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "2DA8",
+      "n_residues": 22,
+      "n_atoms": 512,
+      "overall_score": 60.2,
+      "n_correct": 6,
+      "n_wrong": 2,
+      "pct_correct": 75.0,
+      "n_violations": 2,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "2DDE",
+      "n_residues": 20,
+      "n_atoms": 302,
+      "overall_score": 46.9,
+      "n_correct": 16,
+      "n_wrong": 1,
+      "pct_correct": 94.12,
+      "n_violations": 1,
+      "has_errors": true
+    },
+    {
+      "pdb_id": "2EAX",
+      "n_residues": 499,
+      "n_atoms": 3845,
+      "overall_score": 69.0,
+      "n_correct": 446,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "2EZ7",
+      "n_residues": 261,
+      "n_atoms": 2072,
+      "overall_score": 77.4,
+      "n_correct": 237,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "2FCM",
+      "n_residues": 157,
+      "n_atoms": 1191,
+      "overall_score": 72.3,
+      "n_correct": 140,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    },
+    {
+      "pdb_id": "2FCN",
+      "n_residues": 161,
+      "n_atoms": 1194,
+      "overall_score": 72.1,
+      "n_correct": 140,
+      "n_wrong": 0,
+      "pct_correct": 100.0,
+      "n_violations": 0,
+      "has_errors": false
+    }
+  ],
+  "summary": {
+    "n_audited": 200,
+    "n_with_errors": 119,
+    "error_rate_pct": 59.5,
+    "mean_pct_correct_chiral": 90.205,
+    "min_pct_correct_chiral": 30.0,
+    "max_n_wrong": 21,
+    "total_chirality_errors": 493,
+    "total_d_residue_errors": 10,
+    "total_l_residue_errors": 483,
+    "mean_overall_score": 60.55,
+    "mean_residues": 161.3,
+    "top_error_structures": [
+      {
+        "pdb_id": "1XQ7",
+        "n_errors": 21
+      },
+      {
+        "pdb_id": "1FVM",
+        "n_errors": 18
+      },
+      {
+        "pdb_id": "1GO6",
+        "n_errors": 16
+      },
+      {
+        "pdb_id": "1UNJ",
+        "n_errors": 16
+      },
+      {
+        "pdb_id": "2ADW",
+        "n_errors": 16
+      },
+      {
+        "pdb_id": "1QNH",
+        "n_errors": 14
+      },
+      {
+        "pdb_id": "1A7Z",
+        "n_errors": 10
+      },
+      {
+        "pdb_id": "1QFI",
+        "n_errors": 9
+      },
+      {
+        "pdb_id": "1HHU",
+        "n_errors": 8
+      },
+      {
+        "pdb_id": "1I3W",
+        "n_errors": 8
+      }
+    ]
+  },
+  "skipped_ids": [
+    "1C5F",
+    "1DDO",
+    "1GAC",
+    "1GOE",
+    "1H0G",
+    "1H0I",
+    "1HG1",
+    "1LOC",
+    "1M63",
+    "1MF8",
+    "1OF6",
+    "1QTE",
+    "1UHG",
+    "1W9U",
+    "1W9V",
+    "1XKH",
+    "1YWH",
+    "1ZUW",
+    "2AIZ",
+    "2DNS",
+    "2DWU",
+    "2EJ6",
+    "2ESL"
+  ]
+}
