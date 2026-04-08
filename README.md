@@ -1,16 +1,26 @@
 # ChiralFold
 
-**Chirality-preserving peptide structure prediction that definitively defeats AlphaFold 3 on D-peptides and diastereomers.**
+**Chirality-correct peptide 3D coordinate generation for D-amino acids and diastereomers.**
 
-ChiralFold guarantees **0% chirality violations** for any combination of L- and D-amino acids, compared to AlphaFold 3's **51% violation rate** (equivalent to random chance) on D-peptide structures.
+ChiralFold is a cheminformatics pipeline that guarantees **0% chirality violations** at stereogenic centers for any combination of L- and D-amino acids. It addresses a documented failure mode in AlphaFold 3, which produces a **51% per-residue chirality violation rate** on D-peptides — equivalent to random assignment ([Childs, Zhou & Donald, 2025](https://doi.org/10.1101/2025.03.14.643307)).
 
-| Metric | AlphaFold 3 | ChiralFold v2 |
-|--------|:-----------:|:-------------:|
-| Per-residue violation rate (pure D) | 51% (= random) | **0%** (guaranteed) |
-| Diastereomer (mixed L/D) violation rate | 50–52% | **0%** (per-residue control) |
-| P(correct 12-mer structure) | 0.05% | **100%** |
-| Fisher's exact test | — | p < 6.7×10⁻¹⁴⁴ |
-| Cohen's h effect size | — | −1.591 (very large) |
+## What ChiralFold Does (and Doesn't Do)
+
+ChiralFold is **not** a de novo fold predictor competing with AlphaFold 3 on structural accuracy. It is a coordinate generation tool that enforces stereochemistry by construction:
+
+- **De novo mode**: Builds peptide SMILES with explicit `[C@H]`/`[C@@H]` stereocenters, then generates 3D conformers via ETKDG + MMFF94
+- **Mirror-image mode**: Transforms known L-peptide structures to D-enantiomers via coordinate reflection (RMSD = 0.0 Å)
+- **Mixed L/D mode**: Supports per-residue chirality specification for diastereomeric peptides
+
+AF3's diffusion architecture lacks hard stereochemical constraints, so it treats D-residues as noise. ChiralFold guarantees correct stereochemistry but relies on force-field conformer generation for 3D geometry, which has known limitations (see benchmarks below).
+
+| Metric | AlphaFold 3 | ChiralFold |
+|--------|:-----------:|:----------:|
+| Chirality violation rate | 51% (random) | **0%** (by construction) |
+| Mixed L/D support | 50–52% violation | **0%** (per-residue) |
+| Bond length RMSD | — | 0.026 Å |
+| Bond angle RMSD | — | 1.5–3.0° |
+| Statistical test | — | p < 6.7×10⁻¹⁴⁴ |
 
 ## Installation
 
@@ -18,7 +28,7 @@ ChiralFold guarantees **0% chirality violations** for any combination of L- and 
 pip install git+https://github.com/Tommaso-R-Marena/ChiralFold.git
 ```
 
-Or install from source:
+Or from source:
 
 ```bash
 git clone https://github.com/Tommaso-R-Marena/ChiralFold.git
@@ -28,32 +38,25 @@ pip install -e .
 
 ### Dependencies
 
-- Python ≥ 3.9
-- RDKit ≥ 2023.3
-- NumPy, SciPy, pandas, matplotlib, seaborn, scikit-learn
+Python ≥ 3.9, RDKit ≥ 2023.3, NumPy, SciPy, pandas, matplotlib, seaborn, scikit-learn.
 
 ## Quick Start
-
-### Python API
 
 ```python
 from chiralfold import ChiralFold
 
 model = ChiralFold()
 
-# Pure D-peptide prediction
+# Pure D-peptide
 result = model.predict('AFWKELDR')
 print(result['violation_rate'])  # 0.0
 
-# Mixed L/D diastereomer prediction (NEW in v2)
+# Mixed L/D diastereomer
 result = model.predict('AFWKELDR', chirality_pattern='DLDLDLDL')
-print(result['n_d_residues'])    # 4
-print(result['n_l_residues'])    # 4
-print(result['violation_rate'])  # 0.0
 
-# Mirror-image transformation (L→D)
+# Mirror-image L→D transformation
 import numpy as np
-l_coords = np.random.randn(100, 3)  # L-peptide coordinates
+l_coords = np.random.randn(100, 3)
 result = model.predict_from_mirror(l_coords, 'AEAAAKEAAA')
 print(result['rmsd_to_ideal_mirror'])  # 0.0
 ```
@@ -63,10 +66,9 @@ print(result['rmsd_to_ideal_mirror'])  # 0.0
 ```python
 from chiralfold import d_peptide_smiles, l_peptide_smiles, mixed_peptide_smiles
 
-# Build peptide SMILES with explicit stereochemistry
-d_smi = d_peptide_smiles('AFWK')          # All D
-l_smi = l_peptide_smiles('AFWK')          # All L
-m_smi = mixed_peptide_smiles('AFWK', 'DLDL')  # Mixed
+d_smi = d_peptide_smiles('AFWK')               # All D
+l_smi = l_peptide_smiles('AFWK')               # All L
+m_smi = mixed_peptide_smiles('AFWK', 'DLDL')   # Mixed
 ```
 
 ### Chirality Validation
@@ -77,109 +79,81 @@ from chiralfold import validate_diastereomer
 report = validate_diastereomer('AFWKELDR', 'DLDLDLDL')
 print(report['valid'])              # True
 print(report['smiles_violations'])  # 0
-print(report['n_d'])                # 4
-print(report['n_l'])                # 4
 ```
 
-### Command-Line Interface
+### CLI
 
 ```bash
-# Predict a D-peptide structure
 chiralfold predict AFWKELDR
-
-# Predict a mixed L/D diastereomer
 chiralfold predict AFWKELDR --chirality DLDLDLDL
-
-# Validate chirality of a diastereomer
 chiralfold validate AFWKELDR --chirality DLDLDLDL
-
-# Run the full benchmark suite
 chiralfold benchmark
 ```
 
-## Benchmark
+## Benchmarks
 
-ChiralFold was benchmarked against the AlphaFold 3 results reported in [Childs, Zhou & Donald (2025)](https://doi.org/10.1101/2025.03.14.643307).
+### Chirality Benchmark (v2)
 
-### Test Suite
+Benchmarked against AF3 results from [Childs et al. (2025)](https://doi.org/10.1101/2025.03.14.643307):
 
-- **30 pure D-peptide sequences** (3–18 residues): homopolymers, charged, proline-rich, glycine-rich, all-20-amino-acid
-- **15 mixed L/D diastereomer sequences** (6–19 residues): Childs 2025 system analogues (DP19, DP9, DP12), alternating, random, drug-design, block patterns
-- **5 mirror-image transformation cases**: SH3 fragment, MDM2 binder, streptavidin binder, helix, beta-sheet
+- **46 sequences** (31 pure D + 15 mixed L/D diastereomers)
+- **0/467 chirality violations** (0.00%)
+- **217/217 3D geometry checks passed**
+- Fisher's exact p = 6.7×10⁻¹⁴⁴ vs AF3's 51% violation rate
+- Cohen's h = −1.591 (very large effect size)
 
-### Results
+### 3D Geometry Quality (v2.1)
 
-```
-Combined ChiralFold results:
-  Pure D:         0/302 violations (0.00%)
-  Diastereomers:  0/165 violations (0.00%)
-  TOTAL:          0/467 violations (0.00%)
-  3D geometry:    217/217 checks passed
+Assessed structural validity of generated conformers beyond chirality:
 
-AlphaFold 3:     16,600/32,550 violations (51.00%)
-Fisher exact:    p = 6.7e-144
-Z-test:          z = -21.9, p = 1.8e-106
-Cohen's h:       -1.591 (VERY LARGE effect size)
-```
+- **Bond length RMSD**: 0.026 Å from ideal values (PDB typical: ~0.02 Å)
+- **Bond angle RMSD**: 1.5–3.0° per type (PDB typical: ~1.5°)
+- **Peptide planarity**: 39% of ω angles within 6° of trans — this is a known limitation of ETKDG + MMFF94 for peptide backbone generation
+- **Conformer diversity**: 0–14 Å Cα RMSD range across ensemble
+- **Radius of gyration**: Consistent with compact/random coil scaling
+
+Ground truth: **PDB 3IWY** — crystal structure of the D-peptide dPMI-gamma (DWWPLAFEALLR) bound to MDM2 at 1.9 Å resolution. This is the same DP12:MDM2 system where AF3 showed 50% chirality violations.
+
+### Honest Limitations
+
+1. **Not a fold predictor.** ChiralFold guarantees correct stereocenters, not native-like folds. The de novo conformer ensembles are force-field minima, not biological structures.
+2. **MMFF94 backbone angles.** The force field is parameterized primarily for L-amino acids and doesn't strongly enforce D-amino acid backbone preferences.
+3. **Peptide bond planarity.** ETKDG + MMFF94 produces less planar peptide bonds than experimental crystal structures.
+4. **No protein context.** ChiralFold generates free-peptide conformers, not bound-state poses.
+
+The **mirror-image approach** avoids all of these limitations when an L-peptide template is available, inheriting the full structural quality of the input.
 
 ### Reproducing Results
 
 ```bash
+# Chirality benchmark
 python benchmarks/run_full_benchmark.py
+
+# 3D geometry quality benchmark
+python benchmarks/folding_quality_benchmark.py
 ```
 
-Results are saved to `results/`:
-- `benchmark_results.png` — 8-panel figure
-- `comparison_table.png` — summary table
-- `benchmark_data.csv` — raw data for all 46 sequences
-- `summary.json` — machine-readable results
-
-## How It Works
-
-ChiralFold uses two complementary approaches, both guaranteeing correct chirality by construction:
-
-### 1. De Novo Construction
-
-Each amino acid is encoded with explicit SMILES stereochemistry notation:
-- D-amino acids: `[C@H]` at Cα (R-configuration)
-- L-amino acids: `[C@@H]` at Cα (S-configuration)
-- Mixed: per-residue selection from D or L libraries
-
-The ETKDG distance geometry algorithm and MMFF94 force field preserve all specified stereocenters during 3D coordinate generation.
-
-### 2. Mirror-Image Transformation
-
-For known L-peptide structures, the D-enantiomer is obtained by coordinate reflection:
-
-```
-R: (x, y, z) → (−x, y, z),  det(R) = −1
-```
-
-This inverts the signed volume at every tetrahedral center, converting all S-centers to R (L→D) with RMSD = 0.0 Å to the ideal mirror image.
-
-### Why AlphaFold 3 Fails
-
-AF3's diffusion-based structure generation denoises atom coordinates without enforcing hard stereochemical constraints. D-amino acid residues are treated as noise, resulting in ~50% per-residue chirality violations—equivalent to random assignment. Increasing the number of random seeds (tested up to 128) and confidence metrics (pTM, ipTM) do not improve or predict chirality correctness.
+Results are saved to `results/`.
 
 ## Project Structure
 
 ```
 ChiralFold/
 ├── chiralfold/                   # Python package
-│   ├── __init__.py               # Public API
+│   ├── __init__.py
 │   ├── model.py                  # ChiralFold model + SMILES builders
 │   ├── validator.py              # Chirality validation engine
 │   ├── cli.py                    # Command-line interface
 │   └── data/
-│       └── test_sequences.py     # 30+15 test sequence library
+│       └── test_sequences.py     # 46-sequence test library
 ├── tests/
 │   └── test_chirality.py         # 31 unit tests
 ├── benchmarks/
-│   └── run_full_benchmark.py     # Full 6-phase benchmark script
-├── results/                      # Generated benchmark outputs
-├── pyproject.toml                # Package configuration
-├── setup.py                      # Backward-compatible setup
-├── LICENSE                       # MIT License
+│   ├── run_full_benchmark.py     # Chirality benchmark (6 phases)
+│   └── folding_quality_benchmark.py  # 3D geometry quality
+├── results/                      # Generated outputs
+├── pyproject.toml
+├── LICENSE (MIT)
 └── README.md
 ```
 
@@ -192,17 +166,15 @@ pytest tests/ -v
 
 ## Citation
 
-If you use ChiralFold in your research, please cite:
-
 ```bibtex
 @software{chiralfold2025,
-  title     = {ChiralFold: Chirality-Preserving Peptide Structure Prediction},
+  title     = {ChiralFold: Chirality-Correct Peptide 3D Coordinate Generation},
   author    = {ChiralFold Contributors},
   year      = {2025},
   url       = {https://github.com/Tommaso-R-Marena/ChiralFold},
-  version   = {2.0.0},
-  note      = {Defeats AlphaFold 3 on D-peptide and diastereomer chirality
-               prediction with 0\% violation rate vs.\ 51\%}
+  version   = {2.1.0},
+  note      = {Guarantees 0\% chirality violations for D-peptides and
+               diastereomers where AlphaFold 3 shows 51\% violations}
 }
 ```
 
@@ -220,4 +192,4 @@ The AlphaFold 3 benchmark data is from:
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+MIT. See [LICENSE](LICENSE).

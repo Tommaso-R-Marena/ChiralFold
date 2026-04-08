@@ -27,7 +27,7 @@ Reference:
     Folding Problem for D-Peptides?" bioRxiv 2025.03.14.643307
 """
 
-__version__ = "2.0.0"
+__version__ = "2.1.0"
 __author__ = "ChiralFold Contributors"
 
 from .model import (

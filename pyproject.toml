@@ -4,7 +4,7 @@ build-backend = "setuptools.backends._legacy:_Backend"
 
 [project]
 name = "chiralfold"
-version = "2.0.0"
+version = "2.1.0"
 description = "Chirality-preserving peptide structure prediction — defeats AlphaFold 3 on D-peptides and diastereomers"
 readme = "README.md"
 license = {text = "MIT"}
