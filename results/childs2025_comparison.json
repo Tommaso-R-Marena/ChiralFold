@@ -1,0 +1,338 @@
+{
+  "n_sequences": 41,
+  "total_chiral_residues": 473,
+  "total_violations": 0,
+  "chiralfold_rate": 0.0,
+  "af3_rate": 0.51,
+  "af3_source": "Childs Zhou Donald 2025 bioRxiv 2025.03.14.643307",
+  "per_sequence": [
+    {
+      "id": "DP19_1",
+      "seq": "ETFSDLWKLLRFNQHWYAM",
+      "chirality": "DDDDDDDDDDDDDDDDDDD",
+      "n_chiral": 19,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DP19_2",
+      "seq": "ETFSDLWKLLRFNQHWYAM",
+      "chirality": "DDDDDDDDDDLLLLLLLLL",
+      "n_chiral": 19,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DP19_3",
+      "seq": "ETFSDLWKLLRFNQHWYAM",
+      "chirality": "DLDLDLDLDLDLDLDLDLD",
+      "n_chiral": 19,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DP19_4",
+      "seq": "ETFSDLWKLLRFNQHWYAM",
+      "chirality": "LDDLDDLDDLDDLDDLDDD",
+      "n_chiral": 19,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DP19_5",
+      "seq": "ETFSDLWKLLRFNQHWYAM",
+      "chirality": "DDDDDLLLLLDDDDDLLLL",
+      "n_chiral": 19,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DP9_1",
+      "seq": "TNWYQGLRF",
+      "chirality": "DDDDDDDDD",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DP9_2",
+      "seq": "TNWYQGLRF",
+      "chirality": "DLDLDLDLD",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DP9_3",
+      "seq": "TNWYQGLRF",
+      "chirality": "LDDLDDLDD",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DP9_4",
+      "seq": "TNWYQGLRF",
+      "chirality": "DDDDDLLLL",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DP9_5",
+      "seq": "TNWYQGLRF",
+      "chirality": "LLLDLLLLD",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DP12_1",
+      "seq": "DWWPLAFEALLR",
+      "chirality": "DDDDDDDDDDDD",
+      "n_chiral": 12,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DP12_2",
+      "seq": "DWWPLAFEALLR",
+      "chirality": "DLDLDLDLDLDL",
+      "n_chiral": 12,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DP12_3",
+      "seq": "DWWPLAFEALLR",
+      "chirality": "DDDDDDLLLLLL",
+      "n_chiral": 12,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DP12_4",
+      "seq": "DWWPLAFEALLR",
+      "chirality": "LDDLDDLDDLDD",
+      "n_chiral": 12,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DP12_5",
+      "seq": "DWWPLAFEALLR",
+      "chirality": "DLDDLDDLDLDD",
+      "n_chiral": 12,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "SYN_1",
+      "seq": "AFWKELDR",
+      "chirality": "DDDDDDDD",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "SYN_2",
+      "seq": "AFWKELDR",
+      "chirality": "DLDLDLDL",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "SYN_3",
+      "seq": "AFWKELDR",
+      "chirality": "LLLDLLLL",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "SYN_4",
+      "seq": "MWKYELRF",
+      "chirality": "DDDDDDDD",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "SYN_5",
+      "seq": "MWKYELRF",
+      "chirality": "DDDLLDLD",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "SYN_6",
+      "seq": "RFSDELWNKYAM",
+      "chirality": "DDDDDDDDDDDD",
+      "n_chiral": 12,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "SYN_7",
+      "seq": "RFSDELWNKYAM",
+      "chirality": "DLDDLDDLDLDD",
+      "n_chiral": 12,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "SYN_8",
+      "seq": "THWKFVELRDSNYQA",
+      "chirality": "DDDDDDDDDDDDDDD",
+      "n_chiral": 15,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "SYN_9",
+      "seq": "THWKFVELRDSNYQA",
+      "chirality": "DLDLDLDLDLDLDLD",
+      "n_chiral": 15,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "SYN_10",
+      "seq": "THWKFVELRDSNYQA",
+      "chirality": "LLDLLDLLDLLDLLD",
+      "n_chiral": 15,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "APO_1",
+      "seq": "ALYDHAQVWCE",
+      "chirality": "DDDDDDDDDDD",
+      "n_chiral": 11,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "APO_2",
+      "seq": "ALYDHAQVWCE",
+      "chirality": "DLDLDLDLDLD",
+      "n_chiral": 11,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "APO_3",
+      "seq": "MQIFVKTL",
+      "chirality": "DDDDDDDD",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "APO_4",
+      "seq": "MQIFVKTL",
+      "chirality": "DLDLDLDL",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "CTRL_1",
+      "seq": "AFWKELDR",
+      "chirality": "LLLLLLLL",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "CTRL_2",
+      "seq": "TNWYQGLRF",
+      "chirality": "LLLLLLLLL",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "CTRL_3",
+      "seq": "DWWPLAFEALLR",
+      "chirality": "LLLLLLLLLLLL",
+      "n_chiral": 12,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "HOMO_1",
+      "seq": "AAAAAAAAAA",
+      "chirality": "DDDDDDDDDD",
+      "n_chiral": 10,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "HOMO_2",
+      "seq": "FFFFFFFF",
+      "chirality": "DDDDDDDD",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "HOMO_3",
+      "seq": "LLLLLLLLLL",
+      "chirality": "DDDDDDDDDD",
+      "n_chiral": 10,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "PRO_1",
+      "seq": "PPVFWAEL",
+      "chirality": "DDDDDDDD",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "PRO_2",
+      "seq": "RFPSDPLWKP",
+      "chirality": "DDDDDDDDDD",
+      "n_chiral": 10,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "ALL20",
+      "seq": "ACDEFHIKLMNQRSTVWY",
+      "chirality": "DDDDDDDDDDDDDDDDDD",
+      "n_chiral": 18,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DRUG_1",
+      "seq": "ETFSDLWKLLRFNQHWYAM",
+      "chirality": "LLLLLLDLLLLLLLLLLLL",
+      "n_chiral": 19,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DRUG_2",
+      "seq": "DWWPLAFEALLR",
+      "chirality": "LLLLLDLLLLLL",
+      "n_chiral": 12,
+      "violations": 0,
+      "rate": 0.0
+    },
+    {
+      "id": "DRUG_3",
+      "seq": "TNWYQGLRF",
+      "chirality": "LLLDLLLLL",
+      "n_chiral": 8,
+      "violations": 0,
+      "rate": 0.0
+    }
+  ]
+}

@@ -68,6 +68,9 @@ from .auditor import (
 from .rotamers import validate_rotamers
 from .threading import thread_sequence, thread_and_mirror, find_template
 from .fragments import assemble_protein, predict_secondary_structure
+from .af3_correct import correct_af3_output, detect_chirality_violations, correct_chirality
+from .interface_scorer import score_interface, compare_interfaces
+from .enumerate import enumerate_diastereomers
 
 __all__ = [
     'ChiralFold',
@@ -96,4 +99,10 @@ __all__ = [
     'find_template',
     'assemble_protein',
     'predict_secondary_structure',
+    'correct_af3_output',
+    'detect_chirality_violations',
+    'correct_chirality',
+    'score_interface',
+    'compare_interfaces',
+    'enumerate_diastereomers',
 ]

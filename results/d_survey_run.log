@@ -1,0 +1,292 @@
+=== D-residue PDB Chirality Survey ===
+
+Loaded 1291 PDB IDs from /home/user/workspace/chiralfold/benchmarks/d_residue_pdb_ids.json
+
+[10/200] audited | errors: 8 | last: 1ALX (2 wrong, 0.7s)
+[20/200] audited | errors: 14 | last: 1BFW (0 wrong, 0.4s)
+  [TIMEOUT] 1C5F after 30.0s
+[30/200] audited | errors: 18 | last: 1CWA (7 wrong, 2.5s)
+[40/200] audited | errors: 27 | last: 1CWZ (0 wrong, 0.2s)
+  [TIMEOUT] 1DDO after 30.0s
+[50/200] audited | errors: 35 | last: 1DSC (2 wrong, 0.7s)
+  >>> Checkpoint saved at 50 structures <<<
+[60/200] audited | errors: 40 | last: 1FJM (2 wrong, 29.8s)
+  [SKIP large after dl] 1GAC (3530 KB)
+  [SKIP large after dl] 1GOE (2145 KB)
+  [TIMEOUT] 1H0G after 30.0s
+  [TIMEOUT] 1H0I after 30.0s
+  [TIMEOUT] 1HG1 after 30.0s
+[70/200] audited | errors: 49 | last: 1I3W (8 wrong, 1.5s)
+[80/200] audited | errors: 55 | last: 1JO4 (2 wrong, 0.9s)
+[90/200] audited | errors: 56 | last: 1KTO (0 wrong, 8.7s)
+  [TIMEOUT] 1LOC after 30.0s
+  [TIMEOUT] 1M63 after 30.0s
+=== D-residue PDB Chirality Survey ===
+
+Loaded 1291 PDB IDs from /home/user/workspace/chiralfold/benchmarks/d_residue_pdb_ids.json
+
+Resuming from checkpoint: 50 already audited
+Already audited: 50, need 150 more
+
+  [TIMEOUT] 1C5F after 30.0s
+  [TIMEOUT] 1DDO after 30.0s
+[60/200] audited | errors: 40 | last: 1FJM (2 wrong, 29.7s)
+  [SKIP large after dl] 1GAC (3530 KB)
+  [SKIP large after dl] 1GOE (2145 KB)
+  [TIMEOUT] 1H0G after 30.0s
+  [TIMEOUT] 1H0I after 30.0s
+  [TIMEOUT] 1HG1 after 30.0s
+[70/200] audited | errors: 49 | last: 1I3W (8 wrong, 1.5s)
+  >>> Checkpoint saved at 75 structures <<<
+[80/200] audited | errors: 55 | last: 1JO4 (2 wrong, 0.5s)
+[90/200] audited | errors: 56 | last: 1KTO (0 wrong, 9.3s)
+  [TIMEOUT] 1LOC after 30.0s
+  [TIMEOUT] 1M63 after 30.0s
+[100/200] audited | errors: 59 | last: 1MCJ (0 wrong, 13.9s)
+  >>> Checkpoint saved at 100 structures <<<
+=== D-residue PDB Chirality Survey ===
+
+Loaded 1291 PDB IDs from /home/user/workspace/chiralfold/benchmarks/d_residue_pdb_ids.json
+
+Resuming from checkpoint: 100 already audited
+Already audited: 100, need 100 more
+
+  [TIMEOUT] 1C5F after 30.0s
+  [TIMEOUT] 1DDO after 30.0s
+  [SKIP large after dl] 1GAC (3530 KB)
+  [SKIP large after dl] 1GOE (2145 KB)
+  [TIMEOUT] 1H0G after 30.0s
+  [TIMEOUT] 1H0I after 30.0s
+  [TIMEOUT] 1HG1 after 30.0s
+  [TIMEOUT] 1LOC after 30.0s
+  [TIMEOUT] 1M63 after 30.0s
+  [TIMEOUT] 1MF8 after 30.0s
+[110/200] audited | errors: 63 | last: 1MNV (4 wrong, 0.5s)
+  [TIMEOUT] 1OF6 after 30.0s
+[120/200] audited | errors: 70 | last: 1P4N (0 wrong, 9.8s)
+  >>> Checkpoint saved at 125 structures <<<
+[130/200] audited | errors: 76 | last: 1QNH (14 wrong, 9.4s)
+  [TIMEOUT] 1QTE after 30.0s
+[140/200] audited | errors: 85 | last: 1T7D (2 wrong, 14.8s)
+=== D-residue PDB Chirality Survey ===
+
+Loaded 1291 PDB IDs from /home/user/workspace/chiralfold/benchmarks/d_residue_pdb_ids.json
+
+Resuming from checkpoint: 125 already audited
+Already audited: 125, need 75 more
+
+  [TIMEOUT] 1C5F after 30.0s
+  [TIMEOUT] 1DDO after 30.0s
+  [SKIP large after dl] 1GAC (3530 KB)
+  [SKIP large after dl] 1GOE (2145 KB)
+  [TIMEOUT] 1H0G after 30.0s
+  [TIMEOUT] 1H0I after 30.0s
+  [TIMEOUT] 1HG1 after 30.0s
+  [TIMEOUT] 1LOC after 30.0s
+  [TIMEOUT] 1M63 after 30.0s
+  [TIMEOUT] 1MF8 after 30.0s
+  [TIMEOUT] 1OF6 after 30.0s
+[130/200] audited | errors: 76 | last: 1QNH (14 wrong, 9.5s)
+  [TIMEOUT] 1QTE after 30.0s
+[140/200] audited | errors: 85 | last: 1T7D (2 wrong, 15.2s)
+[150/200] audited | errors: 88 | last: 1TPS (1 wrong, 3.7s)
+  >>> Checkpoint saved at 150 structures <<<
+  [TIMEOUT] 1UHG after 30.0s
+  [TIMEOUT] 1W9U after 30.0s
+  [TIMEOUT] 1W9V after 30.0s
+[160/200] audited | errors: 95 | last: 1WB0 (4 wrong, 10.9s)
+=== D-residue PDB Chirality Survey ===
+
+Loaded 1291 PDB IDs from /home/user/workspace/chiralfold/benchmarks/d_residue_pdb_ids.json
+
+Resuming from checkpoint: 150 already audited
+Already audited: 150, need 50 more
+
+  [TIMEOUT] 1C5F after 30.0s
+  [TIMEOUT] 1DDO after 30.0s
+  [SKIP large after dl] 1GAC (3530 KB)
+  [SKIP large after dl] 1GOE (2145 KB)
+  [TIMEOUT] 1H0G after 30.0s
+  [TIMEOUT] 1H0I after 30.0s
+  [TIMEOUT] 1HG1 after 30.0s
+  [TIMEOUT] 1LOC after 30.0s
+  [TIMEOUT] 1M63 after 30.0s
+  [TIMEOUT] 1MF8 after 30.0s
+  [TIMEOUT] 1OF6 after 30.0s
+  [TIMEOUT] 1QTE after 30.0s
+  [TIMEOUT] 1UHG after 30.0s
+  [TIMEOUT] 1W9U after 30.0s
+  [TIMEOUT] 1W9V after 30.0s
+[160/200] audited | errors: 95 | last: 1WB0 (4 wrong, 10.7s)
+  [TIMEOUT] 1XKH after 30.0s
+[170/200] audited | errors: 103 | last: 1XXZ (2 wrong, 0.2s)
+  >>> Checkpoint saved at 175 structures <<<
+  [TIMEOUT] 1YWH after 30.0s
+[180/200] audited | errors: 109 | last: 1YY2 (1 wrong, 0.2s)
+=== D-residue PDB Chirality Survey ===
+
+Loaded 1291 PDB IDs from /home/user/workspace/chiralfold/benchmarks/d_residue_pdb_ids.json
+
+Resuming from checkpoint: 175 already audited
+Already audited: 175, need 25 more
+
+  [TIMEOUT] 1C5F after 30.0s
+  [TIMEOUT] 1DDO after 30.0s
+  [SKIP large after dl] 1GAC (3530 KB)
+  [SKIP large after dl] 1GOE (2145 KB)
+  [TIMEOUT] 1H0G after 30.0s
+  [TIMEOUT] 1H0I after 30.0s
+  [TIMEOUT] 1HG1 after 30.0s
+  [TIMEOUT] 1LOC after 30.0s
+  [TIMEOUT] 1M63 after 30.0s
+  [TIMEOUT] 1MF8 after 30.0s
+  [TIMEOUT] 1OF6 after 30.0s
+  [TIMEOUT] 1QTE after 30.0s
+  [TIMEOUT] 1UHG after 30.0s
+  [TIMEOUT] 1W9U after 30.0s
+  [TIMEOUT] 1W9V after 30.0s
+  [TIMEOUT] 1XKH after 30.0s
+  [TIMEOUT] 1YWH after 30.0s
+[180/200] audited | errors: 109 | last: 1YY2 (1 wrong, 0.2s)
+  [TIMEOUT] 1ZUW after 30.0s
+  [SKIP large after dl] 2AIZ (3368 KB)
+[190/200] audited | errors: 113 | last: 2APH (2 wrong, 9.2s)
+=== D-residue PDB Chirality Survey ===
+
+Loaded 1291 PDB IDs from /home/user/workspace/chiralfold/benchmarks/d_residue_pdb_ids.json
+
+Resuming from checkpoint: 175 already audited
+Already audited: 175, need 25 more
+
+  [TIMEOUT] 1C5F after 30.0s
+  [TIMEOUT] 1DDO after 30.0s
+  [SKIP large after dl] 1GAC (3530 KB)
+  [SKIP large after dl] 1GOE (2145 KB)
+  [TIMEOUT] 1H0G after 30.0s
+  [TIMEOUT] 1H0I after 30.0s
+  [TIMEOUT] 1HG1 after 30.0s
+  [TIMEOUT] 1LOC after 30.0s
+  [TIMEOUT] 1M63 after 30.0s
+  [TIMEOUT] 1MF8 after 30.0s
+  [TIMEOUT] 1OF6 after 30.0s
+  [TIMEOUT] 1QTE after 30.0s
+  [TIMEOUT] 1UHG after 30.0s
+  [TIMEOUT] 1W9U after 30.0s
+  [TIMEOUT] 1W9V after 30.0s
+  [TIMEOUT] 1XKH after 30.0s
+  [TIMEOUT] 1YWH after 30.0s
+[180/200] audited | errors: 109 | last: 1YY2 (1 wrong, 0.2s)
+  [TIMEOUT] 1ZUW after 30.0s
+  [SKIP large after dl] 2AIZ (3368 KB)
+[190/200] audited | errors: 113 | last: 2APH (2 wrong, 8.6s)
+=== D-residue PDB Chirality Survey ===
+
+Loaded 1291 PDB IDs from /home/user/workspace/chiralfold/benchmarks/d_residue_pdb_ids.json
+
+Resuming from checkpoint: 175 already audited
+Already audited: 175, need 25 more
+
+  [TIMEOUT] 1C5F after 30.0s
+  [TIMEOUT] 1DDO after 30.0s
+  [SKIP large after dl] 1GAC (3530 KB)
+  [SKIP large after dl] 1GOE (2145 KB)
+  [TIMEOUT] 1H0G after 30.0s
+  [TIMEOUT] 1H0I after 30.0s
+  [TIMEOUT] 1HG1 after 30.0s
+  [TIMEOUT] 1LOC after 30.0s
+  [TIMEOUT] 1M63 after 30.0s
+  [TIMEOUT] 1MF8 after 30.0s
+  [TIMEOUT] 1OF6 after 30.0s
+  [TIMEOUT] 1QTE after 30.0s
+  [TIMEOUT] 1UHG after 30.0s
+  [TIMEOUT] 1W9U after 30.0s
+  [TIMEOUT] 1W9V after 30.0s
+  [TIMEOUT] 1XKH after 30.0s
+  [TIMEOUT] 1YWH after 30.0s
+[180/200] audited | errors: 109 | last: 1YY2 (1 wrong, 0.2s)
+  >>> Checkpoint saved at 180 structures <<<
+  >>> Checkpoint saved at 185 structures <<<
+  [TIMEOUT] 1ZUW after 30.0s
+  [SKIP large after dl] 2AIZ (3368 KB)
+[190/200] audited | errors: 113 | last: 2APH (2 wrong, 9.3s)
+  >>> Checkpoint saved at 190 structures <<<
+=== D-residue PDB Chirality Survey ===
+
+Loaded 1291 PDB IDs from /home/user/workspace/chiralfold/benchmarks/d_residue_pdb_ids.json
+
+Resuming from checkpoint: 190 already audited
+Already audited: 190, need 10 more
+
+  [TIMEOUT] 1C5F after 30.0s
+  [TIMEOUT] 1DDO after 30.0s
+  [SKIP large after dl] 1GAC (3530 KB)
+  [SKIP large after dl] 1GOE (2145 KB)
+  [TIMEOUT] 1H0G after 30.0s
+  [TIMEOUT] 1H0I after 30.0s
+  [TIMEOUT] 1HG1 after 30.0s
+  [TIMEOUT] 1LOC after 30.0s
+  [TIMEOUT] 1M63 after 30.0s
+  [TIMEOUT] 1MF8 after 30.0s
+  [TIMEOUT] 1OF6 after 30.0s
+  [TIMEOUT] 1QTE after 30.0s
+  [TIMEOUT] 1UHG after 30.0s
+  [TIMEOUT] 1W9U after 30.0s
+  [TIMEOUT] 1W9V after 30.0s
+  [TIMEOUT] 1XKH after 30.0s
+  [TIMEOUT] 1YWH after 30.0s
+  [TIMEOUT] 1ZUW after 30.0s
+  [SKIP large after dl] 2AIZ (3368 KB)
+  >>> Checkpoint saved at 195 structures <<<
+  [TIMEOUT] 2DNS after 30.0s
+  [TIMEOUT] 2DWU after 30.0s
+=== D-residue PDB Chirality Survey ===
+
+Loaded 1291 PDB IDs from /home/user/workspace/chiralfold/benchmarks/d_residue_pdb_ids.json
+
+Resuming from checkpoint: 195 already audited
+Already audited: 195, need 5 more
+
+  [TIMEOUT] 1C5F after 30.0s
+  [TIMEOUT] 1DDO after 30.0s
+  [SKIP large after dl] 1GAC (3530 KB)
+  [SKIP large after dl] 1GOE (2145 KB)
+  [TIMEOUT] 1H0G after 30.0s
+  [TIMEOUT] 1H0I after 30.0s
+  [TIMEOUT] 1HG1 after 30.0s
+  [TIMEOUT] 1LOC after 30.0s
+  [TIMEOUT] 1M63 after 30.0s
+  [TIMEOUT] 1MF8 after 30.0s
+  [TIMEOUT] 1OF6 after 30.0s
+  [TIMEOUT] 1QTE after 30.0s
+  [TIMEOUT] 1UHG after 30.0s
+  [TIMEOUT] 1W9U after 30.0s
+  [TIMEOUT] 1W9V after 30.0s
+  [TIMEOUT] 1XKH after 30.0s
+  [TIMEOUT] 1YWH after 30.0s
+  [TIMEOUT] 1ZUW after 30.0s
+  [SKIP large after dl] 2AIZ (3368 KB)
+  [TIMEOUT] 2DNS after 30.0s
+  [TIMEOUT] 2DWU after 30.0s
+=== D-residue PDB Chirality Survey ===
+
+Loaded 1291 PDB IDs from /home/user/workspace/chiralfold/benchmarks/d_residue_pdb_ids.json
+
+Resuming from checkpoint: 195 already audited
+Already audited: 195, need 5 more
+
+  [TIMEOUT] 2EJ6 after 30.0s
+  [TIMEOUT] 2ESL after 30.0s
+[200/200] audited | errors: 119 | last: 2FCN (0 wrong, 1.9s)
+  >>> Checkpoint saved at 200 structures <<<
+
+=== Survey Complete ===
+Attempted      : 290
+Audited        : 200
+Perfect chiral : 81
+With errors    : 119
+Too large      : 14
+Download fails : 0
+Timeouts       : 76
+Audit errors   : 0
+
+Results saved to: /home/user/workspace/chiralfold/results/d_survey_results.json

@@ -1,0 +1,17 @@
+{
+  "receptor": "results/docking/mdm2_receptor.pdb",
+  "ligand_designed": "results/docking/d_p53_ligand.pdb",
+  "ligand_experimental": "results/docking/dpmi_gamma_ligand.pdb",
+  "center": [
+    19.681770642201823,
+    -5.866385321100918,
+    21.209009174311937
+  ],
+  "box_size": [
+    30.0,
+    30.0,
+    30.0
+  ],
+  "exhaustiveness": 32,
+  "n_poses": 10
+}

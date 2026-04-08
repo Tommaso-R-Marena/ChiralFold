@@ -235,5 +235,43 @@ class TestIntegration:
         assert total_chiral > 100
 
 
+# ── External PDB validation test ──────────────────────────────────────
+
+class TestExternalPDB:
+    """Validate chirality on a real PDB structure fetched from RCSB."""
+
+    def test_ubiquitin_1ubq_chirality(self):
+        """PDB 1UBQ (ubiquitin, 76 residues) must have 100% Cα chirality."""
+        import os
+        import urllib.request
+        import tempfile
+
+        # Download 1UBQ if not cached
+        cache_dir = os.path.join(os.path.dirname(__file__), '..', 'results')
+        pdb_path = os.path.join(cache_dir, '1UBQ.pdb')
+
+        if not os.path.exists(pdb_path):
+            os.makedirs(cache_dir, exist_ok=True)
+            url = 'https://files.rcsb.org/download/1UBQ.pdb'
+            try:
+                urllib.request.urlretrieve(url, pdb_path)
+            except Exception:
+                pytest.skip('Could not download 1UBQ.pdb from RCSB')
+
+        if not os.path.exists(pdb_path):
+            pytest.skip('1UBQ.pdb not available')
+
+        from chiralfold.auditor import audit_pdb
+        report = audit_pdb(pdb_path)
+
+        assert report['chirality']['pct_correct'] == 100.0, (
+            f"1UBQ chirality: {report['chirality']['pct_correct']}% "
+            f"(expected 100%)"
+        )
+        assert report['n_residues'] >= 70, (
+            f"1UBQ has {report['n_residues']} residues (expected >= 70)"
+        )
+
+
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
