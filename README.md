@@ -12,7 +12,7 @@ ChiralFold provides `pip install`-able stereochemistry validation and coordinate
 
 **Mirror-image binder design** — Converted the p53:MDM2 crystal structure (PDB 1YCR) into a D-peptide therapeutic candidate that preserves the Phe19/Trp23/Leu26 binding triad as D-amino acids — the same hotspot the experimental dPMI-γ (Kd = 53 nM) uses. All backbone φ angles exactly sign-inverted, 0.0 Å coordinate error.
 
-**PDB-wide D-residue survey** — Audited 200 PDB structures containing D-amino acids. Found 21 D-label/L-coordinate mismatches in 12 structures: 4 genuine stereochemistry errors (biology requires D, coordinates show L), 13 CCD code misassignments (L-molecule labeled with D-code), 3 polymer residue mislabels, and 1 borderline. All cross-referenced against biological context and primary literature. MolProbity does not flag any of these.
+**PDB-wide D-residue survey** — Verified 12,573 D-amino acid residues across 4,616 PDB files (>91% of all RCSB entries for each of the 18 standard D-amino acid CCD codes). Found 29 D-label/L-coordinate mismatches in 16 structures: 6 genuine stereochemistry errors (biology requires D, coordinates show L), 18 CCD code misassignments across 5 structures (L-molecule labeled with D-code), 3 polymer residue mislabels, and 2 borderlines. Errors cluster in 5 CCD codes (DTY, DLY, DPN, DSN, DAR); 9 codes confirmed clean at zero errors. All cross-referenced against biological context and primary literature. MolProbity does not flag any of these.
 
 **AF3 chirality correction** — Automatic detection and correction of stereochemistry violations in AlphaFold 3 outputs, directly addressing the 51% violation rate documented by Childs et al. (2025).
 
@@ -168,7 +168,7 @@ Fisher's exact test: p < 6.7×10⁻¹⁴⁴. 31 PDB structures audited: 30/31 = 
 
 ### PDB-Wide D-Residue Chirality Verification
 
-Independently verified (no ChiralFold code — numpy + raw PDB coordinates only) 1,677 D-amino acid residues across 231 PDB files. Found **21 D-label/L-coordinate mismatches in 12 structures** — cases where deposited Cα coordinates show L-stereochemistry despite D-amino acid labels. Error rate: 1.3%. All are invisible to MolProbity.
+Independently verified (no ChiralFold code — numpy + raw PDB coordinates only) 12,573 D-amino acid residues across 4,616 PDB files (>91% coverage of all 18 standard D-amino acid CCD codes). Found **29 D-label/L-coordinate mismatches in 16 structures** — cases where deposited Cα coordinates show L-stereochemistry despite D-amino acid labels. Error rate: 0.23%. Errors cluster in 5 CCD codes (DTY 2.35%, DLY 0.73%, DPN 0.33%, DAR 0.36%, DSN 0.28%); 9 codes confirmed clean at ≥91% coverage. All are invisible to MolProbity.
 
 **Error classification (cross-referenced against deposition remarks, COMPND records, biological context, and primary literature):**
 
@@ -188,20 +188,43 @@ Independently verified (no ChiralFold code — numpy + raw PDB coordinates only)
 | 2ATS | DLY | A | 3001-3003 | +2.56 to +2.59 | CCD-Code | Title says "(S)-lysine" = L-Lys; 3 ligand copies |
 
 **Error type breakdown:**
-- **CCD-Code** (13 errors, 4 structures): Non-polymer ligand labeled with D-form CCD code when the crystallized molecule is L-form. The coordinates correctly model L-stereochemistry; only the chemical component code is wrong.
+- **CCD-Code** (18 errors, 5 structures): Non-polymer ligand labeled with D-form CCD code when the crystallized molecule is L-form. The coordinates correctly model L-stereochemistry; only the chemical component code is wrong.
 - **Mislabel** (3 errors, 3 structures): Polymer residue labeled with D-amino acid code in a context where L is biologically correct (L-protein, or COMPND record specifying L-form).
-- **Stereochem** (4 errors, 4 structures): **Most concerning** — the biology requires D-stereochemistry but the deposited coordinates show L. These are genuine coordinate-level errors.
-- **Borderline** (1 error, 1 structure): Near-zero signed volume from racemic crystallization conditions.
+- **Stereochem** (6 errors, 6 structures): **Most concerning** — the biology requires D-stereochemistry but the deposited coordinates show L. These are genuine coordinate-level errors.
+- **Borderline** (2 errors, 2 structures): Near-zero signed volume; inconclusive without additional evidence.
 
-Regardless of type, all 21 mismatches are real annotation inconsistencies in the PDB. The signed volume method detects all error types without requiring knowledge of biological context.
+Regardless of type, all 29 mismatches are real annotation inconsistencies in the PDB. The signed volume method detects all error types without requiring knowledge of biological context.
 
-Full dataset: `results/d_residue_verification.csv` (1,678 rows with raw coordinates). Classification: `results/error_classification.json`. Per-structure reclassification evidence: `results/error_table_verified.csv`.
+Full dataset: `results/d_residue_verification.csv` (12,574 rows with raw coordinates). Classification: `results/error_classification.json`. Per-structure reclassification evidence: `results/error_table_verified.csv`. **Code-level coverage summary: `results/ccd_code_coverage_summary.csv`** (see below).
 
-> **Benchmark Reproducibility:** All 12 reclassifications are independently verifiable from `results/error_table_verified.csv` (signed volumes, B-factors, ALTLOC flags, biological evidence) and `results/error_classification.json` (category breakdown and method). No ChiralFold code is required — only numpy and raw PDB coordinate files from RCSB.
+> **Benchmark Reproducibility:** All 16 error structures are independently verifiable from `results/error_table_verified.csv` (signed volumes, B-factors, ALTLOC flags, biological evidence) and `results/error_classification.json` (category breakdown and method). No ChiralFold code is required — only numpy and raw PDB coordinate files from RCSB.
 
-**Bulletproof verification:** Five independent checks confirm the findings: (1) Sign convention validated on 24/24 known-correct D-residues in 3IWY (all negative volumes); (2) 1KO0 reclassified as borderline (vol=+0.12, ALTLOC B, B=32.3 — inconclusive); (3) 1OF6 confirmed across all 8 chains (all L-coordinates, consistent with L-Tyr biological role); (4) 1ABI internal control passes cleanly (DPN:1 vol=-2.60 correct vs DPN:56 vol=+2.49 error); (5) Full re-verification of all 12 structures with biological context cross-referencing. See `benchmarks/bulletproof_verification.py` and `results/bulletproof_outputs/`.
+**Bulletproof verification:** Five independent checks confirm the findings: (1) Sign convention validated on 24/24 known-correct D-residues in 3IWY (all negative volumes); (2) 1KO0 reclassified as borderline (vol=+0.12, ALTLOC B, B=32.3 — inconclusive); (3) 1OF6 confirmed across all 8 chains (all L-coordinates, consistent with L-Tyr biological role); (4) 1ABI internal control passes cleanly (DPN:1 vol=-2.60 correct vs DPN:56 vol=+2.49 error); (5) Full re-verification of all 16 structures with biological context cross-referencing. See `benchmarks/bulletproof_verification.py` and `results/bulletproof_outputs/`.
 
-**Correlation analysis:** All 12 error structures were deposited between 1992 and 2005. Zero errors in structures deposited after 2005, consistent with the 2006–2008 wwPDB remediation effort that systematically corrected stereochemistry assignments. Deposition year significantly predicts errors (Mann-Whitney U=278, p=0.0027). Resolution does not (p=0.19) — errors span 0.99–2.70 Å, indicating a labeling problem rather than a data quality problem.
+**Correlation analysis:** 13 of the 16 error structures were deposited between 1992 and 2005, consistent with the 2006–2008 wwPDB remediation effort. Three post-remediation errors (2RMI 2007, 2W76 2008, 3RIT 2011) confirm the pipeline still lacks a D-specific chirality check. Deposition year significantly predicts errors (Mann-Whitney U=278, p=0.0027 on the initial 12-structure survey). Resolution does not (p=0.19) — errors span 0.99–2.77 Å, indicating a labeling problem rather than a data quality problem.
+
+---
+
+### Code-Level Coverage Summary
+
+`results/ccd_code_coverage_summary.csv` — **18 rows, 12 columns.** One row per standard D-amino acid CCD code. Lets reviewers reproduce the error-clustering finding without parsing the LaTeX.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `ccd_code` | string | Three-letter wwPDB Chemical Component Dictionary code (e.g. `DTY`, `DLY`) |
+| `rcsb_total_entries` | integer | Total PDB entries containing this code, per RCSB full-text search |
+| `entries_surveyed` | integer | Entries downloaded and verified in this study |
+| `coverage_pct` | float | `entries_surveyed / rcsb_total_entries × 100` |
+| `mmcif_only_unavailable` | integer | Entries not available as legacy PDB format (post-2019 depositions and large cryo-EM assemblies); excluded from verification |
+| `residues_checked` | integer | Individual Cα chirality checks performed (residues with complete N/Cα/C/Cβ backbone) |
+| `n_errors` | integer | D-labeled residues with confirmed L-stereochemistry (signed volume > 0) |
+| `n_error_structures` | integer | Distinct PDB IDs containing at least one error |
+| `error_structures` | string | Semicolon-separated list of those PDB IDs |
+| `error_rate_pct` | float | `n_errors / residues_checked × 100` |
+| `status` | string | `error-prone` (n_errors > 0) or `confirmed-clean` (n_errors = 0 at ≥91% coverage) |
+| `biological_context` | string | Plain-English summary of the structural families in which this code appears |
+
+**Key finding from this table:** Errors concentrate in five codes — DTY (2.35% error rate), DLY (0.73%), DAR (0.36%), DSN (0.28%), DPN (0.33%) — while nine codes are confirmed clean at zero errors across ≥91% of their RCSB universe: DAS, DGL, DGN, DIL, DLE, DPR, DTH, DTR, DVA. The error-prone codes share two biological scenarios: enzyme active-site ligands where the D-form CCD code is confused with the L-form substrate (DAR/DTY/DLY), and designed or NRPS-assembled peptides where D-configuration is required but L-coordinates were deposited (DPN/DSN).
 
 ### Planarity Fix
 
@@ -290,8 +313,8 @@ Residues: 189. Chirality: 181 correct, 0 wrong, 8 Gly (100.0%). Ramachandran: 95
 **MDM2 Interface Score (1YCR, p53:MDM2):**
 Buried Surface Area: 1,980 Å². Shape Complementarity: 0.933. Hydrogen bonds: 10. Interface score: 61.9/100.
 
-**D-Residue Verification (1,677 residues, independent of ChiralFold):**
-21 D-label/L-coordinate mismatches in 12 PDB structures. Error rate: 1.3%. Classified by biological context: 4 genuine stereochemistry errors (coordinates modeled as L where D is required), 13 CCD code misassignments (L-form ligand with D-code), 3 polymer residue mislabels, 1 borderline. All verified using only numpy and raw PDB coordinates (no ChiralFold code). Classification cross-referenced against COMPND records, SEQRES, deposition titles, and primary literature. Full dataset: `results/d_residue_verification.csv`. Classification: `results/error_classification.json`.
+**D-Residue Verification (12,573 residues, independent of ChiralFold):**
+29 D-label/L-coordinate mismatches in 16 PDB structures. Error rate: 0.23% (12,573 residues checked across 4,616 files, >91% coverage of all 18 standard D-amino acid CCD codes). Classified by biological context: 6 genuine stereochemistry errors (coordinates modeled as L where D is required), 18 CCD code misassignments across 5 structures (L-form ligand with D-code), 3 polymer residue mislabels, 2 borderlines. All verified using only numpy and raw PDB coordinates (no ChiralFold code). Classification cross-referenced against COMPND records, SEQRES, deposition titles, and primary literature. Full dataset: `results/d_residue_verification.csv`. Classification: `results/error_classification.json`. Code-level coverage table: `results/ccd_code_coverage_summary.csv`.
 
 **Batch Audit (validated against this README):**
 1UBQ: 100% chirality, 97.3% Rama favored, 96.0% planarity, score 78.6.
