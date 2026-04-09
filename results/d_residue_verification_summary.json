@@ -2,15 +2,15 @@
   "description": "Independent D-amino acid chirality verification using signed tetrahedron volume",
   "method": "signed_volume = dot(N-CA, cross(C-CA, CB-CA)). Negative = D, Positive = L.",
   "code_used": "numpy only, no ChiralFold",
-  "pdb_files_scanned": 238,
-  "files_with_d_aa": 231,
-  "total_d_residues": 1678,
-  "checkable_residues": 1677,
+  "pdb_files_scanned": 597,
+  "files_with_d_aa": 501,
+  "total_d_residues": 10470,
+  "checkable_residues": 10469,
   "incomplete_residues": 1,
-  "d_correct": 1656,
-  "l_error": 21,
+  "d_correct": 10442,
+  "l_error": 27,
   "flat_ambiguous": 0,
-  "error_rate_pct": 1.25,
+  "error_rate_pct": 0.26,
   "errors": [
     {
       "pdb_id": "1ABI",
@@ -179,11 +179,59 @@
       "resname": "DLY",
       "one_letter": "K",
       "signed_volume": 2.5571
+    },
+    {
+      "pdb_id": "2H9E",
+      "chain": "S",
+      "resnum": 1,
+      "resname": "DTY",
+      "one_letter": "Y",
+      "signed_volume": 0.5642
+    },
+    {
+      "pdb_id": "3RIT",
+      "chain": "A",
+      "resnum": 364,
+      "resname": "DLY",
+      "one_letter": "K",
+      "signed_volume": 2.7548
+    },
+    {
+      "pdb_id": "3RIT",
+      "chain": "B",
+      "resnum": 362,
+      "resname": "DLY",
+      "one_letter": "K",
+      "signed_volume": 2.4824
+    },
+    {
+      "pdb_id": "3RIT",
+      "chain": "C",
+      "resnum": 362,
+      "resname": "DLY",
+      "one_letter": "K",
+      "signed_volume": 2.4182
+    },
+    {
+      "pdb_id": "3RIT",
+      "chain": "D",
+      "resnum": 364,
+      "resname": "DLY",
+      "one_letter": "K",
+      "signed_volume": 2.7681
+    },
+    {
+      "pdb_id": "3RIT",
+      "chain": "E",
+      "resnum": 363,
+      "resname": "DLY",
+      "one_letter": "K",
+      "signed_volume": 2.4892
     }
   ],
   "errors_by_type": {
-    "DTY": 9,
-    "DLY": 4,
+    "DTY": 10,
+    "DLY": 9,
     "DAR": 2,
     "DPN": 1,
     "DAL": 1,
@@ -194,6 +242,7 @@
   },
   "errors_by_structure": {
     "1OF6": 8,
+    "3RIT": 5,
     "2ATS": 3,
     "1ABI": 1,
     "1BG0": 1,
@@ -204,6 +253,7 @@
     "1P52": 1,
     "1UHG": 1,
     "1XT7": 1,
-    "2AOU": 1
+    "2AOU": 1,
+    "2H9E": 1
   }
 }
