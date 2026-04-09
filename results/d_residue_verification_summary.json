@@ -2,15 +2,15 @@
   "description": "Independent D-amino acid chirality verification using signed tetrahedron volume",
   "method": "signed_volume = dot(N-CA, cross(C-CA, CB-CA)). Negative = D, Positive = L.",
   "code_used": "numpy only, no ChiralFold",
-  "pdb_files_scanned": 597,
-  "files_with_d_aa": 501,
-  "total_d_residues": 10470,
-  "checkable_residues": 10469,
+  "pdb_files_scanned": 1578,
+  "files_with_d_aa": 1018,
+  "total_d_residues": 12202,
+  "checkable_residues": 12201,
   "incomplete_residues": 1,
-  "d_correct": 10442,
-  "l_error": 27,
+  "d_correct": 12172,
+  "l_error": 29,
   "flat_ambiguous": 0,
-  "error_rate_pct": 0.26,
+  "error_rate_pct": 0.24,
   "errors": [
     {
       "pdb_id": "1ABI",
@@ -189,6 +189,22 @@
       "signed_volume": 0.5642
     },
     {
+      "pdb_id": "2RMI",
+      "chain": "A",
+      "resnum": 12,
+      "resname": "DPN",
+      "one_letter": "F",
+      "signed_volume": 2.6259
+    },
+    {
+      "pdb_id": "2W76",
+      "chain": "C",
+      "resnum": 3,
+      "resname": "DSN",
+      "one_letter": "S",
+      "signed_volume": 2.3283
+    },
+    {
       "pdb_id": "3RIT",
       "chain": "A",
       "resnum": 364,
@@ -232,11 +248,11 @@
   "errors_by_type": {
     "DTY": 10,
     "DLY": 9,
+    "DPN": 2,
     "DAR": 2,
-    "DPN": 1,
+    "DSN": 2,
     "DAL": 1,
     "DHI": 1,
-    "DSN": 1,
     "DSG": 1,
     "DCY": 1
   },
@@ -254,6 +270,8 @@
     "1UHG": 1,
     "1XT7": 1,
     "2AOU": 1,
-    "2H9E": 1
+    "2H9E": 1,
+    "2RMI": 1,
+    "2W76": 1
   }
 }

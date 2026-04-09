@@ -11,3 +11,7 @@ PDB,Residue,Chain,Position,Signed_Volume,B_factor_CA,ALTLOC,Standard_Naming,Conf
 1XT7,DSG,A,3,+2.55,N/A,N/A,Yes,Confirmed,Stereochem,"Daptomycin antibiotic: D-Asn biologically required",N/A
 2AOU,DCY,A,248,+2.67,N/A,N/A,Yes,Confirmed,Mislabel,"Histamine methyltransferase is L-protein; no reason for D-Cys",N/A
 2ATS,DLY,A,3001-3003,+2.56 to +2.59,N/A,N/A,No,Confirmed,CCD-Code,"Title says (S)-lysine = L-Lys; 3 copies; DLY should be LYS","Yes (wwPDB CCD: LYS; InChI /t5-/m0 = S-config = L-Lys)"
+2H9E,DTY,S,1,+0.56,33.99,No,Yes,Borderline,Borderline,"Selectide DTY-Ile-Arg-Leu-LPD inhibitor; vol=+0.56 below confirmed-error threshold; borderline",N/A
+2RMI,DPN,A,12,+2.63,0.00,No,Yes,Confirmed,Stereochem,"Astressin cyclic CRF antagonist: D-Phe12 biologically required; PMID 17657708; NMR deposited 2007",N/A
+2W76,DSN,C,3,+2.33,57.98,No,Yes,Confirmed,Stereochem,"Pyoverdine PVD(PA6)-Fe siderophore: D-Ser at pos 3 biosynthetically required by NRPS epimerization; PMID 19504741; dep 2008",N/A
+3RIT,DLY,A-E,362-364,+2.42 to +2.77,53.34-86.00,No,Yes,Confirmed,CCD-Code,"Dipeptide epimerase: title says L-Arg-D-Lys product but all 5 chains show L-Lys coordinates; dep 2011; PMID 22392983",N/A

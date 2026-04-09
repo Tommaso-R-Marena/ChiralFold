@@ -1,47 +1,65 @@
 {
-  "total_mismatches": 21,
-  "total_structures": 12,
+  "total_mismatches": 29,
+  "total_structures": 16,
+  "pdb_files_scanned": 1018,
+  "d_residues_checked": 12201,
+  "d_residues_correct": 12172,
+  "error_rate_pct": 0.24,
   "classification": {
     "Stereochem": {
-      "structures": 4,
-      "errors": 4,
-      "pdbs": [
-        "1ABI",
-        "1D7T",
-        "1HHZ",
-        "1XT7"
-      ]
+      "structures": 6,
+      "errors": 6,
+      "pdbs": ["1ABI", "1D7T", "1HHZ", "1XT7", "2RMI", "2W76"],
+      "description": "Biology unambiguously requires D-stereochemistry; deposited Cα coordinates show L-configuration"
     },
     "CCD-Code": {
-      "structures": 4,
-      "errors": 13,
-      "pdbs": [
-        "1BG0",
-        "1OF6",
-        "1P52",
-        "2ATS"
-      ]
-    },
-    "Borderline": {
-      "structures": 1,
-      "errors": 1,
-      "pdbs": [
-        "1KO0"
-      ]
+      "structures": 5,
+      "errors": 18,
+      "pdbs": ["1BG0", "1OF6", "1P52", "2ATS", "3RIT"],
+      "description": "Non-polymer ligand deposited with D-form CCD code; Cα coordinates correctly model L-form"
     },
     "Mislabel": {
       "structures": 3,
       "errors": 3,
-      "pdbs": [
-        "1MCB",
-        "1UHG",
-        "2AOU"
-      ]
+      "pdbs": ["1MCB", "1UHG", "2AOU"],
+      "description": "Polymer residue in L-protein labeled with D-amino acid code; no biological justification"
+    },
+    "Borderline": {
+      "structures": 2,
+      "errors": 2,
+      "pdbs": ["1KO0", "2H9E"],
+      "description": "Signed volume below +1.0; near-zero or low magnitude; inconclusive without additional evidence"
     }
   },
-  "method": "Signed tetrahedron volume at C\u03b1: V = (CB-CA) \u00b7 ((N-CA) \u00d7 (C-CA))",
-  "convention": "V > 0 \u2192 L-stereochemistry; V < 0 \u2192 D-stereochemistry",
+  "method": "Signed tetrahedron volume at Cα: V = (N-CA) · [(C-CA) × (CB-CA)]",
+  "convention": "V > 0 → L-stereochemistry; V < 0 → D-stereochemistry",
   "dependencies": "numpy only; no ChiralFold code",
   "data_source": "Raw PDB files from https://files.rcsb.org/download/{PDB_ID}.pdb",
-  "classification_evidence": "COMPND records, SEQRES, HET/HETATM, deposition titles, primary literature"
+  "classification_evidence": "COMPND records, SEQRES, HET/HETATM, deposition titles, primary literature",
+  "new_in_targeted_expansion": {
+    "2RMI": {
+      "type": "Stereochem",
+      "residue": "DPN:A:12",
+      "signed_volume": 2.6259,
+      "deposited": 2007,
+      "molecule": "Astressin (CRF receptor antagonist)",
+      "evidence": "D-Phe12 biologically required: cyclo(30-33)[D-Phe12,Nle21,38,Glu30,Lys33]hCRF(12-41); PMID 17657708"
+    },
+    "2W76": {
+      "type": "Stereochem",
+      "residue": "DSN:C:3",
+      "signed_volume": 2.3283,
+      "deposited": 2008,
+      "molecule": "Pyoverdine siderophore PVD(PA6) from P. aeruginosa",
+      "evidence": "D-Ser at position 3 biosynthetically required by NRPS epimerization domain; PMID 19504741"
+    },
+    "3RIT": {
+      "type": "CCD-Code",
+      "residue": "DLY (5 chains, A-E)",
+      "signed_volume_range": [2.4182, 2.7681],
+      "deposited": 2011,
+      "molecule": "Dipeptide epimerase substrate (L-Arg-L-Lys labeled as L-Arg-D-Lys)",
+      "evidence": "Title says L-Arg-D-Lys product; all 5 copies show L-Lys coordinates; PMID 22392983"
+    }
+  }
 }
