@@ -2,7 +2,11 @@
 
 **General-purpose protein stereochemistry toolkit — chirality-correct structure generation, PDB auditing, and mirror-image transformation for any protein.**
 
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/main/demos/ChiralFold_Quick_Demo.ipynb)
+
 ChiralFold provides `pip install`-able stereochemistry validation and coordinate generation for L-proteins, D-peptides, diastereomers, and any PDB structure. It guarantees **0% chirality violations** at stereogenic centers and includes a MolProbity-calibrated quality auditor validated against wwPDB reports on 31 structures.
+
+> **Try it instantly:** Click the badge above to open the [Quick Demo notebook](demos/ChiralFold_Quick_Demo.ipynb) in Google Colab — no setup required. Runs a full PDB audit, D-peptide prediction (16/16 conformers converged), and AF3 violation check in under a minute.
 
 ## Key Results
 
@@ -168,7 +172,7 @@ Fisher's exact test: p < 6.7×10⁻¹⁴⁴. 31 PDB structures audited: 30/31 = 
 
 ### PDB-Wide D-Residue Chirality Verification
 
-Independently verified (no ChiralFold code — numpy + raw PDB coordinates only) 12,573 D-amino acid residues across 4,616 PDB files (>91% coverage of all 18 standard D-amino acid CCD codes). Found **29 D-label/L-coordinate mismatches in 16 structures** — cases where deposited Cα coordinates show L-stereochemistry despite D-amino acid labels. Error rate: 0.23%. Errors cluster in 5 CCD codes (DTY 2.35%, DLY 0.73%, DPN 0.33%, DAR 0.36%, DSN 0.28%); 9 codes confirmed clean at ≥91% coverage. All are invisible to MolProbity.
+Independently verified (no ChiralFold code — numpy + raw PDB coordinates only) 12,573 D-amino acid residues across 4,616 PDB files (>91% coverage of all 18 standard D-amino acid CCD codes). Found **29 D-label/L-coordinate mismatches in 16 structures** — cases where deposited Cα coordinates show L-stereochemistry despite D-amino acid labels. Error rate: 0.23%. Errors cluster in 5 CCD codes (DTY 2.35%, DLY 0.73%, DAR 0.36%, DSN 0.28%, DPN 0.33%); 9 codes confirmed clean at ≥91% coverage. All are invisible to MolProbity.
 
 **Error classification (cross-referenced against deposition remarks, COMPND records, biological context, and primary literature):**
 
@@ -294,6 +298,8 @@ ChiralFold/
 │   └── test_chirality.py     # Unit tests (incl. external PDB validation)
 ├── benchmarks/               # Benchmark scripts (incl. bulletproof_verification.py)
 ├── results/                  # Generated outputs
+├── demos/
+│   └── ChiralFold_Quick_Demo.ipynb  # Colab demo notebook
 ├── CONTRIBUTING.md           # How to contribute
 ├── pyproject.toml
 ├── LICENSE (MIT)
