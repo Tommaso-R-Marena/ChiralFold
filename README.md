@@ -228,7 +228,7 @@ Full dataset: `results/d_residue_verification.csv` (12,574 rows with raw coordin
 | `status` | string | `error-prone` (n_errors > 0) or `confirmed-clean` (n_errors = 0 at ≥91% coverage) |
 | `biological_context` | string | Plain-English summary of the structural families in which this code appears |
 
-**Key finding from this table:** Errors concentrate in five codes — DTY (2.35% error rate), DLY (0.73%), DAR (0.36%), DSN (0.28%), DPN (0.33%) — while nine codes are confirmed clean at zero errors across ≥91% of their RCSB universe: DAS, DGL, DGN, DIL, DLE, DPR, DTH, DTR, DVA. The error-prone codes share two biological scenarios: enzyme active-site ligands where the D-form CCD code is confused with the L-form substrate (DAR/DTY/DLY), and designed or NRPS-assembled peptides where D-configuration is required but L-coordinates were deposited (DPN/DSN).
+**Key finding from this table:** Errors concentrate in five codes — DTY (2.35% error rate), DLY (0.73%), DAR (0.36%), DPN (0.33%), DSN (0.28%) — while nine codes are confirmed clean at zero errors across ≥91% of their RCSB universe: DAS, DGL, DGN, DIL, DLE, DPR, DTH, DTR, DVA. The error-prone codes share two biological scenarios: enzyme active-site ligands where the D-form CCD code is confused with the L-form substrate (DAR/DTY/DLY), and designed or NRPS-assembled peptides where D-configuration is required but L-coordinates were deposited (DPN/DSN).
 
 ### Planarity Fix
 
