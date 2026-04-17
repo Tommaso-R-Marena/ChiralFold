@@ -320,7 +320,7 @@ class ChiralFold:
         params.numThreads = 0
         params.randomSeed = 42
         params.pruneRmsThresh = 0.5
-        params.maxIterations = 500  # more iterations for longer peptides
+        params.maxIterations = 2000  # increased from 500 for full convergence
 
         cids = AllChem.EmbedMultipleConfs(
             mol_h, numConfs=n_confs, params=params
@@ -341,9 +341,9 @@ class ChiralFold:
         conformer_data = []
         try:
             if self.force_field == 'MMFF94':
-                results = AllChem.MMFFOptimizeMoleculeConfs(mol_h, maxIters=500)
+                results = AllChem.MMFFOptimizeMoleculeConfs(mol_h, maxIters=2000)
             else:
-                results = AllChem.UFFOptimizeMoleculeConfs(mol_h, maxIters=500)
+                results = AllChem.UFFOptimizeMoleculeConfs(mol_h, maxIters=2000)
 
             for i, (converged, energy) in enumerate(results):
                 conformer_data.append({
