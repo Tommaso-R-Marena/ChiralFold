@@ -22,13 +22,12 @@ Metrics computed
 from __future__ import annotations
 
 import os
-import warnings
 from collections import defaultdict
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
-warnings.filterwarnings("ignore")
+# Module-level: do NOT call warnings.filterwarnings globally.
 
 
 # ─────────────────────────────────────────────────────────────────────────────

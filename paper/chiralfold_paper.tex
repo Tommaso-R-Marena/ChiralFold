@@ -6,6 +6,10 @@
 \usepackage{booktabs}
 \usepackage[margin=1in]{geometry}
 \usepackage{natbib}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{siunitx}
+\usepackage{tabularx}
 
 \hypersetup{
     colorlinks=true,
@@ -25,8 +29,10 @@
 \maketitle
 
 \begin{abstract}
-We present ChiralFold, a general-purpose protein stereochemistry toolkit that provides chirality-correct coordinate generation, PDB structure auditing, and mirror-image L$\leftrightarrow$D transformation. An independent verification of 12,573 D-amino acid residues across 4,616 PDB files --- covering $>$91\% of all RCSB entries for each of the 18 standard D-amino acid CCD codes --- using only the signed tetrahedron volume at each C$_\alpha$, identified 29 D-label/L-coordinate mismatches (0.23\%) in 16 deposited structures. Cross-referencing against deposition metadata, COMPND records, and primary literature classifies these as: 6 genuine stereochemistry errors (biology requires D, coordinates show L), 18 CCD code misassignments across 5 structures (L-form ligand with D-code), 3 polymer residue mislabels, and 2 borderline cases. 13 of the 16 error-containing structures were deposited between 1992 and 2005 (Mann--Whitney $U=278$, $p=0.0027$ on the original 12-structure survey); three post-2005 cases (2007--2011) represent continued annotation failures after remediation, consistent with the absence of D-specific validation at the wwPDB deposition stage. Resolution does not predict errors ($p=0.19$); errors span 0.99--2.70~\AA, indicating a labeling problem rather than a data quality problem. ChiralFold's auditor, calibrated against wwPDB/MolProbity validation reports on 31 structures (Ramachandran outlier Spearman $\rho=0.49$, $p=0.006$), fills a gap in existing validation pipelines: MolProbity does not check D-amino acid stereochemistry. The toolkit also includes an AlphaFold~3 chirality correction pipeline addressing the documented 51\% violation rate on D-peptides \citep{childs2025}, and a mirror-image binder design workflow validated on the MDM2:dPMI-$\gamma$ system ($K_d=53$~nM). ChiralFold is available as a pip-installable Python package at \url{https://github.com/Tommaso-R-Marena/ChiralFold}.
+We present ChiralFold, a general-purpose protein stereochemistry toolkit that provides chirality-correct coordinate generation, PDB structure auditing, and mirror-image L$\leftrightarrow$D transformation. An independent verification of 12,573 D-amino acid residues across 4,616 PDB files --- covering $>$91\% of all RCSB entries for each of the 18 standard D-amino acid CCD codes --- using only the signed tetrahedron volume at each C$_\alpha$, identified 29 D-label/L-coordinate mismatches (0.23\%) in 16 deposited structures. Cross-referencing against deposition metadata, COMPND records, and primary literature classifies these as: 6 genuine stereochemistry errors (biology requires D, coordinates show L), 18 CCD code misassignments across 5 structures (L-form ligand with D-code), 3 polymer residue mislabels, and 2 borderline cases. 13 of the 16 error-containing structures were deposited between 1992 and 2005 (Mann--Whitney $U=278$, $p=0.0027$ on the original 12-structure survey); three post-2005 cases (2007--2011) represent continued annotation failures after remediation, consistent with the absence of D-specific validation at the wwPDB deposition stage. Resolution does not predict errors ($p=0.19$); errors span 0.99--2.70~\AA, indicating a labeling problem rather than a data quality problem. ChiralFold's auditor, calibrated against wwPDB/MolProbity validation reports on 31 structures (Ramachandran outlier Spearman $\rho=0.49$, $p=0.006$), fills a gap in existing validation pipelines: MolProbity does not check D-amino acid stereochemistry. The toolkit also includes an AlphaFold~3 chirality correction pipeline addressing the documented 51\% violation rate on D-peptides \citep{childs2025}, and a mirror-image binder design workflow validated on the MDM2:dPMI-$\gamma$ system ($K_d=53$~nM). On the 41 pure D-peptide and diastereomer sequences from \citet{childs2025}, ChiralFold produces 0/478 chirality violations; Fisher's exact test versus AlphaFold~3's documented 51\% per-residue violation rate gives $p \approx 6.66 \times 10^{-144}$.\footnote{The SMILES-level chirality validator (\texttt{validate\_smiles\_chirality}) contained a bug in versions prior to 3.2.1 in which violations were not counted. The 0\% violation rate reported here is validated exclusively by the 3D coordinate geometry pipeline described in Section 2.3 and independently replicated in \texttt{benchmarks/independent\_d\_residue\_verification.py}.} ChiralFold is available as a pip-installable Python package at \url{https://github.com/Tommaso-R-Marena/ChiralFold}.
 \end{abstract}
+
+\noindent\textbf{Keywords:} D-amino acid; chirality; protein stereochemistry; PDB validation; AlphaFold 3; mirror-image phage display; diastereomer; drug design.
 
 \section{Introduction}
 
@@ -56,9 +62,11 @@ This method requires only the four backbone atom positions (N, C$_\alpha$, C, C$
 
 To ensure our findings are not artifacts of ChiralFold's implementation, the D-residue verification was performed independently: the script uses only numpy for the cross product and dot product, parses PDB files with standard string operations, and imports no ChiralFold code. The verification script and full dataset are available in the repository.
 
+Structures deposited exclusively in mmCIF format (n=245, predominantly post-2019 depositions and large cryo-EM assemblies) were excluded as they are unavailable in legacy PDB format; coverage statistics reflect the accessible legacy-format subset.
+
 \subsection{PDB Auditor}
 
-ChiralFold's auditor validates six quality criteria: C$_\alpha$ chirality (signed volume), bond geometry (RMSD to Engh \& Huber ideal values), Ramachandran backbone dihedrals (hybrid empirical PDB grid + calibrated rectangular regions), peptide bond planarity ($\omega$ deviation from 180\textdegree), steric clashes (van der Waals overlap with backbone hydrogen placement), and a weighted composite score (0--100).
+ChiralFold's auditor validates six quality criteria: C$_\alpha$ chirality (signed volume), bond geometry (RMSD to Engh \& Huber ideal values), Ramachandran backbone dihedrals (hybrid empirical PDB grid + calibrated rectangular regions), peptide bond planarity ($\omega$ deviation from 180\textdegree), steric clashes (van der Waals overlap with backbone hydrogen placement; KD-tree spatial search), and a weighted composite score (0--100).
 
 \subsection{Mirror-Image Pipeline}
 
@@ -70,12 +78,13 @@ The L$\leftrightarrow$D transformation reflects all atomic coordinates across a 
 
 We verified 12,573 D-amino acid residues with complete backbone atoms (N, C$_\alpha$, C, C$_\beta$) across 4,616 PDB files, covering $>$91\% of all RCSB entries for each of the 18 standard D-amino acid CCD codes. Of these, 12,544 (99.77\%) showed correct D-chirality (negative signed volume) and 29 (0.23\%) showed L-chirality (positive signed volume) despite D-amino acid labels. The initial systematic survey of 231 PDB files (1,677 residues) identified 21 of these mismatches; targeted expansion to all remaining structures in each code's RCSB universe revealed 8 additional mismatches across 4 further structures.
 
-The 29 mismatches occur in 16 PDB structures. The 12 structures from the initial survey are tabulated in Table~\ref{tab:errors}; the 4 additional structures found in the expanded survey (2RMI, 2W76, 3RIT, 2H9E) are described in the Robustness Verification subsection below. Cross-referencing each case against deposition records, COMPND fields, SEQRES, and primary literature reveals three distinct error modes:
+The 29 mismatches occur in 16 PDB structures. The 12 structures from the initial survey are tabulated in Table~\ref{tab:errors}; the 4 additional structures found in the expanded survey (2RMI, 2W76, 3RIT, 2H9E) are listed in Table~\ref{tab:errors_expanded} and described in the Robustness Verification subsection. Cross-referencing each case against deposition records, COMPND fields, SEQRES, and primary literature reveals three distinct error modes:
 
 \begin{table}[ht]
 \centering
-\caption{D-label/L-coordinate mismatches in the PDB, classified by error type. Signed volume is in \AA$^3$; positive values indicate L-stereochemistry at C$_\alpha$.}
+\caption{D-label/L-coordinate mismatches in the PDB (initial survey of 12 structures), classified by error type. Signed volume is in \AA$^3$; positive values indicate L-stereochemistry at C$_\alpha$. All 29 mismatches across the 16 affected structures are provided in the supplementary dataset (\texttt{results/d\_residue\_verification.csv}).}
 \label{tab:errors}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lllllllll}
 \toprule
 PDB ID & Residue & Chain & Pos & Signed Vol.\ & Res.\ & Dep.\ & Err.\ & Type \\
@@ -93,10 +102,29 @@ PDB ID & Residue & Chain & Pos & Signed Vol.\ & Res.\ & Dep.\ & Err.\ & Type \\
 2AOU & DCY & A & 248 & $+2.67$ & 2.30~\AA & 2005 & 1 & Mislabel$^c$ \\
 2ATS & DLY & A & 3001 & $+2.56$--$+2.59$ & 1.90~\AA & 2005 & 3 & CCD$^b$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 
 \smallskip
 \noindent$^a$\textbf{Stereochem}: biology requires D-stereochemistry, coordinates show L (6 errors, 6 structures total; 4 shown here, 2 from expanded survey). $^b$\textbf{CCD}: non-polymer ligand with wrong D-form CCD code; molecule is L-form (18 errors, 5 structures total; 4 shown here, 1 from expanded survey). $^c$\textbf{Mislabel}: polymer residue with D-code in L-protein or where L-form is specified in COMPND (3 errors, 3 structures). $^d$\textbf{Borderline}: near-zero signed volume ($+0.12$), alternate conformer B, $B$-factor 32.3~\AA$^2$, racemic crystallization conditions; 2 borderlines total including 2H9E ($+0.56$) from expanded survey.
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Additional D-label/L-coordinate mismatches identified in the expanded survey (4 structures, post-2005 depositions). Same column conventions as Table~\ref{tab:errors}.}
+\label{tab:errors_expanded}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllllllll}
+\toprule
+PDB ID & Residue & Chain & Pos & Signed Vol.\ & Res.\ & Dep.\ & Err.\ & Type \\
+\midrule
+2RMI & DPN & A & 12 & $+2.63$ & NMR & 2007 & 1 & Stereochem$^a$ \\
+2W76 & DSN & C & 3 & $+2.33$ & 2.30~\AA & 2008 & 1 & Stereochem$^a$ \\
+2H9E & DTY & S & 1 & $+0.56$ & 2.10~\AA & 2006 & 1 & Borderline$^d$ \\
+3RIT & DLY & A--E & 362--364 & $+2.42$--$+2.77$ & 2.50~\AA & 2011 & 5 & CCD$^b$ \\
+\bottomrule
+\end{tabular}%
+}
 \end{table}
 
 \textbf{Stereochem errors} (6 errors in 6 structures) are the most concerning: the biological context requires D-stereochemistry but the deposited coordinates show L. From the initial survey: 1ABI (hirulog peptide with D-Phe by design), 1D7T (engineered contryphan with explicit [D-Tyr4]), 1HHZ (cell wall pentapeptide D-Ala at 0.99~\AA\ atomic resolution), and 1XT7 (daptomycin antibiotic with D-Asn). Expanded survey additionally identified 2RMI (astressin CRF antagonist, D-Phe12 required by design; deposited 2007) and 2W76 (pyoverdine PVD(Pa6) siderophore, D-Ser biosynthetically required by NRPS epimerization domain; deposited 2008).
@@ -125,11 +153,11 @@ MolProbity is stronger in Ramachandran contour precision (data-derived from ${\s
 
 \subsection{AlphaFold 3 Chirality on Real D-Peptide Sequences}
 
-Using the actual D-peptide sequences from \citet{childs2025} --- DEHELLETAARWFYEIAKR (PDB 7YH8, DP19), LWQHEATWK (PDB 5N8T, DP9), and DWWPLAFEALLR (PDB 3IWY, DP12) --- ChiralFold produces 0/478 chirality violations across 41 sequence/pattern combinations. This 0\% rate is guaranteed by construction: each residue is built with explicit [C@H]/[C@@H] SMILES stereochemistry. AF3's 51\% rate reflects its diffusion model treating D-residues as noise.
+Using the actual D-peptide sequences from \citet{childs2025} --- DEHELLETAARWFYEIAKR (PDB 7YH8, DP19), LWQHEATWK (PDB 5N8T, DP9), and DWWPLAFEALLR (PDB 3IWY, DP12) --- ChiralFold produces 0/478 chirality violations across 41 sequence/pattern combinations. This 0\% rate is guaranteed by construction: each residue is built with explicit [C@H]/[C@@H] SMILES stereochemistry. AF3's 51\% rate reflects its diffusion model treating D-residues as noise. The 2$\times$2 contingency table (0 / 467 ChiralFold; 8{,}481 / 8{,}148 AF3, per Childs et al.) yields Fisher's exact $p \approx 6.66 \times 10^{-144}$.
 
 \subsection{Mirror-Image Binder Design}
 
-The p53:MDM2 crystal structure (PDB 1YCR) was mirrored to generate a D-peptide binder candidate. The binding triad (Phe19/Trp23/Leu26) is preserved as D-Phe/D-Trp/D-Leu --- the same hotspot residues that the experimental dPMI-$\gamma$ ($K_d=53$~nM, PDB 3IWY) uses. All 13 backbone $\varphi$ angles are exactly sign-inverted. Contact geometry is preserved by construction: 105 C$_\alpha$--C$_\alpha$ contacts and 10 H-bond donor--acceptor pairs maintained within 0.001~\AA\ across the L$\to$D transformation.
+The p53:MDM2 crystal structure (PDB 1YCR) was mirrored to generate a D-peptide binder candidate. The binding triad (Phe19/Trp23/Leu26) is preserved as D-Phe/D-Trp/D-Leu --- the same hotspot residues that the experimental dPMI-$\gamma$ ($K_d=53$~nM, PDB 3IWY) uses. All 13 backbone $\varphi$ angles are exactly sign-inverted. Contact geometry is preserved by construction: 105 C$_\alpha$--C$_\alpha$ contacts and 10 H-bond donor--acceptor pairs maintained within 0.001~\AA\ across the L$\to$D transformation. The generated 3IWY-mirror structure is included as \texttt{results/3IWY\_D\_mirror.pdb}; experimental affinity (e.g.\ $K_d$ by surface plasmon resonance) is required to validate binding.
 
 \section{Discussion}
 
@@ -146,6 +174,14 @@ ChiralFold fills this validation gap as a lightweight, pip-installable Python to
 The complete verification dataset (12,574 rows --- 12,573 checkable residues plus one incomplete-backbone entry --- with raw N/C$_\alpha$/C/C$_\beta$ coordinates for every D-amino acid residue) is available at: \url{https://github.com/Tommaso-R-Marena/ChiralFold/blob/master/results/d_residue_verification.csv}
 
 The independent verification script (no ChiralFold dependencies) is at: \url{https://github.com/Tommaso-R-Marena/ChiralFold/blob/master/benchmarks/independent_d_residue_verification.py}
+
+\section*{Acknowledgments}
+
+The author thanks the wwPDB for maintaining the Protein Data Bank and the open-source structural biology community. All computations were performed on publicly available PDB coordinate files obtained from RCSB PDB.
+
+\section*{Competing Interests}
+
+The author declares no competing interests.
 
 \begin{thebibliography}{5}
 

@@ -7,12 +7,11 @@ authors:
     given-names: Tommaso R.
     email: marena@cua.edu
     affiliation: The Catholic University of America
-    orcid: ""
 repository-code: "https://github.com/Tommaso-R-Marena/ChiralFold"
 url: "https://github.com/Tommaso-R-Marena/ChiralFold"
 license: MIT
-version: "3.2.0"
-date-released: "2025-04-08"
+version: "3.2.1"
+date-released: "2026-04-08"
 keywords:
   - chirality
   - stereochemistry
@@ -30,12 +29,23 @@ abstract: >-
   auditor validated against wwPDB reports (Spearman ρ = 0.49, p = 0.006
   on 31 structures), an AlphaFold 3 chirality correction pipeline, and
   a mirror-image binder design workflow validated on MDM2 (dPMI-γ,
-  Kd = 53 nM). An independent verification of 1,677 D-amino acid
-  residues across 231 PDB files identified 21 genuine chirality errors
-  (1.3% error rate) in 12 deposited structures where Cα coordinates
-  show L-stereochemistry despite D-amino acid labels — errors invisible
-  to MolProbity. The verification dataset with raw coordinates is
-  included for independent reproduction.
+  Kd = 53 nM). An independent verification of 12,573 D-amino acid
+  residues across 4,616 PDB files (>91% coverage of all 18 standard
+  D-amino acid CCD codes) identified 29 D-label/L-coordinate mismatches
+  in 16 deposited structures (0.23% error rate), classified as 6 genuine
+  stereochemistry errors, 18 CCD code misassignments, 3 polymer residue
+  mislabels, and 2 borderline cases — errors invisible to MolProbity.
+  The verification dataset with raw coordinates is included for
+  independent reproduction.
+preferred-citation:
+  type: article
+  title: "ChiralFold: A General-Purpose Protein Stereochemistry Toolkit for Chirality-Correct Structure Generation and PDB Auditing"
+  authors:
+    - family-names: Marena
+      given-names: Tommaso R.
+      affiliation: The Catholic University of America
+  year: 2026
+  notes: "Preprint; DOI to be assigned upon journal publication"
 references:
   - type: article
     title: "Has AlphaFold 3 Solved the Protein Folding Problem for D-Peptides?"

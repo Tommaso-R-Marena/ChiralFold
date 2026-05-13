@@ -26,7 +26,8 @@ from typing import Dict, List, Optional, Set, Tuple
 
 import numpy as np
 
-warnings.filterwarnings("ignore")
+# Module-level: do NOT call warnings.filterwarnings globally — that suppresses
+# warnings for all downstream user code.
 
 
 # ─────────────────────────────────────────────────────────────────────────────

@@ -26,7 +26,9 @@ from typing import List, Optional, Sequence, Tuple
 
 import numpy as np
 
-warnings.filterwarnings("ignore")
+# Module-level: do NOT call warnings.filterwarnings globally. Specific
+# RDKit/numpy warnings, if any, are suppressed inside the relevant function
+# bodies with context managers.
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -110,6 +112,62 @@ _PRO_ALLOWED: List[Tuple[float, float, float, float]] = [
     (-100.0, -40.0, -180.0, -130.0),
     # cis proline
     (-100.0, -50.0, -15.0, 60.0),
+]
+
+
+# ── D-amino acid Ramachandran regions ──────────────────────────────────────
+# Defined as mirror images of the L-amino acid favored/allowed regions per
+# Hovmöller, Zhou & Ohlson (2002) "Conformations of amino acids in
+# proteins" Acta Cryst. D58:768–776, and the MolProbity D-proline
+# validation in Lovell et al. (2003).
+#
+# For every L region (φ_min, φ_max, ψ_min, ψ_max) the mirror is
+# (-φ_max, -φ_min, -ψ_max, -ψ_min). We do not include the L
+# "left-handed α" region in the D-general favored set because that
+# region is itself the mirror of the L α region and is therefore the
+# *favored* α_D region for D-amino acids — handled explicitly below.
+
+_D_GENERAL_FAVORED: List[Tuple[float, float, float, float]] = [
+    # Mirror of L α-helix → α_D (favored region for D-amino acids)
+    (25.0, 105.0, 0.0, 75.0),
+    # Mirror of L β-sheet core (and its wrap-around)
+    (55.0, 180.0, -180.0, -80.0),
+    (55.0, 180.0, 120.0, 180.0),
+    # Mirror of L PPII
+    (55.0, 90.0, -180.0, -100.0),
+    # Mirror of L bridge region (α↔β transition)
+    (55.0, 120.0, -80.0, 0.0),
+]
+
+_D_GENERAL_ALLOWED: List[Tuple[float, float, float, float]] = [
+    # Mirror of L extended α-helix
+    (15.0, 135.0, -25.0, 100.0),
+    # Mirror of L extended β-sheet + PPII
+    (40.0, 180.0, -180.0, -50.0),
+    (40.0, 180.0, 100.0, 180.0),
+    # Mirror of L ε (extended bridge)
+    (40.0, 135.0, -100.0, 0.0),
+    # Mirror of L γ-turn region
+    (-110.0, -50.0, -40.0, 60.0),
+    # Mirror of L δ region (rare but allowed)
+    (110.0, 180.0, 0.0, 60.0),
+]
+
+
+_D_PRO_FAVORED: List[Tuple[float, float, float, float]] = [
+    # Mirror of L proline α
+    (50.0, 80.0, 15.0, 55.0),
+    (55.0, 70.0, -170.0, -120.0),
+    (55.0, 80.0, -170.0, -80.0),
+    (55.0, 80.0, -180.0, -120.0),
+]
+
+_D_PRO_ALLOWED: List[Tuple[float, float, float, float]] = [
+    # Mirror of L extended proline
+    (40.0, 100.0, -10.0, 75.0),
+    (40.0, 100.0, -180.0, -60.0),
+    (40.0, 100.0, 130.0, 180.0),
+    (50.0, 100.0, -60.0, 15.0),
 ]
 
 
@@ -213,12 +271,16 @@ def score_ramachandran(phi: float, psi: float,
     if math.isnan(phi) or math.isnan(psi):
         return 'outlier'
 
-    # For D-amino acids: negate φ and ψ (mirror symmetry) then score as L
+    # D-amino acid Ramachandran regions are explicit mirror images of the
+    # L regions (Hovmöller et al. 2002; MolProbity D-proline validation).
+    # We do NOT route D-residues through the L empirical grid because that
+    # grid was built from L-structures and would systematically misclassify
+    # D-residues at the mirror α_D region as outliers, unfairly penalising
+    # correctly-folded D-peptides in the auditor's overall score.
     if residue_type.startswith('D-'):
-        phi, psi = -phi, -psi
-        residue_type = residue_type[2:]
+        return _score_rectangular(phi, psi, residue_type)
 
-    # Try empirical grid first (for general residues)
+    # Try empirical grid first (for L general residues)
     if residue_type == 'general':
         _load_empirical_grid()
         emp = _score_empirical(phi, psi)
@@ -236,11 +298,15 @@ def score_ramachandran(phi: float, psi: float,
 
 
 def _score_rectangular(phi: float, psi: float, residue_type: str) -> str:
-    """Score using rectangular region definitions."""
+    """Score using rectangular region definitions (L and D variants)."""
     if residue_type == 'glycine':
         fav, alw = _GLY_FAVORED, _GLY_ALLOWED
     elif residue_type == 'proline':
         fav, alw = _PRO_FAVORED, _PRO_ALLOWED
+    elif residue_type == 'D-general':
+        fav, alw = _D_GENERAL_FAVORED, _D_GENERAL_ALLOWED
+    elif residue_type == 'D-proline':
+        fav, alw = _D_PRO_FAVORED, _D_PRO_ALLOWED
     else:
         fav, alw = _GENERAL_FAVORED, _GENERAL_ALLOWED
 

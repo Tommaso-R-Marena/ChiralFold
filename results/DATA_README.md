@@ -1,82 +1,124 @@
-# D-Amino Acid Chirality Verification Dataset
+# ChiralFold — Results Directory
 
-## Description
+This directory contains the data artefacts produced by the benchmark
+scripts in `benchmarks/`. Numeric files (`*.csv`, `*.json`) are
+canonical, frozen outputs and should not be edited manually. PDB files
+included here are intentional reference structures used by the mirror
+pipeline and auditor benchmarks.
 
-Independent verification of stereochemistry at Cα for all D-amino acid residues in 231 PDB structures. Each residue's chirality was determined by computing the signed volume of the tetrahedron formed by the four Cα substituents (N, C, CB) directly from deposited PDB coordinates.
+## D-amino acid chirality verification
 
-## Method
-
-```
-signed_volume = dot(N − CA, cross(C − CA, CB − CA))
-```
-
-- Negative volume → D-chirality (expected for D-labeled residues)
-- Positive volume → L-chirality (stereochemistry error)
-
-This verification used **only numpy and raw PDB coordinates**. No ChiralFold code was involved.
-
-## Files
-
-### `d_residue_verification.csv`
-
-1,678 rows, one per D-amino acid residue. Columns:
+`d_residue_verification.csv` — 12,574 rows, one per D-amino acid residue
+encountered in the PDB-wide survey (12,573 checkable + 1
+incomplete-backbone row). Columns:
 
 | Column | Description |
 |--------|-------------|
-| pdb_id | 4-character PDB accession code |
-| chain | Chain identifier |
-| resnum | Residue sequence number |
-| resname | D-amino acid 3-letter code (DAL, DAR, DAS, etc.) |
-| one_letter | One-letter amino acid code |
-| has_all_atoms | Whether N, CA, C, CB are all present |
-| signed_volume | Signed tetrahedron volume (negative = D, positive = L) |
-| chirality | Classification: D, L, flat, or incomplete |
-| is_error | True if labeled D but coordinates show L |
-| n_xyz | Raw N atom coordinates (x,y,z) |
-| ca_xyz | Raw CA atom coordinates (x,y,z) |
-| c_xyz | Raw C atom coordinates (x,y,z) |
-| cb_xyz | Raw CB atom coordinates (x,y,z) |
+| `pdb_id` | 4-character PDB accession code |
+| `chain` | Chain identifier |
+| `resnum` | Residue sequence number |
+| `resname` | D-amino acid 3-letter code (DAL, DAR, DAS, etc.) |
+| `one_letter` | One-letter amino acid code |
+| `has_all_atoms` | Whether N, CA, C, CB are all present |
+| `signed_volume` | Signed tetrahedron volume (negative = D, positive = L) |
+| `chirality` | Classification: D, L, flat, or incomplete |
+| `is_error` | True if labelled D but coordinates show L |
+| `n_xyz` / `ca_xyz` / `c_xyz` / `cb_xyz` | Raw atomic coordinates |
 
-### `d_residue_verification_summary.json`
-
-Aggregate statistics including error counts by residue type and PDB structure.
-
-## Results
-
-- **1,677** D-amino acid residues with complete backbone atoms
-- **1,656** correctly D (negative signed volume)
-- **21** errors (positive signed volume) in **12** PDB structures
-- **Error rate: 1.3%**
-
-## Affected Structures
-
-| PDB | Residue | Chain | Position | Signed Volume |
-|-----|---------|:-----:|:--------:|:-------------:|
-| 1ABI | DPN | I | 56 | +2.49 |
-| 1BG0 | DAR | A | 403 | +2.58 |
-| 1D7T | DTY | A | 4 | +1.85 |
-| 1HHZ | DAL | E | 1 | +2.70 |
-| 1KO0 | DLY | A | 542 | +0.12 |
-| 1MCB | DHI | P | 3 | +2.60 |
-| 1OF6 | DTY | A–H | 1369–1370 | +2.51 to +2.67 |
-| 1P52 | DAR | A | 403 | +2.54 |
-| 1UHG | DSN | D | 164 | +2.21 |
-| 1XT7 | DSG | A | 3 | +2.55 |
-| 2AOU | DCY | A | 248 | +2.67 |
-| 2ATS | DLY | A | 3001–3003 | +2.56 to +2.59 |
-
-## Reproduction
-
-```bash
-python benchmarks/independent_d_residue_verification.py
+Signed volume convention:
 ```
+signed_volume = dot(N − CA, cross(C − CA, CB − CA))
+```
+Negative → D-chirality (expected for D-labelled residues); positive →
+L-chirality (annotation/coordinate mismatch).
 
-Requires only Python 3.9+ and numpy. PDB files must be in `results/d_survey/`.
+`d_residue_verification_summary.json` — Aggregate statistics:
+- 12,573 checkable D-residues across 4,616 PDB files
+- 12,544 correctly D (negative signed volume)
+- **29 D-label/L-coordinate mismatches** in **16 structures**
+- Error rate: **0.23%**
 
-## Citation
+## Error classification
 
-See `CITATION.cff` in the repository root.
+`error_classification.json` — Per-error category assignment cross-referenced against deposition metadata, COMPND records, SEQRES, and primary literature.
 
-## License
+`error_taxonomy.csv` and `error_taxonomy_expanded.csv` — Tabular form of the same classification, with the expanded survey adding the post-2005 cases (2RMI, 2W76, 3RIT, 2H9E).
 
-MIT. See repository LICENSE.
+`error_table_verified.csv` — Per-structure reclassification table including signed volumes, B-factors, ALTLOC flags, and the biological evidence used to assign the category.
+
+`error_correlation_data.json` — Mann-Whitney U statistics and deposition-year regressions used in the discussion (U = 278, p = 0.0027 on the initial 12-structure survey).
+
+`CLASSIFICATION_README.md` — Narrative description of the four error categories (Stereochem, CCD-Code, Mislabel, Borderline).
+
+`DPR_EXPANSION_REPORT.md`, `DPN_DAS_DAL_EXPANSION_REPORT.md`, `TARGETED_EXPANSION_REPORT.md`, `EXPANDED_VERIFICATION_REPORT.md` — Narrative reports documenting how the survey was expanded from the initial 231 PDB files to >91% coverage of each CCD code (4,616 files total).
+
+## Code-level coverage
+
+`ccd_code_coverage_summary.csv` — 18 rows × 12 columns, one row per
+standard D-amino acid CCD code:
+
+| Column | Description |
+|--------|-------------|
+| `ccd_code` | Three-letter CCD code |
+| `rcsb_total_entries` | Total PDB entries containing this code |
+| `entries_surveyed` | Entries downloaded and verified |
+| `coverage_pct` | `entries_surveyed / rcsb_total_entries × 100` |
+| `mmcif_only_unavailable` | Entries only available as mmCIF (excluded) |
+| `residues_checked` | Individual Cα chirality checks |
+| `n_errors` | D-labelled residues with confirmed L-stereochemistry |
+| `n_error_structures` | Distinct PDB IDs containing at least one error |
+| `error_structures` | Semicolon-separated list of those PDB IDs |
+| `error_rate_pct` | `n_errors / residues_checked × 100` |
+| `status` | `error-prone` (n_errors > 0) or `confirmed-clean` |
+| `biological_context` | Plain-English summary |
+
+## Benchmark outputs
+
+`childs2025_comparison.json` — ChiralFold vs AF3 on 41 sequences from
+the Childs et al. (2025) DP19/DP9/DP12 systems and variants. 478 chiral
+residues, 0 ChiralFold violations.
+
+`molprobity_comparison.json` — ChiralFold auditor vs wwPDB/MolProbity
+on 31 PDB structures spanning 0.48–3.4 Å.
+
+`summary.json` — Headline statistics consumed by the paper:
+- 46 total benchmark sequences (31 pure D + 15 diastereomer)
+- 467 chiral residues, 0 violations
+- Canonical Fisher's exact p = **6.66 × 10⁻¹⁴⁴**
+
+`benchmark_data.csv`, `batch_results.csv` — Raw per-structure benchmark
+results.
+
+`folding_quality.png`, `mirror_binder_design.png`,
+`mirror_pipeline_benchmark.png`, `molprobity_comparison.png`,
+`benchmark_results.png`, `comparison_table.png`, `survey_and_docking.png`
+— Publication figures generated by the corresponding benchmark scripts.
+
+`robustness_statement.txt` — Five independent robustness checks
+described in the paper's *Robustness Verification* subsection.
+
+`d_survey/` and `d_survey_results.json`, `d_survey_run.log` —
+PDB-survey raw outputs and run log.
+
+`bulletproof_outputs/` — Per-structure outputs from
+`benchmarks/bulletproof_verification.py`.
+
+`docking/` — Raw outputs from the mirror-binder docking workflow.
+
+`pdb50/` — 50-structure reference PDB set used for the auditor
+calibration.
+
+## Reference structures
+
+The following PDB-format files are intentional artefacts and should not
+be removed by `.gitignore`:
+
+| File | Purpose |
+|------|---------|
+| `1CRN_D_mirror.pdb` | Crambin mirror-image reference |
+| `1L2Y_D_mirror.pdb` | Trp-cage mirror-image reference (large structure for clash benchmark) |
+| `1SHG_D_mirror.pdb` | SH3 mirror-image reference |
+| `1UBQ_D_mirror.pdb` | Ubiquitin mirror-image reference |
+| `3IWY.pdb` | MDM2:dPMI-γ complex (PDB original) |
+| `3IWY_D_mirror.pdb` | Mirror-image binder candidate (1YCR derivative) |
+| `5HHD_D_mirror.pdb` | 5HHD mirror-image reference |

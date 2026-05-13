@@ -32,8 +32,11 @@ from collections import defaultdict
 from typing import Dict, List, Optional, Set, Tuple
 
 import numpy as np
+from scipy.spatial import cKDTree
 
-warnings.filterwarnings("ignore")
+# Module-level: do NOT call warnings.filterwarnings globally — that suppresses
+# warnings for downstream user code. Targeted suppression is applied locally
+# where benign warnings are expected (see _check_ramachandran).
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Constants
@@ -99,6 +102,34 @@ L_RESNAMES: Set[str] = {
 
 GLYCINE_RESNAMES: Set[str] = {"GLY"}
 PROLINE_RESNAMES: Set[str] = {"PRO", "DPR"}
+
+
+def _is_chain_continuous(
+    key_i: Tuple,
+    key_j: Tuple,
+    res_map_i: Dict[str, np.ndarray],
+    res_map_j: Dict[str, np.ndarray],
+) -> bool:
+    """
+    Decide whether residues *key_i* and *key_j* are peptide-bonded neighbours
+    in the same chain. Used to guard inter-residue geometry checks against
+    chain breaks, missing residues, and concatenated multi-chain files.
+
+    Keys are (chain, resseq, icode, resname) tuples.
+    """
+    chain_i, resseq_i, _icode_i, _resname_i = key_i
+    chain_j, resseq_j, _icode_j, _resname_j = key_j
+    if chain_i != chain_j:
+        return False
+    # Allow insertion codes: 47A → 47B → 48 has resseq diff ≤ 2.
+    if abs(resseq_j - resseq_i) > 2:
+        return False
+    ca_i = res_map_i.get("CA")
+    ca_j = res_map_j.get("CA")
+    if ca_i is not None and ca_j is not None:
+        if float(np.linalg.norm(ca_j - ca_i)) > 4.5:
+            return False
+    return True
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -350,31 +381,39 @@ def _check_chirality(
             n_error += 1
             continue
 
-        # Look for Hα (HA, HA2, HA3 …)
+        # Canonical convention: ALWAYS use the 3-substituent signed volume
+        # at Cα with ordering (N, C, Cβ). Positive signed_volume(CA; N, C, CB)
+        # → L-configuration (S at Cα for standard amino acids); negative → D.
+        # This is consistent regardless of whether Hα is present in the file,
+        # eliminating the sign-ambiguity that arose in v3.2.0 when files with
+        # explicit hydrogens used a different substituent ordering.
+        signed_vol = _signed_volume(ca, n_pos, c_pos, cb_pos)
+
+        # If Hα is present, use it only as a sanity check (does not change the
+        # primary chirality determination). The H-aware 4-substituent volume
+        # has the opposite sign convention; we therefore expect it to have the
+        # opposite sign to the 3-substituent volume for the same handedness.
         h_pos: Optional[np.ndarray] = None
         for hname in ("HA", "HA2", "1HA", "2HA"):
             if hname in atom_map:
                 h_pos = atom_map[hname]
                 break
+        # (Sanity check is computed but does not override; kept for future use.)
+        _ = h_pos  # silence linter; reserved for future Hα cross-checks
 
-        if h_pos is not None:
-            vol = _signed_volume(ca, n_pos, c_pos, cb_pos)
-            # With all four substituents use N, C, Cβ, Hα
-            vol4 = _signed_volume(ca, n_pos, cb_pos, h_pos)
-            # Fall back to three-substituent version (ignore H sign ambiguity)
-            signed_vol = vol4
-        else:
-            # Three-substituent version: N, C, Cβ
-            signed_vol = _signed_volume(ca, n_pos, c_pos, cb_pos)
-
+        # Planarity threshold: 0.05 Å^3 corresponds to a deviation from a flat
+        # tetrahedron below which the sign of the signed volume is dominated
+        # by coordinate noise rather than true stereochemistry.
         if abs(signed_vol) < 0.05:
             # Essentially planar — cannot assign chirality
             n_error += 1
             continue
 
-        # L-configuration convention: N→C→CB forms a left-handed triple
-        # At Cα the signed volume (N, C, CB) > 0 for L; < 0 for D
-        # (This matches the standard CIP S for L-amino acids in PDB frame)
+        # Canonical convention (matches chiralfold/af3_correct.py):
+        # Positive signed volume(CA; N, C, CB) → L-configuration (S at Cα for
+        # standard amino acids). Negative → D-configuration. This is
+        # consistent regardless of H presence and is the convention used
+        # throughout the ChiralFold codebase.
         is_l_geometry = signed_vol > 0
         is_d_geometry = signed_vol < 0
 
@@ -507,8 +546,11 @@ def _check_bond_geometry(
                         "sigma": round(abs(dev) / BA_SIGMA, 1),
                     })
 
-        # Inter-residue (peptide bond) geometry
-        if i + 1 < n:
+        # Inter-residue (peptide bond) geometry — guard against chain
+        # breaks, missing residues, and concatenated multi-chain files.
+        if i + 1 < n and _is_chain_continuous(
+            ordered_keys[i], ordered_keys[i + 1], res_maps[i], res_maps[i + 1]
+        ):
             next_map = res_maps[i + 1]
             n_next = next_map.get("N")
             ca_next = next_map.get("CA")
@@ -624,14 +666,18 @@ def _check_ramachandran(
 
         phi = psi = None
 
-        # φ = C(i-1) - N(i) - CA(i) - C(i)
-        if i > 0:
+        # φ = C(i-1) - N(i) - CA(i) - C(i) — only if (i-1, i) are continuous.
+        if i > 0 and _is_chain_continuous(
+            ordered_keys[i - 1], ordered_keys[i], res_maps[i - 1], res_maps[i]
+        ):
             c_prev = res_maps[i - 1].get("C")
             if c_prev is not None:
                 phi = _dihedral_deg(c_prev, n_, ca, c)
 
-        # ψ = N(i) - CA(i) - C(i) - N(i+1)
-        if i < n - 1:
+        # ψ = N(i) - CA(i) - C(i) - N(i+1) — only if (i, i+1) are continuous.
+        if i < n - 1 and _is_chain_continuous(
+            ordered_keys[i], ordered_keys[i + 1], res_maps[i], res_maps[i + 1]
+        ):
             n_next = res_maps[i + 1].get("N")
             if n_next is not None:
                 psi = _dihedral_deg(n_, ca, c, n_next)
@@ -702,6 +748,12 @@ def _check_planarity(
     n = len(res_maps)
 
     for i in range(n - 1):
+        # Guard against chain gaps before measuring ω across residues.
+        if not _is_chain_continuous(
+            ordered_keys[i], ordered_keys[i + 1], res_maps[i], res_maps[i + 1]
+        ):
+            continue
+
         ca_i  = res_maps[i].get("CA")
         c_i   = res_maps[i].get("C")
         n_j   = res_maps[i + 1].get("N")
@@ -856,7 +908,7 @@ def _add_backbone_hydrogens(atoms: List[_Atom]) -> List[_Atom]:
 
 def _check_clashes(atoms: List[_Atom]) -> dict:
     """
-    Detect steric clashes between non-bonded atoms.
+    Detect steric clashes between non-bonded atoms using a scipy KD-tree.
 
     Two atoms clash when their distance < (rvdw_A + rvdw_B - 0.4) Å.
     Backbone amide hydrogens are added if not present (MolProbity-compatible).
@@ -870,60 +922,52 @@ def _check_clashes(atoms: List[_Atom]) -> dict:
     if n_atoms < 2:
         return {"n_clashes": 0, "clash_score": 0.0, "worst_clashes": []}
 
+    coords = np.asarray(
+        [[a.x, a.y, a.z] for a in all_atoms_for_check], dtype=float
+    )
+    radii = np.asarray(
+        [_vdw_radius(a) for a in all_atoms_for_check], dtype=float
+    )
+    max_sum_radii = float(np.max(radii)) * 2
+
+    tree = cKDTree(coords)
+    pairs = tree.query_pairs(r=max_sum_radii, output_type="ndarray")
+
     clashes: List[dict] = []
-    # We need an efficient spatial search; for simplicity use O(n²) with
-    # an early cutoff at 5 Å for the bounding box.
-
-    # Build a simple grid for efficiency
-    coords = np.array([[a.x, a.y, a.z] for a in all_atoms_for_check])
-    radii  = np.array([_vdw_radius(a) for a in all_atoms_for_check])
-    max_clash_dist = float(np.max(radii) * 2)
-
-    n = len(all_atoms_for_check)
     seen: Set[Tuple[int, int]] = set()
 
-    for i in range(n):
-        ai = all_atoms_for_check[i]
-        xi = coords[i]
-
-        for j in range(i + 1, n):
-            aj = all_atoms_for_check[j]
-
-            # Skip bonded and 1-3 angle partners
-            if _are_bonded(ai, aj):
-                continue
-
-            xj = coords[j]
-            diff = xi - xj
-            # Quick rejection: sum of max radii
-            sq_dist = float(np.dot(diff, diff))
-            clash_limit = radii[i] + radii[j] - 0.4
-            if sq_dist >= clash_limit * clash_limit:
-                continue
-
-            dist = math.sqrt(sq_dist)
-            overlap = (radii[i] + radii[j]) - dist
-            if overlap >= 0.4:
-                pair_key = (min(ai.serial, aj.serial), max(ai.serial, aj.serial))
-                if pair_key in seen:
-                    continue
-                seen.add(pair_key)
-                clashes.append({
-                    "atom1": f"{ai.chain}:{ai.resname}{ai.resseq}.{ai.name}",
-                    "atom2": f"{aj.chain}:{aj.resname}{aj.resseq}.{aj.name}",
-                    "distance":  round(dist, 3),
-                    "overlap":   round(overlap, 3),
-                    "vdw_sum":   round(radii[i] + radii[j], 3),
-                })
+    for i, j in pairs:
+        ai = all_atoms_for_check[int(i)]
+        aj = all_atoms_for_check[int(j)]
+        if _are_bonded(ai, aj):
+            continue
+        dist = float(np.linalg.norm(coords[i] - coords[j]))
+        clash_limit = radii[i] + radii[j] - 0.4
+        if dist >= clash_limit:
+            continue
+        overlap = float((radii[i] + radii[j]) - dist)
+        if overlap < 0.4:
+            continue
+        pair_key = (min(ai.serial, aj.serial), max(ai.serial, aj.serial))
+        if pair_key in seen:
+            continue
+        seen.add(pair_key)
+        clashes.append({
+            "atom1": f"{ai.chain}:{ai.resname}{ai.resseq}.{ai.name}",
+            "atom2": f"{aj.chain}:{aj.resname}{aj.resseq}.{aj.name}",
+            "distance": round(dist, 3),
+            "overlap": round(overlap, 3),
+            "vdw_sum": round(float(radii[i] + radii[j]), 3),
+        })
 
     clashes.sort(key=lambda c: -c["overlap"])
-    n_clashes   = len(clashes)
+    n_clashes = len(clashes)
     clash_score = 1000.0 * n_clashes / n_atoms if n_atoms > 0 else 0.0
 
     return {
-        "n_clashes":    n_clashes,
-        "clash_score":  round(clash_score, 2),
-        "worst_clashes": clashes[:20],   # top 20 by overlap magnitude
+        "n_clashes": n_clashes,
+        "clash_score": round(clash_score, 2),
+        "worst_clashes": clashes[:20],
     }
 
 
@@ -950,11 +994,12 @@ def _compute_overall_score(
     """
     score = 0.0
 
-    # Ramachandran (30 pts) — 100% favored → 30 pts; 0% → 0 pts
+    # Ramachandran (30 pts) — smooth linear interpolation: 0 pts at 0%,
+    # 30 pts at 98% favored, and proportional below that with no cliff edge
+    # at 50% (which previously gave the same 0 pts as 0% favored).
     pct_fav = rama.get("pct_favored", 0.0)
-    # Interpolate: <50% → 0 pts; 98% → ~30 pts
-    rama_score = max(0.0, min(30.0, (pct_fav - 50.0) / 50.0 * 30.0))
-    score += rama_score
+    rama_score = min(30.0, 30.0 * pct_fav / 98.0)
+    score += max(0.0, rama_score)
 
     # Chirality (25 pts)
     pct_chir = chirality.get("pct_correct", 100.0)

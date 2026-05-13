@@ -20,10 +20,9 @@ from __future__ import annotations
 
 import itertools
 import random
-import warnings
 from typing import Dict, List, Optional, Tuple
 
-warnings.filterwarnings("ignore")
+# Module-level: do NOT call warnings.filterwarnings globally.
 
 
 # ─────────────────────────────────────────────────────────────────────────────

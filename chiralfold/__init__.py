@@ -26,11 +26,12 @@ Quick start::
     result = model.predict_from_mirror(l_coords, 'AEAAAKEAAA')
 
 Reference:
-    Childs, Zhou & Donald (2025). "Has AlphaFold 3 Solved the Protein
-    Folding Problem for D-Peptides?" bioRxiv 2025.03.14.643307
+    Childs CM, Zhou P, Donald BR (2025). Has AlphaFold 3 Solved the Protein
+    Folding Problem for D-Peptides? bioRxiv 2025.03.14.643307.
+    https://doi.org/10.1101/2025.03.14.643307
 """
 
-__version__ = "3.0.0"
+__version__ = "3.2.1"
 __author__ = "Tommaso R. Marena"
 
 from .model import (

@@ -25,8 +25,8 @@ import numpy as np
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from copy import deepcopy
-import warnings
-warnings.filterwarnings('ignore')
+
+# Module-level: do NOT call warnings.filterwarnings globally.
 
 
 # ═══════════════════════════════════════════════════════════════════════════

@@ -2,14 +2,30 @@
 ChiralFold Unit Tests
 ======================
 
-Tests for chirality correctness across pure D, pure L, and mixed L/D peptides.
+Test coverage scope:
+  - Amino-acid SMILES libraries (L and D, 20 residues each, including
+    glycine achirality and isoleucine/threonine side-chain stereo).
+  - SMILES builders (``d_peptide_smiles``, ``l_peptide_smiles``,
+    ``mixed_peptide_smiles``) including error paths.
+  - Chirality validation (``validate_smiles_chirality``,
+    ``validate_3d_chirality``, ``validate_diastereomer``) on pure-D,
+    pure-L, and mixed-pattern peptides.
+  - ChiralFold model: ``predict`` (de novo and mirror modes).
+  - ``MirrorImagePredictor`` reflection geometry.
+  - 30 pure-D sequences and 15 diastereomer sequences run end-to-end.
+  - External-PDB integration tests (1UBQ download from RCSB).
+  - Regression tests confirming the v3.2.1 validator bug fix.
+  - Smoke imports for the AF3-correction pipeline and the CLI entry point.
 """
 
 import pytest
 import numpy as np
-from rdkit import Chem
 
-from chiralfold.model import (
+pytest.importorskip("rdkit", reason="rdkit required for chirality tests")
+
+from rdkit import Chem  # noqa: E402
+
+from chiralfold.model import (  # noqa: E402
     ChiralFold,
     d_peptide_smiles,
     l_peptide_smiles,
@@ -18,12 +34,12 @@ from chiralfold.model import (
     L_AMINO_ACID_SMILES,
     MirrorImagePredictor,
 )
-from chiralfold.validator import (
+from chiralfold.validator import (  # noqa: E402
     validate_smiles_chirality,
     validate_3d_chirality,
     validate_diastereomer,
 )
-from chiralfold.data.test_sequences import PURE_D_SEQS, DIASTEREOMER_SEQS
+from chiralfold.data.test_sequences import PURE_D_SEQS, DIASTEREOMER_SEQS  # noqa: E402
 
 
 # ── Amino acid library tests ──────────────────────────────────────────────
@@ -146,6 +162,7 @@ class TestChiralityValidation:
 # ── ChiralFold model tests ───────────────────────────────────────────────
 
 class TestChiralFoldModel:
+    # n_conformers=3 for CI speed; production uses default 16
     def test_predict_pure_d(self):
         model = ChiralFold(n_conformers=3)
         result = model.predict('AFK')
@@ -209,9 +226,10 @@ class TestMirrorImagePredictor:
 
 # ── Integration test ──────────────────────────────────────────────────────
 
+@pytest.mark.slow
 class TestIntegration:
     def test_full_30_sequence_suite_zero_violations(self):
-        """The key benchmark: all 30 pure D sequences must have 0 violations."""
+        """46 total sequences, 467 chiral residues. Key benchmark: all must have 0 violations."""
         total_chiral = 0
         total_viol = 0
         for sid, seq in PURE_D_SEQS.items():
@@ -221,7 +239,7 @@ class TestIntegration:
             total_chiral += sv['n_chiral']
             total_viol += sv['violations']
         assert total_viol == 0
-        assert total_chiral > 250  # Should be 302
+        assert total_chiral >= 250  # stable lower bound (actual: 302)
 
     def test_full_15_diastereomer_suite_zero_violations(self):
         """All 15 diastereomer sequences must have 0 violations."""
@@ -237,6 +255,7 @@ class TestIntegration:
 
 # ── External PDB validation test ──────────────────────────────────────
 
+@pytest.mark.slow
 class TestExternalPDB:
     """Validate chirality on a real PDB structure fetched from RCSB."""
 
@@ -244,9 +263,7 @@ class TestExternalPDB:
         """PDB 1UBQ (ubiquitin, 76 residues) must have 100% Cα chirality."""
         import os
         import urllib.request
-        import tempfile
 
-        # Download 1UBQ if not cached
         cache_dir = os.path.join(os.path.dirname(__file__), '..', 'results')
         pdb_path = os.path.join(cache_dir, '1UBQ.pdb')
 
@@ -271,6 +288,53 @@ class TestExternalPDB:
         assert report['n_residues'] >= 70, (
             f"1UBQ has {report['n_residues']} residues (expected >= 70)"
         )
+
+
+# ── AF3 correction smoke tests ────────────────────────────────────────────
+
+class TestAF3Correction:
+    def test_correct_af3_import(self):
+        from chiralfold.af3_correct import correct_af3_output
+        assert callable(correct_af3_output)
+
+
+# ── CLI smoke tests ───────────────────────────────────────────────────────
+
+class TestCLI:
+    def test_cli_import(self):
+        from chiralfold.cli import main
+        assert callable(main)
+
+
+# ── Validator regression tests (v3.2.1 bug fix) ────────────────────────────
+
+class TestValidatorFix:
+    """Regression tests confirming validator bug fix in v3.2.1."""
+
+    def test_wrong_chirality_detected_smiles(self):
+        """validate_smiles_chirality must return violations > 0 for inverted sequence."""
+        from chiralfold.validator import validate_smiles_chirality
+        from chiralfold.model import mixed_peptide_smiles
+        from rdkit import Chem
+        # Build a pure-L peptide but tell validator to expect pure-D
+        smi = mixed_peptide_smiles("AWK", "LLL")
+        mol = Chem.MolFromSmiles(smi)
+        result = validate_smiles_chirality(mol, "AWK", "DDD")
+        # If all residues are L but we expect D, violations must be > 0
+        assert result['violations'] > 0, (
+            "validate_smiles_chirality returned 0 violations for deliberately "
+            "wrong chirality — the v3.2.1 bug fix may not have been applied."
+        )
+
+    def test_correct_chirality_no_violations(self):
+        """validate_smiles_chirality must return 0 violations for correct input."""
+        from chiralfold.validator import validate_smiles_chirality
+        from chiralfold.model import mixed_peptide_smiles
+        from rdkit import Chem
+        smi = mixed_peptide_smiles("AWK", "LLL")
+        mol = Chem.MolFromSmiles(smi)
+        result = validate_smiles_chirality(mol, "AWK", "LLL")
+        assert result['violations'] == 0
 
 
 if __name__ == '__main__':
