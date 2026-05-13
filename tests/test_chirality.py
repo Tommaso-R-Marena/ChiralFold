@@ -337,5 +337,73 @@ class TestValidatorFix:
         assert result['violations'] == 0
 
 
+# ── validate_3d_chirality stability tests ────────────────────────────────
+
+class TestValidate3DChiralityStability:
+    """validate_3d_chirality must be invariant to atom-numbering permutations.
+
+    The pre-v3.2.2 implementation derived handedness from a signed volume
+    over the first three atoms returned by ``GetNeighbors()``. RDKit does
+    not guarantee that iteration order matches the canonical bond ordering
+    used to interpret ``CHI_TETRAHEDRAL_CW/CCW``, so equivalent molecules
+    with different atom indices could be flagged inconsistently. These
+    tests pin the new ``AssignStereochemistryFrom3D``-based implementation.
+    """
+
+    def _embed(self, seq, pattern):
+        from rdkit.Chem import AllChem
+        from chiralfold.model import mixed_peptide_smiles
+        smi = mixed_peptide_smiles(seq, pattern)
+        mol = Chem.MolFromSmiles(smi)
+        mol_h = Chem.AddHs(mol)
+        params = AllChem.ETKDGv3()
+        params.randomSeed = 42
+        AllChem.EmbedMolecule(mol_h, params)
+        return mol_h
+
+    def test_stable_under_renumbering_d_peptide(self):
+        import random
+        mol_h = self._embed("AFK", "DDD")
+        baseline = validate_3d_chirality(mol_h)
+        n = mol_h.GetNumAtoms()
+        for seed in range(10):
+            random.seed(seed)
+            perm = list(range(n))
+            random.shuffle(perm)
+            renumbered = Chem.RenumberAtoms(mol_h, perm)
+            assert validate_3d_chirality(renumbered) == baseline, (
+                f"validate_3d_chirality unstable under renumbering "
+                f"(seed={seed})"
+            )
+
+    def test_stable_under_renumbering_mixed_peptide(self):
+        import random
+        mol_h = self._embed("ACDEF", "LDLDL")
+        baseline = validate_3d_chirality(mol_h)
+        assert baseline['checked'] >= 4
+        n = mol_h.GetNumAtoms()
+        for seed in range(10):
+            random.seed(seed + 100)
+            perm = list(range(n))
+            random.shuffle(perm)
+            renumbered = Chem.RenumberAtoms(mol_h, perm)
+            assert validate_3d_chirality(renumbered) == baseline
+
+    def test_flipped_tags_are_detected_as_violations(self):
+        """Tag/geometry mismatch must still surface as a violation."""
+        mol_h = self._embed("AFK", "DDD")
+        cw = Chem.ChiralType.CHI_TETRAHEDRAL_CW
+        ccw = Chem.ChiralType.CHI_TETRAHEDRAL_CCW
+        flipped = Chem.RWMol(mol_h)
+        for a in flipped.GetAtoms():
+            t = a.GetChiralTag()
+            if t == cw:
+                a.SetChiralTag(ccw)
+            elif t == ccw:
+                a.SetChiralTag(cw)
+        result = validate_3d_chirality(flipped)
+        assert result['violations'] == result['checked'] > 0
+
+
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
