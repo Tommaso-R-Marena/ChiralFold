@@ -2,7 +2,8 @@
 
 **General-purpose protein stereochemistry toolkit — chirality-correct structure generation, PDB auditing, and mirror-image transformation for any protein.**
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/main/demos/ChiralFold_Quick_Demo.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Quick_Demo.ipynb)
+![Tests](https://github.com/Tommaso-R-Marena/ChiralFold/actions/workflows/ci.yml)
 
 ChiralFold provides `pip install`-able stereochemistry validation and coordinate generation for L-proteins, D-peptides, diastereomers, and any PDB structure. It guarantees **0% chirality violations** at stereogenic centers and includes a MolProbity-calibrated quality auditor validated against wwPDB reports on 31 structures.
 
@@ -23,6 +24,13 @@ ChiralFold provides `pip install`-able stereochemistry validation and coordinate
 ## Installation
 
 ```bash
+pip install git+https://github.com/Tommaso-R-Marena/ChiralFold.git
+```
+
+If `pip install rdkit` fails on your platform (rare on Linux/macOS, common on some Windows toolchains), use the conda fallback:
+
+```bash
+conda install -c conda-forge rdkit
 pip install git+https://github.com/Tommaso-R-Marena/ChiralFold.git
 ```
 
@@ -51,7 +59,7 @@ from chiralfold import correct_af3_output
 
 # Detect and fix chirality violations in AF3 predictions
 result = correct_af3_output('af3_prediction.pdb', 'corrected.pdb')
-print(f"Fixed {result['n_corrected']} violations")
+print(f"Fixed {result['correction']['n_corrected']} violations")
 ```
 
 ### Enumerate Diastereomers for Drug Design
@@ -132,7 +140,7 @@ Head-to-head comparison on 31 PDB structures (0.48–3.4 Å, X-ray + NMR + cryo-
 | Chirality validation | 30/31 = 100% | Not directly comparable | Flagged 1 real issue |
 | Quality vs resolution | r = -0.26 (expected) | Similar trend | Consistent |
 
-Note: v3.2's hybrid Ramachandran uses an empirical PDB probability grid (built from 5,859 residues across 28 high-quality structures) for the favored/allowed classification, with calibrated rectangular regions as a fallback for the outlier boundary. This hybrid approach achieves mean outlier rates matching wwPDB while maintaining coverage for unusual backbone geometries.
+Note: v3.2's hybrid Ramachandran uses an empirical PDB probability grid (built from 5,859 residues across 28 high-quality structures) for the favored/allowed classification, with calibrated rectangular regions as a fallback for the outlier boundary. D-amino acid residues use mirror-image regions calibrated per Hovmöller et al. (2002) and the MolProbity D-proline validation. This hybrid approach achieves mean outlier rates matching wwPDB while maintaining coverage for unusual backbone geometries.
 
 **Where ChiralFold adds value:**
 - `pip install` — no web interface or complex local setup required
@@ -164,7 +172,7 @@ Values from `chiralfold audit --rcsb-batch` run in this validation session.
 
 On D-peptide sequences, ChiralFold produces 0% chirality violations (0/467 chiral residues across 46 test sequences) vs AlphaFold 3's documented 51% per-residue violation rate on D-peptides (Childs et al., 2025). Note: ChiralFold's 0% rate is guaranteed by construction — each residue is built with explicit stereochemistry encoding — rather than learned from data. The comparison demonstrates that construction-based approaches solve a problem AF3's diffusion architecture fundamentally cannot.
 
-Fisher's exact test: p < 6.7×10⁻¹⁴⁴. 31 PDB structures audited: 30/31 = 100% Cα correctness.
+Fisher's exact test on the canonical contingency table from `results/summary.json`: p ≈ 6.66 × 10⁻¹⁴⁴. 31 PDB structures audited: 30/31 = 100% Cα correctness.
 
 ### External Benchmark: Childs et al. 2025
 
@@ -260,7 +268,7 @@ ChiralFold is a stereochemistry toolkit, not a de novo structure predictor. It e
 | Interface scoring | New in v3.2 |
 | Template threading | Available (template-dependent; requires structural homolog in PDB) |
 | Fragment assembly | Available (Chou-Fasman SS + NeRF backbone; not comparable to learned models) |
-| De novo fold prediction | Not supported — use AF3/ESMFold + ChiralFold correction |
+| De novo fold prediction | Not applicable — ChiralFold is a stereochemistry post-processor, not a de novo structure predictor |
 
 ## Previously Addressed Limitations
 
@@ -327,13 +335,29 @@ Buried Surface Area: 1,980 Å². Shape Complementarity: 0.933. Hydrogen bonds: 1
 1CRN: 100% chirality, 88.6% Rama favored, 91.1% planarity, score 72.1.
 1SHG: 100% chirality, 92.7% Rama favored, 66.1% planarity, score 70.0.
 
+## Data Availability
+
+The complete verification dataset (12,574 rows, raw N/Cα/C/Cβ coordinates for every D-amino acid residue surveyed) is at [`results/d_residue_verification.csv`](results/d_residue_verification.csv). The independent verification script (no ChiralFold dependencies, numpy-only) is at [`benchmarks/independent_d_residue_verification.py`](benchmarks/independent_d_residue_verification.py). Reproducibility instructions for every benchmark in this README are documented in [`results/REPRODUCIBILITY.md`](results/REPRODUCIBILITY.md) and [`benchmarks/README.md`](benchmarks/README.md).
+
+## Version History
+
+### v3.2.1 (2026-05-13)
+
+- **Fixed:** `validate_smiles_chirality()` and `validate_3d_chirality()` in `validator.py` were non-functional (violations counter was never incremented). The 0% violation rate reported in the paper is independently confirmed by 3D coordinate geometry benchmarks (`benchmarks/independent_d_residue_verification.py`, `benchmarks/childs2025_comparison.py`).
+- **Fixed:** `__version__` updated to 3.2.1 throughout (package, CITATION.cff, BibTeX).
+- **Fixed:** `CITATION.cff` statistics updated to final survey values (12,573 residues, 4,616 files, 29 errors in 16 structures, 0.23% rate).
+- **Improved:** Clash detection now uses scipy KD-tree (O(n log n)) instead of O(n²) brute force.
+- **Improved:** Inter-residue geometry checks (bond length/angle, peptide planarity ω, Ramachandran φ/ψ) now guard against chain gaps, missing residues, and concatenated multi-chain files.
+- **Improved:** D-amino acid Ramachandran regions defined as explicit mirror images of the L regions per Hovmöller et al. (2002) and the MolProbity D-proline validation, rather than relying on negate-and-reuse-L heuristic.
+- **Fixed:** Module-level `warnings.filterwarnings('ignore')` removed from `chiralfold/auditor.py`, `chiralfold/validator.py`, `chiralfold/ramachandran.py`. Targeted context managers used instead.
+
 ## Citation
 
 ```bibtex
-@software{chiralfold2025,
+@software{chiralfold2026,
   title     = {ChiralFold: General-Purpose Protein Stereochemistry Toolkit},
   author    = {Tommaso R. Marena},
-  year      = {2025},
+  year      = {2026},
   url       = {https://github.com/Tommaso-R-Marena/ChiralFold},
   version   = {3.2.1},
   note      = {PDB auditing calibrated against wwPDB/MolProbity,
@@ -348,7 +372,7 @@ The AlphaFold 3 benchmark data is from:
 ```bibtex
 @article{childs2025alphafold3dpeptides,
   title   = {Has AlphaFold 3 Solved the Protein Folding Problem for D-Peptides?},
-  author  = {Childs, Cameron M. and Zhou, Jianfu and Donald, Bruce R.},
+  author  = {Childs, Cameron M. and Zhou, Pei and Donald, Bruce R.},
   journal = {bioRxiv},
   year    = {2025},
   doi     = {10.1101/2025.03.14.643307}
