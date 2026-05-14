@@ -1,0 +1,61 @@
+# ChiralFold v3.2.1 — installed dependency lock file
+# Generated 2026-05-14 from a fresh editable install on Python 3.12.8 / Linux.
+# Regenerate with: pip install -e ".[dev]" && pip freeze > requirements-lock.txt
+# (Only direct + transitive deps of chiralfold are pinned here, not the
+# unrelated packages that may be present in your virtualenv.)
+
+ast-serialize==0.3.0
+attrs==26.1.0
+beautifulsoup4==4.14.3
+certifi==2026.4.22
+charset-normalizer==3.4.7
+chiralfold==3.2.1
+click==8.3.3
+contourpy==1.3.3
+coverage==7.14.0
+cycler==0.12.1
+defusedxml==0.7.1
+et-xmlfile==2.0.0
+fonttools==4.62.1
+idna==3.13
+iniconfig==2.3.0
+jinja2==3.1.6
+joblib==1.5.3
+kiwisolver==1.5.0
+librt==0.11.0
+lxml==6.1.0
+lz4==4.4.5
+markupsafe==3.0.3
+matplotlib==3.10.9
+mypy==2.1.0
+mypy-extensions==1.1.0
+numpy==2.4.4
+openpyxl==3.1.5
+orjson==3.11.8
+packaging==26.2
+pandas==2.3.3
+pathspec==1.1.1
+pillow==12.2.0
+pip==24.3.1
+pluggy==1.6.0
+pycairo==1.29.0
+pygments==2.20.0
+pyparsing==3.3.2
+pytest==9.0.3
+pytest-cov==7.1.0
+python-dateutil==2.9.0.post0
+pytz==2026.2
+pyyaml==6.0.3
+rdkit==2026.3.1
+requests==2.33.1
+ruff==0.15.12
+scikit-learn==1.8.0
+scipy==1.17.1
+seaborn==0.13.2
+six==1.17.0
+soupsieve==2.8.3
+threadpoolctl==3.6.0
+typing-extensions==4.15.0
+tzdata==2026.2
+urllib3==2.7.0
+xlsxwriter==3.2.9
