@@ -1,9 +1,9 @@
 # ChiralFold
 
-**General-purpose protein stereochemistry toolkit — chirality-correct structure generation, PDB auditing, and mirror-image transformation for any protein.**
+**Chirality-correct protein stereochemistry toolkit: PDB auditing, D-peptide construction, AF3 chirality correction, and mirror-image binder design.**
 
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Quick_Demo.ipynb)
-![Tests](https://github.com/Tommaso-R-Marena/ChiralFold/actions/workflows/ci.yml)
+![Tests](https://github.com/Tommaso-R-Marena/ChiralFold/actions/workflows/ci.yml/badge.svg?branch=master)
 
 ChiralFold provides `pip install`-able stereochemistry validation and coordinate generation for L-proteins, D-peptides, diastereomers, and any PDB structure. It guarantees **0% chirality violations** at stereogenic centers and includes a MolProbity-calibrated quality auditor validated against wwPDB reports on 31 structures.
 
@@ -15,11 +15,11 @@ ChiralFold provides `pip install`-able stereochemistry validation and coordinate
 
 **Ramachandran agreement with wwPDB/MolProbity** — Spearman ρ = 0.49 (p = 0.006) on outlier percentage across 31 structures. ChiralFold reports 0.60% mean outliers vs wwPDB's 0.64%.
 
-**Mirror-image binder design** — Converted the p53:MDM2 crystal structure (PDB 1YCR) into a D-peptide therapeutic candidate that preserves the Phe19/Trp23/Leu26 binding triad as D-amino acids — the same hotspot the experimental dPMI-γ (Kd = 53 nM) uses. All backbone φ angles exactly sign-inverted, 0.0 Å coordinate error.
+**Mirror-image binder design** — Converted the p53:MDM2 crystal structure (PDB 1YCR) into a D-peptide therapeutic candidate that preserves the Phe19/Trp23/Leu26 binding triad as D-amino acids — the same hotspot the experimental dPMI-γ (Kd = 53 nM) uses. All backbone φ angles exactly sign-inverted, 0.0 Å coordinate error. The mirror transformation is mathematically exact; experimental Kd measurement against MDM2 is required to confirm binding affinity and is outside the scope of this computational study.
 
 **PDB-wide D-residue survey** — Verified 12,573 D-amino acid residues across 4,616 PDB files (>91% of all RCSB entries for each of the 18 standard D-amino acid CCD codes). Found 29 D-label/L-coordinate mismatches in 16 structures: 6 genuine stereochemistry errors (biology requires D, coordinates show L), 18 CCD code misassignments across 5 structures (L-molecule labeled with D-code), 3 polymer residue mislabels, and 2 borderlines. Errors cluster in 5 CCD codes (DTY, DLY, DPN, DSN, DAR); 9 codes confirmed clean at zero errors. All cross-referenced against biological context and primary literature. MolProbity does not flag any of these.
 
-**AF3 chirality correction** — Automatic detection and correction of stereochemistry violations in AlphaFold 3 outputs, directly addressing the 51% violation rate documented by Childs et al. (2025).
+**AF3 chirality correction** — Automatic detection and correction of stereochemistry violations in AlphaFold 3 outputs, directly addressing the 51% violation rate documented by Childs et al. (2025). This is a construction-vs-learning contrast: ChiralFold's 0% rate is guaranteed by explicit SMILES stereochemistry encoding, not by outperforming AF3 on a learned task. See the [Benchmarks](#benchmarks) section for full details.
 
 ## Installation
 
@@ -151,10 +151,14 @@ Note: v3.2's hybrid Ramachandran uses an empirical PDB probability grid (built f
 - Conformer generation with planarity fix (33% → 95%)
 
 **Where MolProbity is stronger:**
-- Data-derived Ramachandran contours from ~100K structures
-- Rotamer completeness (chi2/chi3/chi4; ChiralFold validates chi1 only)
-- Cβ deviation analysis and all-atom contact scoring
-- Decades of community validation and refinement
+
+| Capability | MolProbity | ChiralFold |
+|---|---|---|
+| Ramachandran contours | Data-derived from ~100K structures | Hybrid empirical grid + calibrated rectangles |
+| Chi2–Chi4 rotamer validation | Full chi2/chi3/chi4 | Not implemented (chi1 only) |
+| Cβ deviation analysis | Available | Not implemented |
+| All-atom contact (clash) scoring | Probe/Reduce all-atom | Backbone H-aware KD-tree |
+| Community refinement | Decades | New |
 
 ### Auditor Quality on Reference Structures
 

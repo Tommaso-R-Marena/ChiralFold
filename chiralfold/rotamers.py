@@ -2,6 +2,9 @@
 ChiralFold — Side-Chain Rotamer Validation
 ============================================
 
+Current implementation validates chi1 dihedral angles only. Chi2/chi3/chi4
+validation is planned for a future release.
+
 Implements side-chain rotamer validation based on the Penultimate Rotamer
 Library (Lovell et al. 2000, Proteins 40:389-408).
 

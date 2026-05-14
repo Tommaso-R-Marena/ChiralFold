@@ -30,6 +30,12 @@ jobs:
           pip install "rdkit>=2023.3" || pip install rdkit-pypi
           pip install -e ".[dev]"
 
+      # NOTE: `-m "not slow"` excludes tests marked @pytest.mark.slow, which
+      # cover network-dependent benchmarks (RCSB structure downloads, wwPDB
+      # validation XML fetches for the MolProbity comparison) and long-running
+      # compute (the >=100-structure Ramachandran benchmark and full Childs et al.
+      # 2025 enumeration). These are designed to be run manually or in scheduled
+      # benchmark workflows, not on every PR/push.
       - name: Run tests
         run: |
           pytest tests/ -v --tb=short -m "not slow"
