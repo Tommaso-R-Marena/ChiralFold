@@ -1,0 +1,104 @@
+{
+  "n_structures": 363,
+  "n_success": 363,
+  "n_planned": 378,
+  "n_failures": 15,
+  "failures": [
+    {
+      "pdb_id": "1N1O",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "1MF5",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "8HU5",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "2OBZ",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "5R28",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "5D99",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "2Q1O",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "1N7A",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "8CVK",
+      "bin": "xray_med",
+      "reason": "too_many_chains"
+    },
+    {
+      "pdb_id": "1QPH",
+      "bin": "xray_med",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "8CVJ",
+      "bin": "xray_med",
+      "reason": "too_many_chains"
+    },
+    {
+      "pdb_id": "2M8K",
+      "bin": "nmr",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "7Y7G",
+      "bin": "cryoem",
+      "reason": "too_many_chains"
+    },
+    {
+      "pdb_id": "7Y7A",
+      "bin": "cryoem",
+      "reason": "too_many_chains"
+    },
+    {
+      "pdb_id": "7Y7F",
+      "bin": "cryoem",
+      "reason": "too_many_chains"
+    }
+  ],
+  "spearman_rho": 0.5109413562372395,
+  "spearman_p_value": 1.5668747100677978e-25,
+  "spearman_p": 1.5668747100677978e-25,
+  "spearman_rho_ci95": [
+    0.41540407608761815,
+    0.5954618126471662
+  ],
+  "pearson_r": 0.32993518617535617,
+  "pearson_p_value": 1.1498597773984567e-10,
+  "pearson_p": 1.1498597773984567e-10,
+  "pearson_r_ci95": [
+    0.13440105543937297,
+    0.9059256780865446
+  ],
+  "bootstrap_n_iter": 2000,
+  "chiralfold_mean_outlier_pct": 0.7782644628099173,
+  "wwpdb_mean_outlier_pct": 1.1041046831955923,
+  "seed": 20260612,
+  "note": "Expanded benchmark via benchmarks/expand_ramachandran_benchmark.py. Candidates drawn by seeded era-representative sampling across the full RCSB result range per bin. See the *_comparison.csv for the per-structure data.",
+  "chain_id_fix": "chain_map remapping applied to _cif_to_pdb (A-Z then 0-9; structures with >36 distinct chains are skipped as 'too_many_chains'). This run supersedes the prior 279-struct run for mmCIF-converted entries with multi-character chain IDs.",
+  "pearson_outlier_note": "Pearson r is dominated by a single anomalous wwPDB entry, 5M2K (wwPDB=100.0%, ChiralFold=0.0%). Excluding it: Pearson r=0.853, Spearman rho=0.521 (n=362). Spearman (rank-based) is robust to this point; the headline Pearson r=0.330 reflects its outlier sensitivity, not a weaker relationship."
+}
