@@ -14,7 +14,7 @@ ChiralFold provides `pip install`-able stereochemistry validation and coordinate
 
 **Chirality validation** — 30/31 PDB structures audit at 100% Cα correctness across X-ray (0.48–3.4 Å), NMR, and cryo-EM. One NMR structure (2JXR) flagged with a genuine stereochemical issue.
 
-**Ramachandran agreement with wwPDB/MolProbity** — On an expanded, stratified sample of **104 structures** (X-ray ultra/high/med/low resolution + NMR + cryo-EM), Spearman ρ = 0.56 (p = 4.4 × 10⁻¹⁰) on outlier percentage, with ChiralFold reporting 0.92% mean outliers vs wwPDB's 0.96%. The original published benchmark on 31 structures (Spearman ρ = 0.49, p = 0.006; 0.60% vs 0.64% mean) is retained as the historical reference. Reproduce the expanded run with `benchmarks/expand_ramachandran_benchmark.py` (outputs: `results/ramachandran_100struct_comparison.csv`, `results/ramachandran_100struct_summary.json`, `results/ramachandran_100struct_plot.png`).
+**Ramachandran agreement with wwPDB/MolProbity** — On a further-expanded, seeded **era-representative** stratified sample of **279 structures** (X-ray ultra/high/med/low resolution + NMR + cryo-EM, spanning all deposition eras), Spearman ρ = 0.48 (95% CI [0.36, 0.58], p = 2.4 × 10⁻¹⁷) and Pearson r = 0.80 (95% CI [0.67, 0.90], p = 1.1 × 10⁻⁶⁴) on outlier percentage, with ChiralFold reporting 0.71% mean outliers vs wwPDB's 0.72%. This is consistent with — and the 104-structure ρ falls inside the 95% CI of — the earlier 104-structure run (ρ = 0.56, p = 4.4 × 10⁻¹⁰; 0.92% vs 0.96% mean), which used a smaller, older-structure-weighted sample. The original published benchmark on 31 structures (ρ = 0.49, p = 0.006; 0.60% vs 0.64% mean) is retained as the historical reference. Reproduce any run with `benchmarks/expand_ramachandran_benchmark.py` (latest outputs: `results/ramachandran_200struct_comparison.csv`, `results/ramachandran_200struct_summary.json`, `results/ramachandran_200struct_plot.png`).
 
 **Mirror-image binder design** — Converted the p53:MDM2 crystal structure (PDB 1YCR) into a D-peptide therapeutic candidate that preserves the Phe19/Trp23/Leu26 binding triad as D-amino acids — the same hotspot the experimental dPMI-γ (Kd = 53 nM) uses. All backbone φ angles exactly sign-inverted, 0.0 Å coordinate error. The mirror transformation is mathematically exact; experimental Kd measurement against MDM2 is required to confirm binding affinity and is outside the scope of this computational study.
 
@@ -133,10 +133,11 @@ chiralfold score-interface receptor.pdb ligand.pdb
 
 ## ChiralFold vs MolProbity
 
-Head-to-head comparison across X-ray, NMR, and cryo-EM structures (original 31-structure set at 0.48–3.4 Å, plus an expanded 104-structure stratified sample):
+Head-to-head comparison across X-ray, NMR, and cryo-EM structures (original 31-structure set at 0.48–3.4 Å, plus expanded stratified samples):
 
 | Metric | ChiralFold | wwPDB/MolProbity | Agreement |
 |--------|:----------:|:----------------:|:---------:|
+| Ramachandran outlier % (n=279, representative) | 0.71% mean | 0.72% mean | ρ = 0.48 (CI 0.36–0.58), p = 2.4×10⁻¹⁷; r = 0.80 |
 | Ramachandran outlier % (n=104, expanded) | 0.92% mean | 0.96% mean | ρ = 0.56, p = 4.4×10⁻¹⁰ |
 | Ramachandran outlier % (n=31, original) | 0.60% mean | 0.64% mean | ρ = 0.49, p = 0.006 |
 | Chirality validation | 30/31 = 100% | Not directly comparable | Flagged 1 real issue |
@@ -257,6 +258,7 @@ Full dataset: `results/d_residue_verification.csv` (12,574 rows with raw coordin
 
 ### wwPDB Comparison
 
+- Representative benchmark (largest): 279 structures audited via seeded era-representative stratified sampling (X-ray ultra/high/med/low + NMR + cryo-EM, all deposition eras); Spearman ρ = 0.48 (95% CI [0.36, 0.58], p = 2.4×10⁻¹⁷), Pearson r = 0.80 (95% CI [0.67, 0.90]); mean outlier rate CF 0.71% vs wwPDB 0.72%. 11 of 290 planned entries skipped (no wwPDB validation report available), spread across bins. See `results/ramachandran_200struct_summary.json`.
 - Expanded benchmark: 104 structures audited (stratified X-ray ultra/high/med/low + NMR + cryo-EM); Spearman ρ = 0.56 (p = 4.4×10⁻¹⁰) vs wwPDB; mean outlier rate CF 0.92% vs wwPDB 0.96%. 9 of 113 planned entries skipped (no wwPDB validation report available). See `results/ramachandran_100struct_summary.json`.
 - Original benchmark (historical): 31 structures audited (X-ray, NMR, cryo-EM); Spearman ρ = 0.49 (p = 0.006) vs wwPDB; mean outlier rate CF 0.60% vs wwPDB 0.64%
 

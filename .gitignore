@@ -23,7 +23,7 @@ Thumbs.db
 pdb_cache/
 .cache/
 results/ramachandran_expansion_cache/
-results/ramachandran_100struct_run.log
+results/ramachandran_*struct_run.log
 results/*.pdb
 !results/*_D_mirror.pdb
 !results/3IWY.pdb

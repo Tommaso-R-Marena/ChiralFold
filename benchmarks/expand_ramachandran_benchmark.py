@@ -88,11 +88,18 @@ SEARCH_URL = 'https://search.rcsb.org/rcsbsearch/v2/query'
 
 def _build_query(resolution_filter,
                  method: str,
-                 max_size: int = 200) -> dict:
+                 max_size: int = 200,
+                 start: int = 0) -> dict:
     """Construct an RCSB Search API JSON query for a single bin.
 
     resolution_filter is either None (no resolution gate) or a dict with the
     RCSB ``range`` operator schema: ``{from, to, include_lower, include_upper}``.
+
+    ``start``/``max_size`` page through the (alphanumerically ordered) result
+    set. The RCSB default sort returns entries in PDB-ID order, i.e. roughly
+    by deposition era; representative sampling must therefore page across the
+    whole range rather than reading only the first window (see
+    ``_search_rcsb_representative``).
     """
     nodes: List[dict] = [{
         'type': 'terminal',
@@ -117,7 +124,7 @@ def _build_query(resolution_filter,
         'query': {'type': 'group', 'logical_operator': 'and', 'nodes': nodes},
         'return_type': 'entry',
         'request_options': {
-            'paginate': {'start': 0, 'rows': max_size},
+            'paginate': {'start': start, 'rows': max_size},
             'results_content_type': ['experimental'],
             'sort': [{'sort_by': 'score', 'direction': 'desc'}],
         },
@@ -135,6 +142,76 @@ def _search_rcsb(query: dict, timeout: int = 30) -> List[str]:
     return [hit['identifier'] for hit in payload.get('result_set', [])]
 
 
+def _rcsb_total_count(resolution_filter, method: str,
+                      timeout: int = 30) -> int:
+    """Return the total number of entries matching a bin's query."""
+    query = _build_query(resolution_filter, method, max_size=1, start=0)
+    data = json.dumps(query).encode('utf-8')
+    req = urllib.request.Request(
+        SEARCH_URL, data=data, headers={'Content-Type': 'application/json'}
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        payload = json.loads(resp.read().decode('utf-8'))
+    return int(payload.get('total_count', 0))
+
+
+def _search_rcsb_representative(resolution_filter, method: str,
+                               n_candidates: int, rng: random.Random,
+                               timeout: int = 30) -> List[str]:
+    """Return a seeded, era-representative candidate list for one bin.
+
+    The RCSB result set is ordered by PDB ID (roughly deposition era), so
+    reading only the first window over-samples legacy structures (which also
+    disproportionately lack wwPDB validation reports). To avoid that bias we:
+
+      1. Look up the bin's total entry count.
+      2. Draw seeded-random page offsets spread across the *entire* range
+         ``[0, total)`` and fetch a small window (50 IDs) at each offset.
+      3. Deduplicate, shuffle with the same seeded RNG, and return up to
+         ``n_candidates`` IDs.
+
+    This is fully deterministic for a given seed while spanning all deposition
+    eras / resolutions within the bin, rather than only the oldest entries.
+    """
+    try:
+        total = _rcsb_total_count(resolution_filter, method, timeout=timeout)
+    except (urllib.error.URLError, ValueError):
+        total = 0
+    if total <= 0:
+        return []
+
+    window = 50
+    # Number of windows needed (with headroom) to gather n_candidates uniques.
+    n_windows = max(4, int((n_candidates * 3) / window) + 2)
+    if total <= window * n_windows:
+        # Small bin: just fetch the whole thing once and sample from it.
+        ids = _search_rcsb(_build_query(resolution_filter, method,
+                                        max_size=min(total, 10000), start=0),
+                           timeout=timeout)
+        rng.shuffle(ids)
+        return ids[:n_candidates]
+
+    max_start = max(0, total - window)
+    offsets = sorted(rng.sample(range(0, max_start + 1),
+                                min(n_windows, max_start + 1)))
+    seen: set = set()
+    candidates: List[str] = []
+    for start in offsets:
+        try:
+            page = _search_rcsb(_build_query(resolution_filter, method,
+                                             max_size=window, start=start),
+                                timeout=timeout)
+        except (urllib.error.URLError, ValueError) as exc:
+            print(f'  [WARN] page at start={start} failed: {exc}')
+            continue
+        for pid in page:
+            if pid not in seen:
+                seen.add(pid)
+                candidates.append(pid)
+    rng.shuffle(candidates)
+    return candidates[:n_candidates]
+
+
 def _stratified_sample(n_target: int, seed: int = 20260514) -> List[Dict]:
     """Build a stratified random sample of PDB IDs across resolution / method.
 
@@ -147,54 +224,55 @@ def _stratified_sample(n_target: int, seed: int = 20260514) -> List[Dict]:
     # n_target, scale each bin proportionally (preserving the stratification
     # ratios) so that the planned pool exceeds n_target. This headroom lets
     # downstream attrition (entries lacking a wwPDB validation report) be
-    # absorbed without dropping below the >=100 usable-structure goal.
+    # absorbed without dropping below the usable-structure goal.
     import math
     base_total = sum(t for *_, t in RESOLUTION_BINS) + NMR_BIN_TARGET + \
         CRYOEM_BIN_TARGET
     scale = max(1.0, n_target / base_total)
 
+    # Over-fetch factor per bin to absorb attrition. ~12% of randomly sampled
+    # entries lack a wwPDB validation report (worst case NMR ~27%). The plan
+    # itself is over-provisioned by this factor (the entries are *kept* in the
+    # plan, not sliced off) so the post-attrition usable count still meets the
+    # target. Every planned entry is processed, so keep this modest.
+    overfetch = 1.30
+
+    def _plan_for_bin(res_filter, method, target, bin_name, res_label):
+        planned = int(math.ceil(target * scale * overfetch))
+        ids = _search_rcsb_representative(res_filter, method, planned, rng)
+        if not ids:
+            print(f'  [WARN] {bin_name} representative query returned no IDs')
+        return [{
+            'pdb_id': pid, 'bin': bin_name, 'resolution_range': res_label,
+            'method': method,
+        } for pid in ids[:planned]]
+
     for bin_name, res_label, res_filter, target in RESOLUTION_BINS:
         try:
-            ids = _search_rcsb(_build_query(res_filter, 'X-RAY DIFFRACTION'))
+            sample.extend(_plan_for_bin(
+                res_filter, 'X-RAY DIFFRACTION', target, bin_name, res_label))
         except (urllib.error.URLError, ValueError) as exc:
             print(f'  [WARN] {bin_name} query failed: {exc}')
-            continue
-        rng.shuffle(ids)
-        scaled = int(math.ceil(target * scale))
-        sample.extend({
-            'pdb_id': pid, 'bin': bin_name, 'resolution_range': res_label,
-            'method': 'X-RAY DIFFRACTION',
-        } for pid in ids[:scaled])
 
     try:
-        nmr_ids = _search_rcsb(_build_query(None, 'SOLUTION NMR'))
-    except urllib.error.URLError as exc:
+        sample.extend(_plan_for_bin(
+            None, 'SOLUTION NMR', NMR_BIN_TARGET, 'nmr', 'NMR'))
+    except (urllib.error.URLError, ValueError) as exc:
         print(f'  [WARN] NMR query failed: {exc}')
-        nmr_ids = []
-    rng.shuffle(nmr_ids)
-    sample.extend({
-        'pdb_id': pid, 'bin': 'nmr', 'resolution_range': 'NMR',
-        'method': 'SOLUTION NMR',
-    } for pid in nmr_ids[:int(math.ceil(NMR_BIN_TARGET * scale))])
 
     try:
-        em_ids = _search_rcsb(_build_query(
+        sample.extend(_plan_for_bin(
             {'from': 0.0, 'to': 4.5,
              'include_lower': True, 'include_upper': True},
-            'ELECTRON MICROSCOPY'))
-    except urllib.error.URLError as exc:
+            'ELECTRON MICROSCOPY', CRYOEM_BIN_TARGET,
+            'cryoem', '<=4.5 A (EM)'))
+    except (urllib.error.URLError, ValueError) as exc:
         print(f'  [WARN] cryo-EM query failed: {exc}')
-        em_ids = []
-    rng.shuffle(em_ids)
-    sample.extend({
-        'pdb_id': pid, 'bin': 'cryoem', 'resolution_range': '<=4.5 A (EM)',
-        'method': 'ELECTRON MICROSCOPY',
-    } for pid in em_ids[:int(math.ceil(CRYOEM_BIN_TARGET * scale))])
 
     if len(sample) < n_target:
         print(f'  [WARN] stratified sample only has {len(sample)} entries '
               f'(target {n_target}); proceeding with what we have.')
-    # Return the full (possibly oversampled) plan so attrition can be absorbed.
+    # Return the full plan so downstream attrition can be absorbed.
     return sample
 
 
@@ -481,6 +559,27 @@ def main() -> int:
     rho, rho_p = scistats.spearmanr(cf, wp)
     r_pearson, p_pearson = scistats.pearsonr(cf, wp)
 
+    # Bootstrap 95% CIs for rho / r by resampling the paired rows (seeded).
+    def _bootstrap_ci(stat_fn, n_boot=2000):
+        boot_rng = np.random.default_rng(args.seed)
+        n = len(cf)
+        vals = []
+        for _ in range(n_boot):
+            idx = boot_rng.integers(0, n, n)
+            try:
+                vals.append(stat_fn(cf[idx], wp[idx]))
+            except Exception:  # noqa: BLE001 - degenerate resample
+                continue
+        if not vals:
+            return [None, None]
+        lo, hi = np.percentile(vals, [2.5, 97.5])
+        return [float(lo), float(hi)]
+
+    spearman_ci = _bootstrap_ci(
+        lambda a, b: scistats.spearmanr(a, b).statistic)
+    pearson_ci = _bootstrap_ci(
+        lambda a, b: scistats.pearsonr(a, b).statistic)
+
     summary = {
         'n_structures': int(len(rows)),
         'n_success': int(len(rows)),
@@ -489,14 +588,21 @@ def main() -> int:
         'failures': failures,
         'spearman_rho': float(rho),
         'spearman_p_value': float(rho_p),
+        'spearman_p': float(rho_p),
+        'spearman_rho_ci95': spearman_ci,
         'pearson_r': float(r_pearson),
         'pearson_p_value': float(p_pearson),
+        'pearson_p': float(p_pearson),
+        'pearson_r_ci95': pearson_ci,
+        'bootstrap_n_iter': 2000,
         'chiralfold_mean_outlier_pct': float(cf.mean()),
         'wwpdb_mean_outlier_pct': float(wp.mean()),
         'seed': int(args.seed),
         'note': (
             'Expanded benchmark via benchmarks/expand_ramachandran_benchmark.py. '
-            'See the *_comparison.csv for the per-structure data.'
+            'Candidates drawn by seeded era-representative sampling across the '
+            'full RCSB result range per bin. See the *_comparison.csv for the '
+            'per-structure data.'
         ),
     }
     if out_prefix:
