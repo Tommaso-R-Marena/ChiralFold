@@ -17,7 +17,10 @@ if _BENCH_DIR not in sys.path:
 
 from expand_ramachandran_benchmark import (  # noqa: E402
     _cif_to_pdb,
+    _cached_pdb_is_valid,
     PDB_CHAIN_CHARS,
+    CONVERTER_VERSION,
+    CONVERTER_REMARK_PREFIX,
 )
 
 
@@ -112,3 +115,47 @@ def test_more_than_36_chains_returns_none():
     cif = _make_cif([f"Y{i}" for i in range(37)])
     pdb_text = _cif_to_pdb(cif)
     assert pdb_text is None
+
+
+def test_converted_output_is_version_tagged():
+    """Converter output carries a version REMARK and is considered valid."""
+    cif = _make_cif(["AA", "AB"])
+    pdb_text = _cif_to_pdb(cif)
+    assert pdb_text is not None
+    first = pdb_text.splitlines()[0]
+    assert first.startswith(CONVERTER_REMARK_PREFIX)
+    assert first.endswith(str(CONVERTER_VERSION))
+
+
+def test_stale_cache_detection(tmp_path):
+    """Cache validity: fresh-converted OK; untagged-converter stale; legacy OK."""
+    # Fresh converted file (current version) -> valid.
+    fresh = tmp_path / "fresh.pdb"
+    fresh.write_text(_cif_to_pdb(_make_cif(["AA", "AB"])))
+    assert _cached_pdb_is_valid(str(fresh)) is True
+
+    # Old untagged converter output (ATOM-leading, no REMARK) -> stale.
+    old = tmp_path / "old.pdb"
+    old.write_text(
+        "ATOM      1  N   SER A   2     "
+        "138.967 202.091 239.093  1.00 98.64           N\nEND\n"
+    )
+    assert _cached_pdb_is_valid(str(old)) is False
+
+    # Genuine legacy PDB download (HEADER-leading) -> valid.
+    legacy = tmp_path / "legacy.pdb"
+    legacy.write_text(
+        "HEADER    TEST\n"
+        "ATOM      1  N   SER A   2       "
+        "1.000   1.000   1.000  1.00 10.00           N\nEND\n"
+    )
+    assert _cached_pdb_is_valid(str(legacy)) is True
+
+    # Wrong-version REMARK tag -> stale.
+    wrongver = tmp_path / "wrong.pdb"
+    wrongver.write_text(
+        f"{CONVERTER_REMARK_PREFIX}{CONVERTER_VERSION + 99}\n"
+        "ATOM      1  N   SER A   2       "
+        "1.000   1.000   1.000  1.00 10.00           N\nEND\n"
+    )
+    assert _cached_pdb_is_valid(str(wrongver)) is False

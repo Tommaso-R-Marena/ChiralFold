@@ -284,6 +284,14 @@ PDB_CHAIN_CHARS = (
     [str(d) for d in range(10)]
 )  # 36 characters: A-Z then 0-9
 
+# Bump this whenever _cif_to_pdb changes in a way that alters its output, so
+# that cached converter-generated PDB files from older versions are detected
+# and regenerated instead of silently reused (e.g. by a --resume run).
+# v2 introduced deterministic multi-character chain-ID remapping.
+CONVERTER_VERSION = 2
+# Self-identifying marker written as the first record of every converted file.
+CONVERTER_REMARK_PREFIX = 'REMARK 999 CHIRALFOLD-CIF-CONVERT v'
+
 
 def _cif_to_pdb(cif_text: str) -> Optional[str]:
     """Convert the ``_atom_site`` loop of an mmCIF document to PDB ATOM records.
@@ -416,8 +424,13 @@ def _cif_to_pdb(cif_text: str) -> Optional[str]:
             f'{icode[:1]:1}   {x:8.3f}{y:8.3f}{z:8.3f}'
             f'{occ:6.2f}{bfac:6.2f}          {element[:2]:>2}'
         )
+    if not out_lines:
+        return None
     out_lines.append('END')
-    return '\n'.join(out_lines) + '\n'
+    # Prepend a self-identifying REMARK so a cached converted file can be
+    # recognised (and its converter version checked) on a later --resume run.
+    header = f'{CONVERTER_REMARK_PREFIX}{CONVERTER_VERSION}'
+    return header + '\n' + '\n'.join(out_lines) + '\n'
 
 
 def _count_cif_chains(cif_text: str) -> int:
@@ -465,6 +478,43 @@ def _count_cif_chains(cif_text: str) -> int:
     return len(chains)
 
 
+def _cached_pdb_is_valid(path: str) -> bool:
+    """Decide whether a cached ``.pdb`` may be reused without regeneration.
+
+    Genuine legacy PDB downloads always begin with a standard header record
+    (HEADER, and in practice other title-section records) and are always
+    reusable. Converter-generated files are tagged with a
+    ``CONVERTER_REMARK_PREFIX`` line recording the converter version; such a
+    file is reusable only if its version matches the current one.
+
+    Converter output written before versioning existed has no REMARK tag and
+    begins directly with an ATOM/HETATM record (legacy PDB files never do).
+    Those are treated as stale and rejected so that a ``--resume`` run against
+    an old cache regenerates them with the current converter rather than
+    silently reusing corrupted (chain-collided) coordinates.
+    """
+    try:
+        with open(path, 'r') as fp:
+            head = fp.read(4096)
+    except OSError:
+        return False
+    if not head.strip():
+        return False
+    first = head.lstrip().splitlines()[0] if head.lstrip() else ''
+    if first.startswith(CONVERTER_REMARK_PREFIX):
+        ver_str = first[len(CONVERTER_REMARK_PREFIX):].strip()
+        try:
+            return int(ver_str) == CONVERTER_VERSION
+        except ValueError:
+            return False
+    # No converter tag. If the file starts with ATOM/HETATM it is untagged
+    # converter output (pre-versioning) -> stale. Otherwise it is a genuine
+    # legacy PDB download (HEADER/etc.) -> valid.
+    if first.startswith('ATOM') or first.startswith('HETATM'):
+        return False
+    return True
+
+
 def _download_pdb(pdb_id: str, cache: str,
                   reason_out: Optional[List[str]] = None) -> Optional[str]:
     """Return a path to a PDB-format file for *pdb_id*, or None on failure.
@@ -479,7 +529,16 @@ def _download_pdb(pdb_id: str, cache: str,
 
     path = os.path.join(cache, f'{pdb_id.lower()}.pdb')
     if os.path.exists(path) and os.path.getsize(path) > 0:
-        return path
+        if _cached_pdb_is_valid(path):
+            return path
+        # Stale converter output from an older _cif_to_pdb version: drop it so
+        # it is regenerated below with the current (chain-ID-safe) converter.
+        print(f'    [cache] {pdb_id}: stale converted PDB '
+              '(old converter); regenerating')
+        try:
+            os.remove(path)
+        except OSError:
+            pass
     try:
         urllib.request.urlretrieve(
             PDB_FILE_URL.format(pdb_id=pdb_id.lower()), path)
