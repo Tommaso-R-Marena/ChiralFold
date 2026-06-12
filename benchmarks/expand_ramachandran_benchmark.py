@@ -78,6 +78,7 @@ NMR_BIN_TARGET = 10
 CRYOEM_BIN_TARGET = 10  # 3.0-4.5 A reconstructions
 
 PDB_FILE_URL = 'https://files.rcsb.org/download/{pdb_id}.pdb'
+CIF_FILE_URL = 'https://files.rcsb.org/download/{pdb_id}.cif'
 VALIDATION_XML_URL = (
     'https://files.rcsb.org/pub/pdb/validation_reports/{stem}/'
     '{pdb_id_lower}/{pdb_id_lower}_validation.xml.gz'
@@ -87,11 +88,18 @@ SEARCH_URL = 'https://search.rcsb.org/rcsbsearch/v2/query'
 
 def _build_query(resolution_filter,
                  method: str,
-                 max_size: int = 200) -> dict:
+                 max_size: int = 200,
+                 start: int = 0) -> dict:
     """Construct an RCSB Search API JSON query for a single bin.
 
     resolution_filter is either None (no resolution gate) or a dict with the
     RCSB ``range`` operator schema: ``{from, to, include_lower, include_upper}``.
+
+    ``start``/``max_size`` page through the (alphanumerically ordered) result
+    set. The RCSB default sort returns entries in PDB-ID order, i.e. roughly
+    by deposition era; representative sampling must therefore page across the
+    whole range rather than reading only the first window (see
+    ``_search_rcsb_representative``).
     """
     nodes: List[dict] = [{
         'type': 'terminal',
@@ -116,7 +124,7 @@ def _build_query(resolution_filter,
         'query': {'type': 'group', 'logical_operator': 'and', 'nodes': nodes},
         'return_type': 'entry',
         'request_options': {
-            'paginate': {'start': 0, 'rows': max_size},
+            'paginate': {'start': start, 'rows': max_size},
             'results_content_type': ['experimental'],
             'sort': [{'sort_by': 'score', 'direction': 'desc'}],
         },
@@ -134,6 +142,76 @@ def _search_rcsb(query: dict, timeout: int = 30) -> List[str]:
     return [hit['identifier'] for hit in payload.get('result_set', [])]
 
 
+def _rcsb_total_count(resolution_filter, method: str,
+                      timeout: int = 30) -> int:
+    """Return the total number of entries matching a bin's query."""
+    query = _build_query(resolution_filter, method, max_size=1, start=0)
+    data = json.dumps(query).encode('utf-8')
+    req = urllib.request.Request(
+        SEARCH_URL, data=data, headers={'Content-Type': 'application/json'}
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        payload = json.loads(resp.read().decode('utf-8'))
+    return int(payload.get('total_count', 0))
+
+
+def _search_rcsb_representative(resolution_filter, method: str,
+                               n_candidates: int, rng: random.Random,
+                               timeout: int = 30) -> List[str]:
+    """Return a seeded, era-representative candidate list for one bin.
+
+    The RCSB result set is ordered by PDB ID (roughly deposition era), so
+    reading only the first window over-samples legacy structures (which also
+    disproportionately lack wwPDB validation reports). To avoid that bias we:
+
+      1. Look up the bin's total entry count.
+      2. Draw seeded-random page offsets spread across the *entire* range
+         ``[0, total)`` and fetch a small window (50 IDs) at each offset.
+      3. Deduplicate, shuffle with the same seeded RNG, and return up to
+         ``n_candidates`` IDs.
+
+    This is fully deterministic for a given seed while spanning all deposition
+    eras / resolutions within the bin, rather than only the oldest entries.
+    """
+    try:
+        total = _rcsb_total_count(resolution_filter, method, timeout=timeout)
+    except (urllib.error.URLError, ValueError):
+        total = 0
+    if total <= 0:
+        return []
+
+    window = 50
+    # Number of windows needed (with headroom) to gather n_candidates uniques.
+    n_windows = max(4, int((n_candidates * 3) / window) + 2)
+    if total <= window * n_windows:
+        # Small bin: just fetch the whole thing once and sample from it.
+        ids = _search_rcsb(_build_query(resolution_filter, method,
+                                        max_size=min(total, 10000), start=0),
+                           timeout=timeout)
+        rng.shuffle(ids)
+        return ids[:n_candidates]
+
+    max_start = max(0, total - window)
+    offsets = sorted(rng.sample(range(0, max_start + 1),
+                                min(n_windows, max_start + 1)))
+    seen: set = set()
+    candidates: List[str] = []
+    for start in offsets:
+        try:
+            page = _search_rcsb(_build_query(resolution_filter, method,
+                                             max_size=window, start=start),
+                                timeout=timeout)
+        except (urllib.error.URLError, ValueError) as exc:
+            print(f'  [WARN] page at start={start} failed: {exc}')
+            continue
+        for pid in page:
+            if pid not in seen:
+                seen.add(pid)
+                candidates.append(pid)
+    rng.shuffle(candidates)
+    return candidates[:n_candidates]
+
+
 def _stratified_sample(n_target: int, seed: int = 20260514) -> List[Dict]:
     """Build a stratified random sample of PDB IDs across resolution / method.
 
@@ -142,47 +220,160 @@ def _stratified_sample(n_target: int, seed: int = 20260514) -> List[Dict]:
     rng = random.Random(seed)
     sample: List[Dict] = []
 
+    # Base per-bin targets sum to 105. When the caller requests a larger
+    # n_target, scale each bin proportionally (preserving the stratification
+    # ratios) so that the planned pool exceeds n_target. This headroom lets
+    # downstream attrition (entries lacking a wwPDB validation report) be
+    # absorbed without dropping below the usable-structure goal.
+    import math
+    base_total = sum(t for *_, t in RESOLUTION_BINS) + NMR_BIN_TARGET + \
+        CRYOEM_BIN_TARGET
+    scale = max(1.0, n_target / base_total)
+
+    # Over-fetch factor per bin to absorb attrition. ~12% of randomly sampled
+    # entries lack a wwPDB validation report (worst case NMR ~27%). The plan
+    # itself is over-provisioned by this factor (the entries are *kept* in the
+    # plan, not sliced off) so the post-attrition usable count still meets the
+    # target. Every planned entry is processed, so keep this modest.
+    overfetch = 1.30
+
+    def _plan_for_bin(res_filter, method, target, bin_name, res_label):
+        planned = int(math.ceil(target * scale * overfetch))
+        ids = _search_rcsb_representative(res_filter, method, planned, rng)
+        if not ids:
+            print(f'  [WARN] {bin_name} representative query returned no IDs')
+        return [{
+            'pdb_id': pid, 'bin': bin_name, 'resolution_range': res_label,
+            'method': method,
+        } for pid in ids[:planned]]
+
     for bin_name, res_label, res_filter, target in RESOLUTION_BINS:
         try:
-            ids = _search_rcsb(_build_query(res_filter, 'X-RAY DIFFRACTION'))
+            sample.extend(_plan_for_bin(
+                res_filter, 'X-RAY DIFFRACTION', target, bin_name, res_label))
         except (urllib.error.URLError, ValueError) as exc:
             print(f'  [WARN] {bin_name} query failed: {exc}')
-            continue
-        rng.shuffle(ids)
-        sample.extend({
-            'pdb_id': pid, 'bin': bin_name, 'resolution_range': res_label,
-            'method': 'X-RAY DIFFRACTION',
-        } for pid in ids[:target])
 
     try:
-        nmr_ids = _search_rcsb(_build_query(None, 'SOLUTION NMR'))
-    except urllib.error.URLError as exc:
+        sample.extend(_plan_for_bin(
+            None, 'SOLUTION NMR', NMR_BIN_TARGET, 'nmr', 'NMR'))
+    except (urllib.error.URLError, ValueError) as exc:
         print(f'  [WARN] NMR query failed: {exc}')
-        nmr_ids = []
-    rng.shuffle(nmr_ids)
-    sample.extend({
-        'pdb_id': pid, 'bin': 'nmr', 'resolution_range': 'NMR',
-        'method': 'SOLUTION NMR',
-    } for pid in nmr_ids[:NMR_BIN_TARGET])
 
     try:
-        em_ids = _search_rcsb(_build_query(
+        sample.extend(_plan_for_bin(
             {'from': 0.0, 'to': 4.5,
              'include_lower': True, 'include_upper': True},
-            'ELECTRON MICROSCOPY'))
-    except urllib.error.URLError as exc:
+            'ELECTRON MICROSCOPY', CRYOEM_BIN_TARGET,
+            'cryoem', '<=4.5 A (EM)'))
+    except (urllib.error.URLError, ValueError) as exc:
         print(f'  [WARN] cryo-EM query failed: {exc}')
-        em_ids = []
-    rng.shuffle(em_ids)
-    sample.extend({
-        'pdb_id': pid, 'bin': 'cryoem', 'resolution_range': '<=4.5 A (EM)',
-        'method': 'ELECTRON MICROSCOPY',
-    } for pid in em_ids[:CRYOEM_BIN_TARGET])
 
     if len(sample) < n_target:
         print(f'  [WARN] stratified sample only has {len(sample)} entries '
               f'(target {n_target}); proceeding with what we have.')
-    return sample[:max(n_target, len(sample))]
+    # Return the full plan so downstream attrition can be absorbed.
+    return sample
+
+
+def _cif_to_pdb(cif_text: str) -> Optional[str]:
+    """Convert the ``_atom_site`` loop of an mmCIF document to PDB ATOM records.
+
+    Many modern / large RCSB entries are distributed only in mmCIF format and
+    return HTTP 404 for the legacy ``.pdb`` download. ChiralFold's auditor reads
+    fixed-column PDB ATOM/HETATM records, so we re-emit the atom site table in
+    that layout. Only fields required by the auditor (record type, atom name,
+    residue name, chain, residue sequence number, insertion code, x/y/z,
+    occupancy, B-factor, element) are written. Returns None if no atom_site
+    loop is found.
+    """
+    lines = cif_text.splitlines()
+    cols: Dict[str, int] = {}
+    data_rows: List[List[str]] = []
+    i = 0
+    while i < len(lines):
+        if lines[i].strip() == 'loop_':
+            j = i + 1
+            headers: List[str] = []
+            while j < len(lines) and lines[j].strip().startswith('_'):
+                headers.append(lines[j].strip())
+                j += 1
+            if headers and headers[0].startswith('_atom_site.'):
+                cols = {h.split('.', 1)[1]: k for k, h in enumerate(headers)}
+                k = j
+                while (k < len(lines) and lines[k].strip()
+                       and not lines[k].strip().startswith('_')
+                       and lines[k].strip() != 'loop_'
+                       and not lines[k].startswith('#')):
+                    parts = lines[k].split()
+                    if len(parts) >= len(headers):
+                        data_rows.append(parts)
+                    k += 1
+                break
+            i = j
+        else:
+            i += 1
+    if not cols or not data_rows:
+        return None
+
+    def col(parts: List[str], key: str, default: str = '') -> str:
+        idx = cols.get(key)
+        if idx is None or idx >= len(parts):
+            return default
+        val = parts[idx]
+        return default if val in ('.', '?') else val
+
+    out_lines: List[str] = []
+    serial = 0
+    last_model = None
+    for parts in data_rows:
+        model = col(parts, 'pdbx_PDB_model_num', '1')
+        if last_model is not None and model != last_model:
+            break  # only emit the first model (matches single-model PDB files)
+        last_model = model
+        record = col(parts, 'group_PDB', 'ATOM')
+        atom_name = col(parts, 'auth_atom_id') or col(parts, 'label_atom_id')
+        alt = col(parts, 'label_alt_id')
+        resname = col(parts, 'auth_comp_id') or col(parts, 'label_comp_id')
+        chain = (col(parts, 'auth_asym_id')
+                 or col(parts, 'label_asym_id') or 'A')[:1]
+        resseq = col(parts, 'auth_seq_id') or col(parts, 'label_seq_id') or '0'
+        icode = col(parts, 'pdbx_PDB_ins_code')
+        try:
+            x = float(col(parts, 'Cartn_x', '0'))
+            y = float(col(parts, 'Cartn_y', '0'))
+            z = float(col(parts, 'Cartn_z', '0'))
+        except ValueError:
+            continue
+        try:
+            occ = float(col(parts, 'occupancy', '1.0'))
+        except ValueError:
+            occ = 1.0
+        try:
+            bfac = float(col(parts, 'B_iso_or_equiv', '0.0'))
+        except ValueError:
+            bfac = 0.0
+        element = col(parts, 'type_symbol')
+        try:
+            resseq_int = int(resseq)
+        except ValueError:
+            resseq_int = 0
+        serial += 1
+        # PDB atom-name column: 1-char elements start in column 14 (index 13).
+        if len(atom_name) >= 4:
+            name_field = atom_name[:4]
+        elif len(element) == 1 and not atom_name[:1].isdigit():
+            name_field = ' ' + atom_name.ljust(3)
+        else:
+            name_field = atom_name.ljust(4)
+        out_lines.append(
+            f'{record:<6}{serial % 100000:>5} {name_field:<4}'
+            f'{alt[:1]:1}{resname[:3]:>3} {chain:1}{resseq_int % 10000:>4}'
+            f'{icode[:1]:1}   {x:8.3f}{y:8.3f}{z:8.3f}'
+            f'{occ:6.2f}{bfac:6.2f}          {element[:2]:>2}'
+        )
+    out_lines.append('END')
+    return '\n'.join(out_lines) + '\n'
 
 
 def _download_pdb(pdb_id: str, cache: str) -> Optional[str]:
@@ -194,8 +385,30 @@ def _download_pdb(pdb_id: str, cache: str) -> Optional[str]:
             PDB_FILE_URL.format(pdb_id=pdb_id.lower()), path)
         return path
     except urllib.error.URLError as exc:
-        print(f'    [skip] {pdb_id}: PDB download failed ({exc})')
-        return None
+        # Legacy PDB format unavailable (common for large / modern entries).
+        # Fall back to the mmCIF file and convert its atom_site loop to PDB.
+        is_404 = isinstance(exc, urllib.error.HTTPError) and exc.code == 404
+        if not is_404:
+            print(f'    [skip] {pdb_id}: PDB download failed ({exc})')
+            return None
+        try:
+            with urllib.request.urlopen(
+                    CIF_FILE_URL.format(pdb_id=pdb_id.lower()),
+                    timeout=60) as resp:
+                cif_text = resp.read().decode('utf-8', 'replace')
+        except (urllib.error.URLError, OSError) as cif_exc:
+            print(f'    [skip] {pdb_id}: PDB 404 and mmCIF fallback '
+                  f'failed ({cif_exc})')
+            return None
+        pdb_text = _cif_to_pdb(cif_text)
+        if not pdb_text:
+            print(f'    [skip] {pdb_id}: mmCIF had no parseable atom_site loop')
+            return None
+        with open(path, 'w') as fp:
+            fp.write(pdb_text)
+        print(f'    [cif->pdb] {pdb_id}: converted from mmCIF '
+              '(legacy PDB unavailable)')
+        return path
 
 
 def _wwpdb_outlier_pct(pdb_id: str, cache: str) -> Optional[float]:
@@ -250,10 +463,36 @@ def main() -> int:
     parser.add_argument('--dry-run', action='store_true',
                         help='print plan without downloading or auditing')
     parser.add_argument('--seed', type=int, default=20260514)
+    parser.add_argument(
+        '--cache-dir', default=CACHE_DIR,
+        help='directory for cached PDB / validation-XML downloads '
+             '(default: results/ramachandran_expansion_cache)')
+    parser.add_argument(
+        '--out-prefix', default=None,
+        help='path prefix for outputs. When set, writes '
+             '<prefix>_comparison.csv, <prefix>_summary.json, '
+             '<prefix>_plot.png and does NOT overwrite the canonical '
+             'results/molprobity_comparison.json. When omitted, uses the '
+             'historical filenames (ramachandran_100struct_comparison.csv, '
+             'ramachandran_100struct_plot.png) and updates '
+             'molprobity_comparison.json.')
+    parser.add_argument(
+        '--resume', action='store_true',
+        help='reuse any cached PDB / validation-XML downloads already present '
+             'in --cache-dir instead of re-fetching (downloads are cached by '
+             'default; this flag also reports how many were reused).')
     args = parser.parse_args()
 
-    os.makedirs(CACHE_DIR, exist_ok=True)
+    cache_dir = os.path.abspath(args.cache_dir)
+    os.makedirs(cache_dir, exist_ok=True)
     os.makedirs(RESULTS_DIR, exist_ok=True)
+    if args.out_prefix:
+        out_prefix = os.path.abspath(args.out_prefix)
+        os.makedirs(os.path.dirname(out_prefix) or '.', exist_ok=True)
+    else:
+        out_prefix = None
+    if args.resume:
+        print(f'  [resume] reusing cached downloads in {cache_dir} when present')
 
     print(f'Building stratified sample, target n={args.n} (seed={args.seed})')
     plan = _stratified_sample(args.n, seed=args.seed)
@@ -267,18 +506,25 @@ def main() -> int:
         return 0
 
     rows: List[Dict] = []
+    failures: List[Dict] = []
     t0 = time.time()
     for i, row in enumerate(plan, 1):
         pdb_id = row['pdb_id']
         print(f'  [{i}/{len(plan)}] {pdb_id} ({row["bin"]})')
-        pdb_path = _download_pdb(pdb_id, CACHE_DIR)
+        pdb_path = _download_pdb(pdb_id, cache_dir)
         if pdb_path is None:
+            failures.append({'pdb_id': pdb_id, 'bin': row['bin'],
+                             'reason': 'pdb_download_failed'})
             continue
-        wwpdb_pct = _wwpdb_outlier_pct(pdb_id, CACHE_DIR)
+        wwpdb_pct = _wwpdb_outlier_pct(pdb_id, cache_dir)
         if wwpdb_pct is None:
+            failures.append({'pdb_id': pdb_id, 'bin': row['bin'],
+                             'reason': 'wwpdb_validation_unavailable'})
             continue
         cf_pct = _run_audit(pdb_path)
         if cf_pct is None:
+            failures.append({'pdb_id': pdb_id, 'bin': row['bin'],
+                             'reason': 'chiralfold_audit_failed'})
             continue
         rows.append({
             'pdb_id': pdb_id, 'bin': row['bin'],
@@ -289,14 +535,19 @@ def main() -> int:
         })
 
     elapsed = time.time() - t0
-    print(f'Completed {len(rows)} structures in {elapsed/60:.1f} min')
+    print(f'Completed {len(rows)} structures in {elapsed/60:.1f} min '
+          f'({len(failures)} failures)')
 
     if len(rows) < 30:
         print(f'  [ERROR] only {len(rows)} usable rows; aborting before '
               'overwriting canonical molprobity_comparison.json.')
         return 1
 
-    csv_path = os.path.join(RESULTS_DIR, 'ramachandran_100struct_comparison.csv')
+    if out_prefix:
+        csv_path = f'{out_prefix}_comparison.csv'
+    else:
+        csv_path = os.path.join(
+            RESULTS_DIR, 'ramachandran_100struct_comparison.csv')
     with open(csv_path, 'w', newline='') as fp:
         w = csv.DictWriter(fp, fieldnames=list(rows[0].keys()))
         w.writeheader()
@@ -308,23 +559,60 @@ def main() -> int:
     rho, rho_p = scistats.spearmanr(cf, wp)
     r_pearson, p_pearson = scistats.pearsonr(cf, wp)
 
+    # Bootstrap 95% CIs for rho / r by resampling the paired rows (seeded).
+    def _bootstrap_ci(stat_fn, n_boot=2000):
+        boot_rng = np.random.default_rng(args.seed)
+        n = len(cf)
+        vals = []
+        for _ in range(n_boot):
+            idx = boot_rng.integers(0, n, n)
+            try:
+                vals.append(stat_fn(cf[idx], wp[idx]))
+            except Exception:  # noqa: BLE001 - degenerate resample
+                continue
+        if not vals:
+            return [None, None]
+        lo, hi = np.percentile(vals, [2.5, 97.5])
+        return [float(lo), float(hi)]
+
+    spearman_ci = _bootstrap_ci(
+        lambda a, b: scistats.spearmanr(a, b).statistic)
+    pearson_ci = _bootstrap_ci(
+        lambda a, b: scistats.pearsonr(a, b).statistic)
+
     summary = {
         'n_structures': int(len(rows)),
+        'n_success': int(len(rows)),
+        'n_planned': int(len(plan)),
+        'n_failures': int(len(failures)),
+        'failures': failures,
         'spearman_rho': float(rho),
         'spearman_p_value': float(rho_p),
+        'spearman_p': float(rho_p),
+        'spearman_rho_ci95': spearman_ci,
         'pearson_r': float(r_pearson),
         'pearson_p_value': float(p_pearson),
+        'pearson_p': float(p_pearson),
+        'pearson_r_ci95': pearson_ci,
+        'bootstrap_n_iter': 2000,
         'chiralfold_mean_outlier_pct': float(cf.mean()),
         'wwpdb_mean_outlier_pct': float(wp.mean()),
+        'seed': int(args.seed),
         'note': (
             'Expanded benchmark via benchmarks/expand_ramachandran_benchmark.py. '
-            'See ramachandran_100struct_comparison.csv for the per-structure data.'
+            'Candidates drawn by seeded era-representative sampling across the '
+            'full RCSB result range per bin. See the *_comparison.csv for the '
+            'per-structure data.'
         ),
     }
-    json_path = os.path.join(RESULTS_DIR, 'molprobity_comparison.json')
+    if out_prefix:
+        json_path = f'{out_prefix}_summary.json'
+    else:
+        json_path = os.path.join(RESULTS_DIR, 'molprobity_comparison.json')
     with open(json_path, 'w') as fp:
         json.dump(summary, fp, indent=2)
-    print(f'Wrote {json_path}: rho={rho:.3f} (p={rho_p:.4g}), n={len(rows)}')
+    print(f'Wrote {json_path}: rho={rho:.3f} (p={rho_p:.4g}), '
+          f'n_success={len(rows)}')
 
     try:
         import matplotlib
@@ -339,8 +627,11 @@ def main() -> int:
         ax.set_title(f'n={len(rows)} structures; Spearman rho={rho:.2f} '
                      f'(p={rho_p:.3g})')
         fig.tight_layout()
-        plot_path = os.path.join(
-            RESULTS_DIR, 'ramachandran_100struct_plot.png')
+        if out_prefix:
+            plot_path = f'{out_prefix}_plot.png'
+        else:
+            plot_path = os.path.join(
+                RESULTS_DIR, 'ramachandran_100struct_plot.png')
         fig.savefig(plot_path, dpi=160)
         plt.close(fig)
         print(f'Wrote {plot_path}')

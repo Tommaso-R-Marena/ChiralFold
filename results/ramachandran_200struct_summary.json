@@ -1,0 +1,82 @@
+{
+  "n_structures": 279,
+  "n_success": 279,
+  "n_planned": 290,
+  "n_failures": 11,
+  "failures": [
+    {
+      "pdb_id": "8HU5",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "2Q1R",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "2OBZ",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "1MF5",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "8GZ6",
+      "bin": "xray_high",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "8EYV",
+      "bin": "xray_low",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "4AIY",
+      "bin": "nmr",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "1L1W",
+      "bin": "nmr",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "4BZT",
+      "bin": "nmr",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "9QU6",
+      "bin": "cryoem",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "8YUP",
+      "bin": "cryoem",
+      "reason": "wwpdb_validation_unavailable"
+    }
+  ],
+  "spearman_rho": 0.4782738680175412,
+  "spearman_p_value": 2.3571337188851922e-17,
+  "spearman_p": 2.3571337188851922e-17,
+  "spearman_rho_ci95": [
+    0.3590054087043007,
+    0.5807739976204137
+  ],
+  "pearson_r": 0.8047315542291233,
+  "pearson_p_value": 1.095222890796569e-64,
+  "pearson_p": 1.095222890796569e-64,
+  "pearson_r_ci95": [
+    0.6703232217703333,
+    0.8961905442821366
+  ],
+  "bootstrap_n_iter": 2000,
+  "chiralfold_mean_outlier_pct": 0.709247311827957,
+  "wwpdb_mean_outlier_pct": 0.7167383512544804,
+  "seed": 20260612,
+  "note": "Expanded benchmark via benchmarks/expand_ramachandran_benchmark.py. Candidates drawn by seeded era-representative sampling across the full RCSB result range per bin. See the *_comparison.csv for the per-structure data."
+}

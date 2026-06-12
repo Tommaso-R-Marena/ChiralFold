@@ -1,0 +1,61 @@
+{
+  "n_structures": 104,
+  "n_success": 104,
+  "n_planned": 113,
+  "n_failures": 9,
+  "failures": [
+    {
+      "pdb_id": "1A7Z",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "1EM0",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "1EN8",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "123D",
+      "bin": "xray_high",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "113D",
+      "bin": "xray_med",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "1A7K",
+      "bin": "xray_low",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "1AI0",
+      "bin": "nmr",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "141D",
+      "bin": "nmr",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "1AGH",
+      "bin": "nmr",
+      "reason": "wwpdb_validation_unavailable"
+    }
+  ],
+  "spearman_rho": 0.564367967831258,
+  "spearman_p_value": 4.3942396695801804e-10,
+  "pearson_r": 0.9126348082111312,
+  "pearson_p_value": 2.027400924455775e-41,
+  "chiralfold_mean_outlier_pct": 0.9228846153846154,
+  "wwpdb_mean_outlier_pct": 0.9632692307692307,
+  "seed": 20260514,
+  "note": "Expanded benchmark via benchmarks/expand_ramachandran_benchmark.py. See the *_comparison.csv for the per-structure data."
+}
