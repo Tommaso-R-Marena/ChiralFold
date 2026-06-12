@@ -100,5 +100,29 @@
   "seed": 20260612,
   "note": "Expanded benchmark via benchmarks/expand_ramachandran_benchmark.py. Candidates drawn by seeded era-representative sampling across the full RCSB result range per bin. See the *_comparison.csv for the per-structure data.",
   "chain_id_fix": "chain_map remapping applied to _cif_to_pdb (A-Z then 0-9; structures with >36 distinct chains are skipped as 'too_many_chains'). This run supersedes the prior 279-struct run for mmCIF-converted entries with multi-character chain IDs.",
-  "pearson_outlier_note": "Pearson r is dominated by a single anomalous wwPDB entry, 5M2K (wwPDB=100.0%, ChiralFold=0.0%). Excluding it: Pearson r=0.853, Spearman rho=0.521 (n=362). Spearman (rank-based) is robust to this point; the headline Pearson r=0.330 reflects its outlier sensitivity, not a weaker relationship."
+  "pearson_outlier_note": "Pearson r is dominated by a single anomalous wwPDB entry, 5M2K (wwPDB=100.0%, ChiralFold=0.0%). Excluding it: Pearson r=0.853, Spearman rho=0.521 (n=362). Spearman (rank-based) is robust to this point; the headline Pearson r=0.330 reflects its outlier sensitivity, not a weaker relationship.",
+  "n_success_clean": 362,
+  "n_excluded": 1,
+  "excluded_entries": [
+    {
+      "pdb_id": "5M2K",
+      "bin": "xray_ultra",
+      "wwpdb_rama_outlier_pct": 100.0
+    }
+  ],
+  "exclusion_criterion": "Structures with wwpdb_rama_outlier_pct > 50.0% are excluded as non-standard entries (typically pure nucleic acids or degenerate cases with <5 analyzable protein residues). Ramachandran analysis is only meaningful for standard protein backbones; such entries are not the intended benchmark target. In this dataset the sole exclusion is 5M2K, the crystal structure of vancomycin (a 7-monomer glycopeptide antibiotic with only 2 standard amino-acid residues), which wwPDB scores at 100% Ramachandran outliers.",
+  "spearman_rho_clean": 0.520790373976862,
+  "spearman_p_clean": 1.481623653903167e-26,
+  "spearman_rho_ci95_clean": [
+    0.4221374458917172,
+    0.605905495796128
+  ],
+  "pearson_r_clean": 0.8534968743825598,
+  "pearson_p_clean": 6.064764211300483e-104,
+  "pearson_r_ci95_clean": [
+    0.7171002531227038,
+    0.9172561904586104
+  ],
+  "chiralfold_mean_outlier_pct_clean": 0.780414364640884,
+  "wwpdb_mean_outlier_pct_clean": 0.8309116022099446
 }
