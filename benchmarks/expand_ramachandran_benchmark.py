@@ -276,6 +276,15 @@ def _stratified_sample(n_target: int, seed: int = 20260514) -> List[Dict]:
     return sample
 
 
+# PDB-format chain IDs occupy a single column, so only single characters are
+# representable. mmCIF ``auth_asym_id`` values can be multi-character (e.g.
+# "AA", "AB"). A-Z then 0-9 gives 36 safe single-character targets.
+PDB_CHAIN_CHARS = (
+    [chr(c) for c in range(ord('A'), ord('Z') + 1)] +
+    [str(d) for d in range(10)]
+)  # 36 characters: A-Z then 0-9
+
+
 def _cif_to_pdb(cif_text: str) -> Optional[str]:
     """Convert the ``_atom_site`` loop of an mmCIF document to PDB ATOM records.
 
@@ -284,8 +293,16 @@ def _cif_to_pdb(cif_text: str) -> Optional[str]:
     fixed-column PDB ATOM/HETATM records, so we re-emit the atom site table in
     that layout. Only fields required by the auditor (record type, atom name,
     residue name, chain, residue sequence number, insertion code, x/y/z,
-    occupancy, B-factor, element) are written. Returns None if no atom_site
-    loop is found.
+    occupancy, B-factor, element) are written.
+
+    Chain IDs are remapped deterministically: each distinct mmCIF chain ID is
+    assigned a unique single-character PDB ID (A-Z then 0-9), preventing the
+    chain collisions that a naive one-character truncation would cause for
+    multi-character mmCIF chain IDs ("AA", "AB", ... all -> "A").
+
+    Returns None if no atom_site loop is found OR if the structure has more
+    than 36 distinct chains (which cannot be represented safely in single-
+    column PDB format).
     """
     lines = cif_text.splitlines()
     cols: Dict[str, int] = {}
@@ -323,6 +340,33 @@ def _cif_to_pdb(cif_text: str) -> Optional[str]:
         val = parts[idx]
         return default if val in ('.', '?') else val
 
+    def _raw_chain(parts: List[str]) -> str:
+        return (col(parts, 'auth_asym_id')
+                or col(parts, 'label_asym_id') or 'A')
+
+    # Pre-pass: build a deterministic mmCIF-chain -> PDB-char remap over the
+    # rows that will actually be emitted (first model only). If there are more
+    # distinct chains than single-character PDB IDs (36), the structure cannot
+    # be represented safely, so we bail out and let the caller skip it.
+    first_model = None
+    seen_order: List[str] = []
+    seen_set: set = set()
+    for parts in data_rows:
+        model = col(parts, 'pdbx_PDB_model_num', '1')
+        if first_model is None:
+            first_model = model
+        elif model != first_model:
+            break
+        raw = _raw_chain(parts)
+        if raw not in seen_set:
+            seen_set.add(raw)
+            seen_order.append(raw)
+    if len(seen_order) > len(PDB_CHAIN_CHARS):
+        # Caller (_download_pdb) reports this as a 'too_many_chains' skip.
+        return None
+    chain_map = {mmcif_id: PDB_CHAIN_CHARS[i]
+                 for i, mmcif_id in enumerate(seen_order)}
+
     out_lines: List[str] = []
     serial = 0
     last_model = None
@@ -335,8 +379,8 @@ def _cif_to_pdb(cif_text: str) -> Optional[str]:
         atom_name = col(parts, 'auth_atom_id') or col(parts, 'label_atom_id')
         alt = col(parts, 'label_alt_id')
         resname = col(parts, 'auth_comp_id') or col(parts, 'label_comp_id')
-        chain = (col(parts, 'auth_asym_id')
-                 or col(parts, 'label_asym_id') or 'A')[:1]
+        raw_chain = _raw_chain(parts)
+        chain = chain_map[raw_chain]
         resseq = col(parts, 'auth_seq_id') or col(parts, 'label_seq_id') or '0'
         icode = col(parts, 'pdbx_PDB_ins_code')
         try:
@@ -376,7 +420,63 @@ def _cif_to_pdb(cif_text: str) -> Optional[str]:
     return '\n'.join(out_lines) + '\n'
 
 
-def _download_pdb(pdb_id: str, cache: str) -> Optional[str]:
+def _count_cif_chains(cif_text: str) -> int:
+    """Count distinct first-model mmCIF chain IDs (for skip diagnostics)."""
+    lines = cif_text.splitlines()
+    cols: Dict[str, int] = {}
+    i = 0
+    rows: List[List[str]] = []
+    while i < len(lines):
+        if lines[i].strip() == 'loop_':
+            j = i + 1
+            headers: List[str] = []
+            while j < len(lines) and lines[j].strip().startswith('_'):
+                headers.append(lines[j].strip())
+                j += 1
+            if headers and headers[0].startswith('_atom_site.'):
+                cols = {h.split('.', 1)[1]: k for k, h in enumerate(headers)}
+                k = j
+                while (k < len(lines) and lines[k].strip()
+                       and not lines[k].strip().startswith('_')
+                       and lines[k].strip() != 'loop_'
+                       and not lines[k].startswith('#')):
+                    p = lines[k].split()
+                    if len(p) >= len(headers):
+                        rows.append(p)
+                    k += 1
+                break
+            i = j
+        else:
+            i += 1
+    if not cols:
+        return 0
+    aidx = cols.get('auth_asym_id', cols.get('label_asym_id'))
+    midx = cols.get('pdbx_PDB_model_num')
+    first_model = None
+    chains: set = set()
+    for p in rows:
+        if midx is not None and midx < len(p):
+            if first_model is None:
+                first_model = p[midx]
+            elif p[midx] != first_model:
+                break
+        if aidx is not None and aidx < len(p):
+            chains.add(p[aidx])
+    return len(chains)
+
+
+def _download_pdb(pdb_id: str, cache: str,
+                  reason_out: Optional[List[str]] = None) -> Optional[str]:
+    """Return a path to a PDB-format file for *pdb_id*, or None on failure.
+
+    On failure, if ``reason_out`` is provided, a single reason code is appended
+    to it (e.g. 'pdb_download_failed', 'too_many_chains',
+    'no_atom_site', 'cif_fetch_failed').
+    """
+    def _fail(reason: str) -> None:
+        if reason_out is not None:
+            reason_out.append(reason)
+
     path = os.path.join(cache, f'{pdb_id.lower()}.pdb')
     if os.path.exists(path) and os.path.getsize(path) > 0:
         return path
@@ -390,6 +490,7 @@ def _download_pdb(pdb_id: str, cache: str) -> Optional[str]:
         is_404 = isinstance(exc, urllib.error.HTTPError) and exc.code == 404
         if not is_404:
             print(f'    [skip] {pdb_id}: PDB download failed ({exc})')
+            _fail('pdb_download_failed')
             return None
         try:
             with urllib.request.urlopen(
@@ -399,10 +500,19 @@ def _download_pdb(pdb_id: str, cache: str) -> Optional[str]:
         except (urllib.error.URLError, OSError) as cif_exc:
             print(f'    [skip] {pdb_id}: PDB 404 and mmCIF fallback '
                   f'failed ({cif_exc})')
+            _fail('cif_fetch_failed')
             return None
         pdb_text = _cif_to_pdb(cif_text)
         if not pdb_text:
-            print(f'    [skip] {pdb_id}: mmCIF had no parseable atom_site loop')
+            n_chains = _count_cif_chains(cif_text)
+            if n_chains > len(PDB_CHAIN_CHARS):
+                print(f'    [skip] {pdb_id}: mmCIF has {n_chains} distinct '
+                      'chains (>36); cannot represent in PDB format')
+                _fail('too_many_chains')
+            else:
+                print(f'    [skip] {pdb_id}: mmCIF had no parseable '
+                      'atom_site loop')
+                _fail('no_atom_site')
             return None
         with open(path, 'w') as fp:
             fp.write(pdb_text)
@@ -511,10 +621,12 @@ def main() -> int:
     for i, row in enumerate(plan, 1):
         pdb_id = row['pdb_id']
         print(f'  [{i}/{len(plan)}] {pdb_id} ({row["bin"]})')
-        pdb_path = _download_pdb(pdb_id, cache_dir)
+        dl_reason: List[str] = []
+        pdb_path = _download_pdb(pdb_id, cache_dir, reason_out=dl_reason)
         if pdb_path is None:
             failures.append({'pdb_id': pdb_id, 'bin': row['bin'],
-                             'reason': 'pdb_download_failed'})
+                             'reason': (dl_reason[0] if dl_reason
+                                        else 'pdb_download_failed')})
             continue
         wwpdb_pct = _wwpdb_outlier_pct(pdb_id, cache_dir)
         if wwpdb_pct is None:
