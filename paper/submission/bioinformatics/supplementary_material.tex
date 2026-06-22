@@ -3,6 +3,8 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{natbib}
 
+\graphicspath{{figures/}}
+
 \title{Supplementary Material\\
 \large ChiralFold: systematic detection of D-amino acid stereochemistry errors in the Protein Data Bank}
 \author{Tommaso R. Marena}
@@ -46,23 +48,23 @@ Theorem & File & Consequence \\
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{figures/fig3_signed_volume_distribution}
+\includegraphics[width=0.9\textwidth]{fig3_signed_volume_distribution.png}
 \caption{Signed volume distribution across 12{,}573 D-residues.}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{figures/fig5_ccd_heatmap}
+\includegraphics[width=0.9\textwidth]{fig5_ccd_heatmap.png}
 \caption{CCD code error clustering heatmap.}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{figures/fig4_bland_altman}
+\includegraphics[width=0.9\textwidth]{fig4_bland_altman.png}
 \caption{Bland--Altman plot, 31-structure pilot benchmark.}
 \end{figure}
 
 \section{Extended statistics}
-Full values in \texttt{paper/stats\_extended.json}, reproduced by \texttt{paper/stats\_analysis.py} (seed 42). Ramachandran $n=362$: Spearman $\rho=0.52$; Pearson $r=0.853$; deposition-year logistic OR$=1.60$/year; CCD clustering $\chi^2=113.78$ ($p=2.33\times10^{-16}$).
+Ramachandran $n=362$ (post-5M2K exclusion): \texttt{results/ramachandran\_279struct\_chainfix\_summary.json} --- Spearman $\rho=0.52$; Pearson $r=0.85$ (0.33 if 5M2K retained). Pilot $n=31$ Bland--Altman and bootstrap CIs: \texttt{paper/stats\_extended.json} via \texttt{paper/stats\_analysis.py} (seed 42). Deposition-year logistic OR$=1.60$/year; CCD clustering $\chi^2=113.78$ ($p=2.33\times10^{-16}$; nine codes with errors vs nine clean).
 
 \end{document}

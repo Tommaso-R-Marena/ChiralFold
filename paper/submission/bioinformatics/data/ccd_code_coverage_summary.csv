@@ -1,0 +1,19 @@
+ccd_code,rcsb_total_entries,entries_surveyed,coverage_pct,mmcif_only_unavailable,residues_checked,n_errors,n_error_structures,error_structures,error_rate_pct,status,biological_context
+DAL,600,577,96.2,23,1302,1,1,1HHZ,0.077,error-prone,"Cell wall peptides, PBP inhibitors, D-Ala-D-Ala ligase structures"
+DAR,189,177,93.7,12,549,2,2,1BG0;1P52,0.364,error-prone,Arginine kinase substrates (L-Arg labeled DAR)
+DAS,1300,1237,95.2,63,434,0,0,,0.0,confirmed-clean,"Lanthipeptides, D-Asp enzyme substrates, antimicrobial peptides"
+DCY,99,96,97.0,3,454,1,1,2AOU,0.22,error-prone,L-protein mislabel (histamine methyltransferase 2AOU)
+DGL,223,205,91.9,18,792,0,0,,0.0,confirmed-clean,"Glutamate racemase substrates, D-Glu natural products"
+DGN,92,87,94.6,5,366,0,0,,0.0,confirmed-clean,NRPS-assembled siderophores and cyclic peptides
+DHI,87,85,97.7,2,204,1,1,1MCB,0.49,error-prone,L-protein mislabel (sialidase 1MCB)
+DIL,118,113,95.8,5,686,0,0,,0.0,confirmed-clean,"Cyclic peptide antibiotics (e.g. cyclosporin), D-Ile natural products"
+DLE,191,181,94.8,10,1479,0,0,,0.0,confirmed-clean,"Cyclic D-peptide antibiotics, gramicidin-type structures"
+DLY,166,159,95.8,7,1234,9,3,1KO0;2ATS;3RIT,0.729,error-prone,"Epimerase substrates, co-crystallization reagents (L-Lys labeled DLY)"
+DPN,2348,2182,92.9,166,598,2,2,1ABI;2RMI,0.334,error-prone,"Thrombin/CRF inhibitors with required D-Phe (hirulog, astressin)"
+DPR,264,254,96.2,10,683,0,0,,0.0,confirmed-clean,"Beta-turn mimetics, gramicidin-type cyclic peptides, D-Pro linkers"
+DSG,107,104,97.2,3,289,1,1,1XT7,0.346,error-prone,Cyclic lipopeptide antibiotics (daptomycin D-Asn)
+DSN,184,174,94.6,10,715,2,2,1UHG;2W76,0.28,error-prone,"NRPS siderophores (pyoverdine D-Ser), L-protein mislabels"
+DTH,135,131,97.0,4,798,0,0,,0.0,confirmed-clean,"Cyclic D-peptide natural products, D-Thr in antibiotics"
+DTR,131,124,94.7,7,475,0,0,,0.0,confirmed-clean,"Designed D-Trp peptides, mirror-image protein binders"
+DTY,156,143,91.7,13,425,10,3,1D7T;1OF6;2H9E,2.353,error-prone,"DAHP synthase allosteric inhibitor (L-Tyr labeled DTY), conotoxins"
+DVA,200,193,96.5,7,972,0,0,,0.0,confirmed-clean,"D-Val in cyclic antibiotics (valinomycin, gramicidin), turn mimetics"

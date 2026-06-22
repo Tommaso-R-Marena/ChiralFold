@@ -13,7 +13,10 @@
 | `references.bib` | Bibliography |
 | `oup-authoring-template.cls` | OUP document class |
 | `oup-abbrvnat.bst` | Reference style |
-| `figures/` | Symlink to `paper/pdb_survey_figures/` |
+| `figures/` | Pre-rendered PNG figures + `generate_figures.py` |
+| `data/` | Small CSV/JSON inputs used to regenerate figures |
+| `package_overleaf.sh` | Build self-contained Overleaf upload zip |
+| `OVERLEAF.md` | Overleaf upload instructions |
 | `COVER_LETTER.txt` | Cover letter (customize date & reviewers) |
 | `HIGHLIGHTS.md` | Key points for submission form |
 | `build_submission.sh` | Compile PDFs and create upload zip |
@@ -24,6 +27,14 @@
 cd paper/submission/bioinformatics
 ./build_submission.sh
 ```
+
+## Overleaf (upload whole directory)
+
+```bash
+./package_overleaf.sh   # creates ChiralFold_Bioinformatics_Overleaf.zip
+```
+
+Upload the zip to Overleaf, set main document to `chiralfold_bioinformatics.tex`, and compile. All figures are included as PNGs in `figures/`. See `OVERLEAF.md`.
 
 Outputs:
 - `chiralfold_bioinformatics.pdf`
