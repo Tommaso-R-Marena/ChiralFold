@@ -1,0 +1,68 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,graphicx,hyperref,booktabs}
+\usepackage[margin=1in]{geometry}
+\usepackage{natbib}
+
+\title{Supplementary Material\\
+\large ChiralFold: systematic detection of D-amino acid stereochemistry errors in the Protein Data Bank}
+\author{Tommaso R. Marena}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Supplementary Methods}
+
+\subsection{Ramachandran benchmark protocol}
+Era-representative stratified sampling across X-ray ultra ($\leq$1.20~\AA), high, medium, low, NMR, and cryo-EM bins (seed 20260612). mmCIF$\to$PDB conversion uses chain-ID remapping (A--Z, 0--9). Structures with $>$36 chains skipped. Script: \texttt{benchmarks/expand\_ramachandran\_benchmark.py}.
+
+\subsection{Mirror-image, AF3 correction, and enumeration}
+L$\leftrightarrow$D reflection: $(x,y,z)\to(-x,y,z)$. AF3 correction reflects violating C$\alpha$ across the N--C--C$\beta$ plane. Diastereomer enumeration scores $2^k$ L/D patterns. Interface scoring uses BSA, H-bonds, and salt bridges.
+
+\subsection{Lean~4 formalization}
+Proofs in \texttt{formal/chirality\_nogo/} (Lean 4.28.0, Mathlib). Build: \texttt{lake build}.
+
+\section{Supplementary Tables}
+
+\subsection{Table S1: All 29 D-label/L-coordinate mismatches}
+See full machine-readable dataset \texttt{results/d\_residue\_verification.csv} and Tables~1--2 in the repository manuscript \texttt{paper/chiralfold\_paper.tex}.
+
+\subsection{Table S2: Formal no-go theorems}
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+Theorem & File & Consequence \\
+\midrule
+\texttt{same\_distances\_opposite\_orientations\_standardTet} & ChiralityNoGo & Equal distances, opposite orient \\
+\texttt{orientTarget\_not\_factorsThroughDistMatrix} & ModelAbstraction & Volume cannot factor through distances \\
+\texttt{distance\_data\_determines\_magnitude\_not\_chirality\_sign} & DistancesOrientVolume & Distances fix $|\mathrm{orient}|^2$, not sign \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Supplementary Figures}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig3_signed_volume_distribution}
+\caption{Signed volume distribution across 12{,}573 D-residues.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig5_ccd_heatmap}
+\caption{CCD code error clustering heatmap.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig4_bland_altman}
+\caption{Bland--Altman plot, 31-structure pilot benchmark.}
+\end{figure}
+
+\section{Extended statistics}
+Full values in \texttt{paper/stats\_extended.json}, reproduced by \texttt{paper/stats\_analysis.py} (seed 42). Ramachandran $n=362$: Spearman $\rho=0.52$; Pearson $r=0.853$; deposition-year logistic OR$=1.60$/year; CCD clustering $\chi^2=113.78$ ($p=2.33\times10^{-16}$).
+
+\end{document}

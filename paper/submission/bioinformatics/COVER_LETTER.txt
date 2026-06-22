@@ -1,0 +1,22 @@
+Tommaso R. Marena
+The Catholic University of America
+marena@cua.edu
+
+[Date]
+
+Dear Editor,
+
+Please consider our manuscript entitled "ChiralFold: systematic detection of D-amino acid stereochemistry errors in the Protein Data Bank" for publication as an Original Paper in Bioinformatics.
+
+D-amino acids are increasingly important in therapeutics and natural-product structural biology, yet no systematic audit of deposited D-residue stereochemistry has been reported, and MolProbity does not flag D-label/L-coordinate mismatches. We verified 12,573 D-residues across 4,616 PDB files and identified 29 annotation errors in 16 structures, classified as genuine stereochemistry errors, CCD-code misassignments, or polymer mislabels. We introduce ChiralFold, a pip-installable auditor calibrated against wwPDB on 362 era-representative structures (Ramachandran Spearman rho = 0.52), with AF3 chirality correction and machine-checked Lean 4 proofs establishing that distance-only models cannot determine chirality sign.
+
+This work fits Bioinformatics's scope in computational structural biology and open software: code is on PyPI (chiralfold 3.4.0), Docker (GHCR), and GitHub with 48 automated tests, full reproduction scripts, and archived benchmark outputs. The PDB survey motivates a concrete wwPDB deposition recommendation testable with one cross product per residue.
+
+We can provide a list of suggested reviewers upon request. Candidates with expertise in PDB validation (MolProbity/wwPDB), D-peptide stereochemistry, or macromolecular deposition pipelines would be appropriate. We have no conflicts of interest with editorial board members.
+
+The manuscript has not been published elsewhere and is not under consideration by another journal. All authors approve this submission.
+
+Sincerely,
+
+Tommaso R. Marena
+The Catholic University of America

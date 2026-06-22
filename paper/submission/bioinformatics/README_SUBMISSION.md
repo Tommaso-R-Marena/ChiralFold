@@ -1,0 +1,78 @@
+# Bioinformatics submission package — ChiralFold
+
+**Article type:** Original Paper  
+**Journal:** [Bioinformatics](https://academic.oup.com/bioinformatics)  
+**Submit at:** https://mc.manuscriptcentral.com/bioinformatics (ScholarOne)
+
+## Contents
+
+| File | Purpose |
+|------|---------|
+| `chiralfold_bioinformatics.tex` | Main manuscript (OUP template, ~7-page target) |
+| `supplementary_material.tex` | Supplementary PDF |
+| `references.bib` | Bibliography |
+| `oup-authoring-template.cls` | OUP document class |
+| `oup-abbrvnat.bst` | Reference style |
+| `figures/` | Symlink to `paper/pdb_survey_figures/` |
+| `COVER_LETTER.txt` | Cover letter (customize date & reviewers) |
+| `HIGHLIGHTS.md` | Key points for submission form |
+| `build_submission.sh` | Compile PDFs and create upload zip |
+
+## Build locally
+
+```bash
+cd paper/submission/bioinformatics
+./build_submission.sh
+```
+
+Outputs:
+- `chiralfold_bioinformatics.pdf`
+- `supplementary_material.pdf`
+- `ChiralFold_Bioinformatics_Submission.zip`
+
+## ScholarOne upload checklist
+
+### Manuscript files
+- [ ] Main PDF: `chiralfold_bioinformatics.pdf`
+- [ ] LaTeX source zip (tex + bib + cls + bst + figures)
+- [ ] Supplementary PDF: `supplementary_material.pdf`
+- [ ] Cover letter: `COVER_LETTER.txt` → PDF
+
+### Submission form fields
+- [ ] **Article type:** Original Paper
+- [ ] **Title:** ChiralFold: systematic detection of D-amino acid stereochemistry errors in the Protein Data Bank
+- [ ] **Abstract:** copy from `chiralfold_bioinformatics.tex` (structured, ≤150 words)
+- [ ] **Keywords:** D-amino acid; chirality; Protein Data Bank; structure validation; AlphaFold 3; stereochemistry
+- [ ] **Data availability:** GitHub https://github.com/Tommaso-R-Marena/ChiralFold (v3.4.0); PyPI `chiralfold`; Zenodo DOI (optional, recommended)
+
+### Author information (you must complete in portal)
+- [ ] ORCID for Tommaso R. Marena
+- [ ] Affiliation: The Catholic University of America, Washington, DC
+- [ ] Corresponding author email: marena@cua.edu
+- [ ] Funding: None
+- [ ] Conflicts: None
+
+### Software availability (Bioinformatics requirement)
+- [ ] URL works: https://github.com/Tommaso-R-Marena/ChiralFold
+- [ ] PyPI: https://pypi.org/project/chiralfold/
+- [ ] Version cited: 3.4.0
+- [ ] License: MIT
+- [ ] Test data: `results/d_residue_verification.csv`, `tests/fixtures/`
+- [ ] Documentation: README.md
+
+### Before you click Submit
+- [ ] Confirm main manuscript ≤7 typeset pages (compile and check page count)
+- [ ] Verify all figure URLs and GitHub links resolve
+- [ ] Replace placeholder suggested reviewers with confirmed names (or remove)
+- [ ] Have co-authors approve (if any added)
+- [ ] Select open-access option / APC plan if required by your institution
+
+## Page limit note
+
+Bioinformatics Original Papers are limited to **7 printed pages**. The condensed `chiralfold_bioinformatics.tex` targets this limit; extended tables, statistics, and figures are in `supplementary_material.tex`. The full unabridged manuscript remains at `paper/chiralfold_paper.tex` for reference.
+
+## After acceptance
+
+- Deposit code DOI on Zenodo from GitHub release v3.4.0
+- Update manuscript with Bioinformatics DOI
+- Add citation to README
