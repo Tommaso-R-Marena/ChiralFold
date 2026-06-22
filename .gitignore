@@ -24,6 +24,8 @@ pdb_cache/
 .cache/
 results/ramachandran_expansion_cache/
 results/ramachandran_*run.log
+formal/**/.lake/
+formal/**/.lake-packages/
 results/*.pdb
 !results/*_D_mirror.pdb
 !results/3IWY.pdb
