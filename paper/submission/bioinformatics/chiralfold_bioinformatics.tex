@@ -20,7 +20,7 @@
 
 \abstract{%
 \textbf{Motivation:} D-amino acids are essential in therapeutics and natural products, yet standard validators do not audit D-residue stereochemistry in deposited structures, and diffusion predictors violate D-chirality at high rates.\\
-\textbf{Results:} We audited 12{,}573 D-residues in 4{,}616 PDB files and found 29 D-label/L-coordinate mismatches (0.23\%) in 16 structures invisible to MolProbity. ChiralFold, calibrated on 362 structures (Ramachandran Spearman $\rho=0.52$ vs wwPDB), detects errors via signed C$\alpha$ volume; Lean~4 proofs show distance-only models cannot determine chirality sign.\\
+\textbf{Results:} We audited 12{,}573 D-residues in 4{,}616 PDB files and found 29 D-label/L-coordinate mismatches (0.23\%) in 16 structures not covered by MolProbity's L-residue C$\alpha$ check. ChiralFold, calibrated on 362 structures (Ramachandran Spearman $\rho=0.52$ vs wwPDB), detects errors via signed C$\alpha$ volume; Lean~4 proofs show chirality sign cannot factor through pairwise distances alone.\\
 \textbf{Availability:} \url{https://github.com/Tommaso-R-Marena/ChiralFold}; \texttt{pip install chiralfold}; Python~3.9+; Linux/macOS/Windows (RDKit required).\\
 \textbf{Contact:} \href{marena@cua.edu}{marena@cua.edu}\\
 \textbf{Supplementary information:} Supplementary data and extended analyses are available at Bioinformatics online and at \url{https://github.com/Tommaso-R-Marena/ChiralFold/tree/master/paper/submission/bioinformatics}.}
@@ -57,7 +57,7 @@ Lean~4 proofs (\texttt{formal/chirality\_nogo/}) show that reflection preserves 
 
 \subsection{PDB D-residue survey}
 
-Of 12{,}573 checkable D-residues, 29 (0.23\%) in 16 structures showed positive signed volume despite D-labels (Fig.~\ref{fig:ccd}). Cross-referencing deposition metadata and literature yields six genuine stereochemistry errors (biology requires D, coordinates show L), 18 CCD-code misassignments across five structures (L-ligand labeled with D-code), three polymer mislabels, and two borderline cases (Supplementary Table~S1). Errors cluster in five CCD codes (DTY, DLY, DPN, DSN, DAR; Fisher's exact $p=1.96\times10^{-10}$ vs nine clean codes). Thirteen of 16 error structures predate 2006 wwPDB remediation (Mann--Whitney $p=1.14\times10^{-4}$ on the expanded set); resolution does not predict errors ($p=0.19$).
+Of 12{,}573 checkable D-residues, 29 (0.23\%) in 16 structures showed positive signed volume despite D-labels (Fig.~\ref{fig:ccd}). Cross-referencing deposition metadata and literature yields six genuine stereochemistry errors (biology requires D, coordinates show L), 18 CCD-code misassignments across five structures (L-ligand labeled with D-code), three polymer mislabels, and two borderline cases (Supplementary Table~S1). All 29 mismatches map to nine CCD codes; nine codes are confirmed clean at zero errors (Fisher's exact $p=1.96\times10^{-10}$); DTY and DLY alone account for 19 errors. MolProbity's standard C$\alpha$ chirality check applies to L-residues only and does not flag these D-label mismatches. Thirteen of 16 error structures predate 2006 wwPDB remediation (Mann--Whitney $p=1.14\times10^{-4}$ on the expanded set); resolution does not predict errors ($p=0.19$).
 
 \begin{figure}[!t]
 \centering
@@ -69,7 +69,7 @@ Of 12{,}573 checkable D-residues, 29 (0.23\%) in 16 structures showed positive s
 
 \subsection{MolProbity calibration}
 
-On $n=362$ structures, ChiralFold Ramachandran outlier percentages agree with wwPDB (Spearman $\rho=0.52$, 95\% CI [0.42, 0.61], $p=1.5\times10^{-26}$; Pearson $r=0.853$; mean 0.78\% vs 0.83\%; Fig.~\ref{fig:rama}). ChiralFold adds D-residue chirality auditing absent from MolProbity.
+On $n=362$ structures, ChiralFold Ramachandran outlier percentages agree with wwPDB (Spearman $\rho=0.52$, 95\% CI [0.42, 0.61], $p=1.5\times10^{-26}$; mean 0.78\% vs 0.83\%; Fig.~\ref{fig:rama}). Pearson $r$ is outlier-sensitive (0.33 for $n=363$; 0.85 after excluding the sole non-protein entry 5M2K); Spearman $\rho$ is the primary agreement metric. ChiralFold adds D-residue chirality auditing absent from MolProbity.
 
 \begin{figure}[!t]
 \centering
@@ -80,13 +80,13 @@ On $n=362$ structures, ChiralFold Ramachandran outlier percentages agree with ww
 
 \subsection{Formal obstruction and AF3}
 
-Lean~4 proofs establish that pairwise distances determine $|\mathrm{orient}|^2$ but not chirality sign (Supplementary Table~S2), explaining why distance-based predictors cannot enforce D-stereochemistry. On 41 D-peptide sequences from \citet{childs2025}, ChiralFold yields 0/478 violations by explicit SMILES construction (construction-vs-learning contrast, not fold prediction).
+Lean~4 proofs establish that any chirality readout factoring only through pairwise distances cannot determine sign (Supplementary Table~S2); this is a structural limitation of distance-only representations, not a complete model of SE(3)-equivariant predictors. On 41 D-peptide sequences from \citet{childs2025}, ChiralFold yields 0/478 violations by explicit SMILES construction (construction-vs-learning contrast, not fold prediction).
 
 \section{Discussion}
 
 The signed C$\alpha$ volume distinguishes stereochemistry errors, CCD misassignments, and mislabels without biological context. The 1HHZ case (0.99~\AA\ resolution, D-Ala with $V=+2.70$) shows errors are labeling failures, not density limitations. CCD misassignments are fixable by comparing deposited coordinates to the InChI \texttt{/m} flag at deposition \citep{shao2015,outcome2016}.
 
-ChiralFold is a stereochemistry post-processor, not a de novo folder: use AF3 or ESMFold for folding, then audit or correct with ChiralFold. Limitations include mmCIF-only exclusions, chi1-only rotamer scoring, and no experimental binding validation of mirror-designed peptides.
+ChiralFold is a stereochemistry post-processor, not a de novo folder: use AF3 or ESMFold for folding, then audit or correct with ChiralFold. Limitations include mmCIF-only exclusions (245 structures), chi1-only rotamer scoring, single-investigator error subtyping from metadata and literature, two borderline cases with signed volume $<1.0$~\AA$^3$, and no experimental binding validation of mirror-designed peptides.
 
 \section{Conclusion}
 
