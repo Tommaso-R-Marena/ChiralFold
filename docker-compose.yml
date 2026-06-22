@@ -1,0 +1,7 @@
+services:
+  chiralfold:
+    build: .
+    image: ghcr.io/tommaso-r-marena/chiralfold:3.4.0
+    volumes:
+      - ./data:/data
+    working_dir: /data
