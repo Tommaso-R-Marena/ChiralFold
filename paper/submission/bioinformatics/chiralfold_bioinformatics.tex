@@ -1,0 +1,114 @@
+%% ChiralFold — Bioinformatics Original Paper (submission draft)
+%% Compile: pdflatex x2, bibtex, pdflatex x2 (from paper/submission/bioinformatics/)
+\documentclass[numsec,webpdf,modern,large,namedate]{oup-authoring-template}
+
+\graphicspath{{figures/}}
+
+\begin{document}
+
+\journaltitle{Bioinformatics}
+\copyrightyear{2026}
+\pubyear{2026}
+\access{Submitted}
+\appnotes{Original Paper}
+
+\title[ChiralFold]{ChiralFold: systematic detection of D-amino acid stereochemistry errors in the Protein Data Bank}
+
+\author[1,$\ast$]{Tommaso R. Marena}
+\address[1]{\orgdiv{Department of Chemistry}, \orgname{The Catholic University of America}, \orgaddress{\street{620 Michigan Ave NE}, \postcode{20064}, \state{Washington, DC}, \country{USA}}}
+\corresp[$\ast$]{Corresponding author. \href{mailto:marena@cua.edu}{marena@cua.edu}}
+
+\abstract{%
+\textbf{Motivation:} D-amino acids are essential in therapeutics and natural products, yet standard validators do not audit D-residue stereochemistry in deposited structures, and diffusion predictors violate D-chirality at high rates.\\
+\textbf{Results:} We audited 12{,}573 D-residues in 4{,}616 PDB files and found 29 D-label/L-coordinate mismatches (0.23\%) in 16 structures invisible to MolProbity. ChiralFold, calibrated on 362 structures (Ramachandran Spearman $\rho=0.52$ vs wwPDB), detects errors via signed C$\alpha$ volume; Lean~4 proofs show distance-only models cannot determine chirality sign.\\
+\textbf{Availability:} \url{https://github.com/Tommaso-R-Marena/ChiralFold}; \texttt{pip install chiralfold}; Python~3.9+; Linux/macOS/Windows (RDKit required).\\
+\textbf{Contact:} \href{marena@cua.edu}{marena@cua.edu}\\
+\textbf{Supplementary information:} Supplementary data and extended analyses are available at Bioinformatics online and at \url{https://github.com/Tommaso-R-Marena/ChiralFold/tree/master/paper/submission/bioinformatics}.}
+
+\keywords{D-amino acid, chirality, Protein Data Bank, structure validation, AlphaFold 3, stereochemistry}
+
+\maketitle
+
+\section{Introduction}
+
+D-amino acids resist proteolysis and underpin mirror-image therapeutics, NRPS natural products, and bacterial cell-wall chemistry. AlphaFold~3 (AF3) produces a 51\% per-residue chirality violation rate on D-peptides \citep{childs2025}, and MolProbity---the standard PDB validator \citep{chen2010}---does not extend C$\alpha$ chirality checks to D-labeled residues. Deposited D-amino acid coordinates may therefore carry annotation errors that persist undetected.
+
+We present ChiralFold, a pip-installable stereochemistry toolkit, and the first systematic PDB-wide audit of D-residue chirality. We classify error modes, benchmark the auditor against wwPDB/MolProbity, formalize a no-go theorem for distance-based chirality in Lean~4, and release reproducible code (v3.4.0).
+
+\section{Materials and methods}
+
+\subsection{Signed tetrahedron volume}
+
+Chirality at C$\alpha$ uses the signed volume of the tetrahedron formed by backbone atoms N, C$\alpha$, C, and C$\beta$:
+\begin{equation}
+V = (\mathbf{N}-\mathbf{C}_\alpha)\cdot\left[(\mathbf{C}-\mathbf{C}_\alpha)\times(\mathbf{C}_\beta-\mathbf{C}_\alpha)\right].
+\end{equation}
+For correctly deposited D-residues, $V<0$ by CIP convention; $V>0$ at a D-label indicates L-coordinates. The PDB survey used an independent numpy-only script (no ChiralFold imports). mmCIF-only entries ($n=245$) were excluded from legacy-PDB coverage statistics.
+
+\subsection{ChiralFold auditor}
+
+The auditor scores C$\alpha$ chirality, bond geometry, hybrid Ramachandran grids, peptide planarity, steric clashes, and a composite 0--100 score. Ramachandran calibration used an era-representative stratified sample of 362 standard-protein structures (seed 20260612), comparing outlier percentages to wwPDB validation XML; one non-protein entry (5M2K) was excluded under a pre-specified criterion (\texttt{wwpdb\_rama\_outlier\_pct}$>50\%$). See Supplementary Methods for bin definitions and chain-ID remapping.
+
+\subsection{Formal verification}
+
+Lean~4 proofs (\texttt{formal/chirality\_nogo/}) show that reflection preserves pairwise distances but negates oriented volume, and that any model factoring through the distance matrix cannot represent signed chirality. AF3 correction reflects violating C$\alpha$ atoms across the N--C--C$\beta$ plane; mirror-image and diastereomer modules are described in Supplementary Methods.
+
+\section{Results}
+
+\subsection{PDB D-residue survey}
+
+Of 12{,}573 checkable D-residues, 29 (0.23\%) in 16 structures showed positive signed volume despite D-labels (Fig.~\ref{fig:ccd}). Cross-referencing deposition metadata and literature yields six genuine stereochemistry errors (biology requires D, coordinates show L), 18 CCD-code misassignments across five structures (L-ligand labeled with D-code), three polymer mislabels, and two borderline cases (Supplementary Table~S1). Errors cluster in five CCD codes (DTY, DLY, DPN, DSN, DAR; Fisher's exact $p=1.96\times10^{-10}$ vs nine clean codes). Thirteen of 16 error structures predate 2006 wwPDB remediation (Mann--Whitney $p=1.14\times10^{-4}$ on the expanded set); resolution does not predict errors ($p=0.19$).
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.48\textwidth]{fig1_error_rate_per_ccd}
+\includegraphics[width=0.48\textwidth]{fig2_deposition_year_vs_errors}
+\caption{(a) Error rate per CCD code with Wilson 95\% CIs; red: error-prone codes. (b) Deposition year vs error indicator; shaded band: 2006--2008 remediation.}
+\label{fig:ccd}
+\end{figure}
+
+\subsection{MolProbity calibration}
+
+On $n=362$ structures, ChiralFold Ramachandran outlier percentages agree with wwPDB (Spearman $\rho=0.52$, 95\% CI [0.42, 0.61], $p=1.5\times10^{-26}$; Pearson $r=0.853$; mean 0.78\% vs 0.83\%; Fig.~\ref{fig:rama}). ChiralFold adds D-residue chirality auditing absent from MolProbity.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.7\textwidth]{fig6_ramachandran_expanded}
+\caption{ChiralFold vs wwPDB Ramachandran outlier \% ($n=362$ era-representative structures).}
+\label{fig:rama}
+\end{figure}
+
+\subsection{Formal obstruction and AF3}
+
+Lean~4 proofs establish that pairwise distances determine $|\mathrm{orient}|^2$ but not chirality sign (Supplementary Table~S2), explaining why distance-based predictors cannot enforce D-stereochemistry. On 41 D-peptide sequences from \citet{childs2025}, ChiralFold yields 0/478 violations by explicit SMILES construction (construction-vs-learning contrast, not fold prediction).
+
+\section{Discussion}
+
+The signed C$\alpha$ volume distinguishes stereochemistry errors, CCD misassignments, and mislabels without biological context. The 1HHZ case (0.99~\AA\ resolution, D-Ala with $V=+2.70$) shows errors are labeling failures, not density limitations. CCD misassignments are fixable by comparing deposited coordinates to the InChI \texttt{/m} flag at deposition \citep{shao2015,outcome2016}.
+
+ChiralFold is a stereochemistry post-processor, not a de novo folder: use AF3 or ESMFold for folding, then audit or correct with ChiralFold. Limitations include mmCIF-only exclusions, chi1-only rotamer scoring, and no experimental binding validation of mirror-designed peptides.
+
+\section{Conclusion}
+
+ChiralFold identifies D-residue annotation errors invisible to existing pipelines and motivates a one-line deposition check: compare signed C$\alpha$ volume to the selected CCD stereochemistry flag. Code, data, formal proofs, and reproduction scripts are publicly available (v3.4.0).
+
+\section*{Data availability}
+
+Verification data: \url{https://github.com/Tommaso-R-Marena/ChiralFold/blob/master/results/d_residue_verification.csv}. Benchmark outputs: \texttt{results/ramachandran\_279struct\_chainfix\_*}. Software: PyPI \texttt{chiralfold}, Docker \texttt{ghcr.io/tommaso-r-marena/chiralfold:3.4.0}, GitHub release v3.4.0.
+
+\section*{Funding}
+
+None declared.
+
+\section*{Conflict of interest}
+
+None declared.
+
+\section*{Author contributions}
+
+T.R.M.\ conceived the study, implemented ChiralFold, performed all analyses, formalized proofs, and wrote the manuscript.
+
+\bibliographystyle{oup-abbrvnat}
+\bibliography{references}
+
+\end{document}
