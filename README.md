@@ -24,9 +24,31 @@ ChiralFold provides `pip install`-able stereochemistry validation and coordinate
 
 ## Installation
 
+### pip (recommended)
+
 ```bash
-pip install git+https://github.com/Tommaso-R-Marena/ChiralFold.git
+pip install chiralfold
 ```
+
+Or install the latest from GitHub:
+
+```bash
+pip install git+https://github.com/Tommaso-R-Marena/ChiralFold.git@v3.4.0
+```
+
+### Docker
+
+```bash
+docker pull ghcr.io/tommaso-r-marena/chiralfold:3.4.0
+
+# Audit a local PDB (mount working directory as /data)
+docker run --rm -v "$PWD:/data" ghcr.io/tommaso-r-marena/chiralfold:3.4.0 audit /data/protein.pdb
+
+# Correct AF3 output
+docker run --rm -v "$PWD:/data" ghcr.io/tommaso-r-marena/chiralfold:3.4.0 correct-af3 /data/af3.pdb -o /data/fixed.pdb
+```
+
+Build locally with `docker compose build` or `docker build -t chiralfold:3.4.0 .`.
 
 If `pip install rdkit` fails on your platform (rare on Linux/macOS, common on some Windows toolchains), use the conda fallback:
 
@@ -272,7 +294,8 @@ ChiralFold is a stereochemistry toolkit, not a de novo structure predictor. It e
 |-----------|--------|
 | Chirality auditing (L and D) | Production-ready |
 | Mirror-image transformation | Production-ready (0.0 Å error) |
-| AF3 chirality correction | New in v3.2 |
+| AF3 chirality correction | Production-ready (v3.2+) |
+| Formal chirality no-go proofs (Lean 4) | New in v3.4 |
 | Diastereomer enumeration | New in v3.2 |
 | Interface scoring | New in v3.2 |
 | Template threading | Available (template-dependent; requires structural homolog in PDB) |

@@ -4,15 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chiralfold"
-version = "3.2.1"
-description = "Chirality-preserving peptide structure prediction — defeats AlphaFold 3 on D-peptides and diastereomers"
+version = "3.4.0"
+description = "Chirality-correct protein stereochemistry toolkit: PDB auditing, D-peptide construction, AF3 correction, and mirror-image design"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.9"
 authors = [
     {name = "Tommaso R. Marena", email = "marena@cua.edu"},
 ]
-keywords = ["chirality", "peptide", "D-amino-acid", "diastereomer", "structure-prediction", "alphafold"]
+keywords = ["chirality", "peptide", "D-amino-acid", "diastereomer", "structure-prediction", "alphafold", "PDB", "stereochemistry", "MolProbity"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Science/Research",
@@ -59,6 +59,9 @@ include = ["chiralfold*"]
 
 [tool.setuptools.package-data]
 chiralfold = ["data/*.json", "data/*.py"]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["*.pyc", "__pycache__/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
