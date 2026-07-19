@@ -153,6 +153,21 @@ chiralfold enumerate AFWKELDR --top 10
 chiralfold score-interface receptor.pdb ligand.pdb
 ```
 
+### Optional PyMOL Visualization
+
+ChiralFold can write PyMOL `.pml` scripts without requiring PyMOL as a package
+dependency:
+
+```python
+from chiralfold.viz import write_af3_correction_session
+
+write_af3_correction_session("af3_before.pdb", "af3_after.pdb", "af3_fix.pml")
+```
+
+See `scripts/pymol/README.md` for chirality audit, mirror comparison, and AF3
+correction templates. Install PyMOL separately as a system or conda package to
+open or render the generated scripts.
+
 ## ChiralFold vs MolProbity
 
 Head-to-head comparison across X-ray, NMR, and cryo-EM structures (original 31-structure set at 0.48–3.4 Å, plus expanded stratified samples):

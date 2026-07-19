@@ -1,0 +1,149 @@
+{
+  "benchmark": "af3_experimental_systems",
+  "scope": "Experimental RCSB structures for Childs et al. systems; no AF3 outputs redistributed.",
+  "af3_reference_note": "Published AF3 failure rates are from Childs, Zhou & Donald 2025 bioRxiv 2025.03.14.643307, not from local AF3 predictions.",
+  "elapsed_s": 0.9346497560036369,
+  "systems": [
+    {
+      "pdb_id": "3IWY",
+      "system": "DP12:MDM2",
+      "childs_sequence": "DWWPLAFEALLR",
+      "published_af3_violation_rate": 0.5,
+      "note": "Experimental dPMI-gamma/MDM2 structure used as the DP12 system.",
+      "rcsb_url": "https://files.rcsb.org/download/3IWY.pdb",
+      "status": "ok",
+      "cached_pdb": "results/.cache/childs_experimental_pdbs/3IWY.pdb",
+      "audit": {
+        "n_residues": 189,
+        "overall_score": 74.6,
+        "chirality": {
+          "n_correct": 181,
+          "n_wrong": 0,
+          "n_glycine": 8,
+          "pct_correct": 100.0,
+          "violations": []
+        },
+        "ramachandran": {
+          "n_evaluated": 181,
+          "pct_favored": 95.58,
+          "pct_allowed": 4.42,
+          "pct_outlier": 0.0
+        },
+        "planarity": {
+          "n_peptide_bonds": null,
+          "pct_within_6deg": 67.57
+        },
+        "clashes": {
+          "n_clashes": 416,
+          "clash_score": 261.8
+        },
+        "bond_geometry": {
+          "n_bonds_checked": 752,
+          "n_angles_checked": 559,
+          "n_outliers": 6
+        }
+      },
+      "af3_detector": {
+        "n_residues": 189,
+        "n_checked": 173,
+        "n_violations": 0,
+        "pct_violations": 0.0,
+        "violations": []
+      }
+    },
+    {
+      "pdb_id": "5N8T",
+      "system": "DP9:Streptavidin",
+      "childs_sequence": "LWQHEATWK",
+      "published_af3_violation_rate": 0.51,
+      "note": "Experimental DP9 streptavidin-binding D-peptide system.",
+      "rcsb_url": "https://files.rcsb.org/download/5N8T.pdb",
+      "status": "ok",
+      "cached_pdb": "results/.cache/childs_experimental_pdbs/5N8T.pdb",
+      "audit": {
+        "n_residues": 129,
+        "overall_score": 75.9,
+        "chirality": {
+          "n_correct": 113,
+          "n_wrong": 0,
+          "n_glycine": 16,
+          "pct_correct": 100.0,
+          "violations": []
+        },
+        "ramachandran": {
+          "n_evaluated": 125,
+          "pct_favored": 97.6,
+          "pct_allowed": 2.4,
+          "pct_outlier": 0.0
+        },
+        "planarity": {
+          "n_peptide_bonds": null,
+          "pct_within_6deg": 64.57
+        },
+        "clashes": {
+          "n_clashes": 234,
+          "clash_score": 238.53
+        },
+        "bond_geometry": {
+          "n_bonds_checked": 514,
+          "n_angles_checked": 383,
+          "n_outliers": 0
+        }
+      },
+      "af3_detector": {
+        "n_residues": 129,
+        "n_checked": 112,
+        "n_violations": 0,
+        "pct_violations": 0.0,
+        "violations": []
+      }
+    },
+    {
+      "pdb_id": "7YH8",
+      "system": "DP19:L-19437",
+      "childs_sequence": "DEHELLETAARWFYEIAKR",
+      "published_af3_violation_rate": 0.52,
+      "note": "Experimental DP19 system if available from RCSB.",
+      "rcsb_url": "https://files.rcsb.org/download/7YH8.pdb",
+      "status": "ok",
+      "cached_pdb": "results/.cache/childs_experimental_pdbs/7YH8.pdb",
+      "audit": {
+        "n_residues": 162,
+        "overall_score": 81.8,
+        "chirality": {
+          "n_correct": 158,
+          "n_wrong": 0,
+          "n_glycine": 4,
+          "pct_correct": 100.0,
+          "violations": []
+        },
+        "ramachandran": {
+          "n_evaluated": 154,
+          "pct_favored": 100.0,
+          "pct_allowed": 0.0,
+          "pct_outlier": 0.0
+        },
+        "planarity": {
+          "n_peptide_bonds": null,
+          "pct_within_6deg": 90.51
+        },
+        "clashes": {
+          "n_clashes": 359,
+          "clash_score": 263.97
+        },
+        "bond_geometry": {
+          "n_bonds_checked": 644,
+          "n_angles_checked": 478,
+          "n_outliers": 0
+        }
+      },
+      "af3_detector": {
+        "n_residues": 162,
+        "n_checked": 154,
+        "n_violations": 0,
+        "pct_violations": 0.0,
+        "violations": []
+      }
+    }
+  ]
+}
