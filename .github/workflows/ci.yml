@@ -42,7 +42,7 @@ jobs:
       # benchmark workflows, not on every PR/push.
       - name: Run tests with coverage
         run: |
-          pytest tests/ -v --tb=short -m "not slow" --cov=chiralfold --cov-report=term-missing --cov-report=xml --cov-fail-under=62
+          pytest tests/ -v --tb=short -m "not slow" --cov=chiralfold --cov-report=term-missing --cov-report=xml --cov-fail-under=75
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
