@@ -24,7 +24,6 @@ ChiralFold: 0% violation rate for any L/D pattern, guaranteed by construction.
 import numpy as np
 from rdkit import Chem
 from rdkit.Chem import AllChem
-from copy import deepcopy
 
 # Module-level: do NOT call warnings.filterwarnings globally.
 
@@ -148,12 +147,12 @@ def mixed_peptide_smiles(seq, chirality_pattern):
 
         if aa == 'G':
             # Glycine: achiral regardless of chirality specification
-            parts.append(f'N{tail}' if last else f'NCC(=O)')
+            parts.append(f'N{tail}' if last else 'NCC(=O)')
             if last:
                 parts.append('')  # handled above
-                parts[-1] = f'NCC(=O)O'
+                parts[-1] = 'NCC(=O)O'
             else:
-                parts[-1] = f'NCC(=O)'
+                parts[-1] = 'NCC(=O)'
             continue
 
         if aa == 'P':

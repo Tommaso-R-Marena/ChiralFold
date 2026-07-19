@@ -80,7 +80,7 @@ On $n=362$ structures, ChiralFold Ramachandran outlier percentages agree with ww
 
 \subsection{Formal obstruction and AF3}
 
-Lean~4 proofs establish that any chirality readout factoring only through pairwise distances cannot determine sign (Supplementary Table~S2); this is a structural limitation of distance-only representations, not a complete model of SE(3)-equivariant predictors. On 41 D-peptide sequences from \citet{childs2025}, ChiralFold yields 0/478 violations by explicit SMILES construction (construction-vs-learning contrast, not fold prediction).
+Lean~4 proofs establish that any chirality readout factoring only through pairwise distances cannot determine sign (Supplementary Table~S2); this is a structural limitation of distance-only representations, not a complete model of SE(3)-equivariant predictors. On 41 D-peptide sequences from \citet{childs2025}, ChiralFold yields 0/478 violations by explicit SMILES construction (construction-vs-learning contrast, not fold prediction). A synthetic AF3-mimetic resource benchmark further shows 100\% detection/correction recall, 0\% residual violations, and a 0.0367~s local correction pipeline across three Childs-system peptides (Supplementary Fig.~S4), supporting correction as lightweight stereochemistry post-processing rather than AF3 re-inference.
 
 \section{Discussion}
 

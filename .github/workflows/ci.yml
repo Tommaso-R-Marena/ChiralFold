@@ -30,19 +30,19 @@ jobs:
           pip install "rdkit>=2023.3" || pip install rdkit-pypi
           pip install -e ".[dev]"
 
+      - name: Run Ruff
+        run: |
+          ruff check chiralfold/
+
       # NOTE: `-m "not slow"` excludes tests marked @pytest.mark.slow, which
       # cover network-dependent benchmarks (RCSB structure downloads, wwPDB
       # validation XML fetches for the MolProbity comparison) and long-running
       # compute (the >=100-structure Ramachandran benchmark and full Childs et al.
       # 2025 enumeration). These are designed to be run manually or in scheduled
       # benchmark workflows, not on every PR/push.
-      - name: Run tests
-        run: |
-          pytest tests/ -v --tb=short -m "not slow"
-
       - name: Run tests with coverage
         run: |
-          pytest tests/ --cov=chiralfold --cov-report=xml -m "not slow"
+          pytest tests/ -v --tb=short -m "not slow" --cov=chiralfold --cov-report=term-missing --cov-report=xml --cov-fail-under=62
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4

@@ -22,7 +22,6 @@ Usage::
 import os
 import math
 import random
-import warnings
 import numpy as np
 from typing import Optional, List, Tuple, Dict, Any
 
@@ -249,9 +248,7 @@ def build_backbone_from_fragments(
         0.0,
     ])
 
-    # We need a "phantom" atom before N for the first NeRF call.
-    # Place it such that we get reasonable geometry.
-    phantom = N_cur - np.array([_BOND_C_N, 0.0, 0.0])
+    # Residues are seeded from N_cur/CA_cur/C_cur; later residues grow via NeRF.
 
     # Use chain of placed atoms: grow atom-by-atom
     # Chain: ... [prev_N, prev_CA, prev_C] → [N, CA, C] → ...
@@ -420,7 +417,7 @@ def assemble_protein(
     os.makedirs(os.path.dirname(os.path.abspath(output_pdb)), exist_ok=True)
 
     with open(output_pdb, 'w') as fh:
-        fh.write(f"REMARK  Built by ChiralFold fragments.py\n")
+        fh.write("REMARK  Built by ChiralFold fragments.py\n")
         fh.write(f"REMARK  Sequence:  {sequence}\n")
         fh.write(f"REMARK  SS:        {ss_pred}\n")
         fh.write(f"REMARK  Chirality: {chirality}\n")
