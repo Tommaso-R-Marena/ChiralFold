@@ -58,7 +58,7 @@ Documentation = "https://github.com/Tommaso-R-Marena/ChiralFold/blob/master/READ
 include = ["chiralfold*"]
 
 [tool.setuptools.package-data]
-chiralfold = ["data/*.json", "data/*.py"]
+chiralfold = ["data/*.json", "data/*.py", "data/*.pdb", "data/examples/*"]
 
 [tool.setuptools.exclude-package-data]
 "*" = ["*.pyc", "__pycache__/*"]
