@@ -25,14 +25,18 @@
 Works on **Linux, macOS, and Windows** (Python 3.9–3.12).
 
 ```bash
-# Recommended (latest from GitHub — always current)
-pip install "chiralfold @ git+https://github.com/Tommaso-R-Marena/ChiralFold.git"
+# Recommended — always current (PyPI package pending Trusted Publisher setup)
+pip install -U pip
+pip install "chiralfold @ git+https://github.com/Tommaso-R-Marena/ChiralFold.git@v3.5.1"
 
 # Or clone + editable
 git clone https://github.com/Tommaso-R-Marena/ChiralFold.git
 cd ChiralFold
 pip install -e .
 ```
+
+> **Note:** Bare `pip install chiralfold` will work once the PyPI Trusted Publisher is linked
+> (workflow: `.github/workflows/publish-pypi.yml`; release `v3.5.1` is tagged). Until then, use the Git install above — same package, wheels built from source.
 
 Core dependencies: `numpy`, `scipy`, `pandas`, `rdkit`.  
 Optional: `pip install "chiralfold[web]"` (Gradio UI) · `pip install "chiralfold[viz]"` (matplotlib/seaborn for benchmarks).
