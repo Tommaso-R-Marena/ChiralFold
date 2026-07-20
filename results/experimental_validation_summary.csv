@@ -1,0 +1,17 @@
+pdb_id,error_type,experimental_method,resolution_angstrom,automated_validation_pass,n_error_residues,validation_rationale
+1ABI,Stereochem,X-RAY DIFFRACTION,2.3,True,1,D-labeled residue (DPN) has L-coordinates (V=2.49 Å³); contradicts D-CCD assignment regardless of biological context.
+1BG0,CCD-Code,X-RAY DIFFRACTION,1.86,True,1,Deposited coordinates match L-stereochemistry (V>0); wwPDB CCD ARG InChI indicates L-form.
+1D7T,Stereochem,SOLUTION NMR,,True,1,D-labeled residue (DTY) has L-coordinates (V=1.85 Å³); contradicts D-CCD assignment regardless of biological context.
+1HHZ,Stereochem,X-RAY DIFFRACTION,0.99,True,1,D-labeled residue (DAL) has L-coordinates (V=2.70 Å³); contradicts D-CCD assignment regardless of biological context.
+1KO0,Borderline,X-RAY DIFFRACTION,2.2,,1,Borderline signed volume; requires manual review.
+1MCB,Mislabel,X-RAY DIFFRACTION,2.7,True,1,L-coordinates with D-amino-acid label in L-protein context.
+1OF6,CCD-Code,X-RAY DIFFRACTION,2.1,True,8,Deposited coordinates match L-stereochemistry (V>0); wwPDB CCD TYR InChI indicates L-form.
+1P52,CCD-Code,X-RAY DIFFRACTION,1.9,True,1,Deposited coordinates match L-stereochemistry (V>0); wwPDB CCD ARG InChI indicates L-form.
+1UHG,Mislabel,X-RAY DIFFRACTION,1.9,True,1,L-coordinates with D-amino-acid label in L-protein context.
+1XT7,Stereochem,SOLUTION NMR,,True,1,D-labeled residue (DSG) has L-coordinates (V=2.55 Å³); contradicts D-CCD assignment regardless of biological context.
+2AOU,Mislabel,X-RAY DIFFRACTION,2.3,True,1,L-coordinates with D-amino-acid label in L-protein context.
+2ATS,CCD-Code,X-RAY DIFFRACTION,1.9,True,3,Deposited coordinates match L-stereochemistry (V>0); wwPDB CCD LYS InChI indicates L-form.
+2H9E,Borderline,X-RAY DIFFRACTION,2.2,,1,Borderline signed volume; requires manual review.
+2RMI,Stereochem,SOLUTION NMR,,True,1,D-labeled residue (DPN) has L-coordinates (V=2.63 Å³); contradicts D-CCD assignment regardless of biological context.
+2W76,Stereochem,X-RAY DIFFRACTION,2.8,True,1,D-labeled residue (DSN) has L-coordinates (V=2.33 Å³); contradicts D-CCD assignment regardless of biological context.
+3RIT,CCD-Code,X-RAY DIFFRACTION,2.701,True,5,Deposited coordinates match L-stereochemistry (V>0); wwPDB CCD LYS InChI indicates L-form.

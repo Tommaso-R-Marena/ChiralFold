@@ -11,7 +11,6 @@ generated conformers without compromising chirality guarantees.
 """
 
 import numpy as np
-from rdkit import Chem
 from rdkit.Chem import AllChem, rdMolTransforms
 
 # Module-level: do NOT call warnings.filterwarnings globally.

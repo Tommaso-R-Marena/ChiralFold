@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import itertools
 import random
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 # Module-level: do NOT call warnings.filterwarnings globally.
 
@@ -309,7 +309,7 @@ if __name__ == "__main__":
     top_n = int(sys.argv[2]) if len(sys.argv) > 2 else 10
 
     print("=" * 70)
-    print(f"ChiralFold — Diastereomer Enumeration Self-Test")
+    print("ChiralFold — Diastereomer Enumeration Self-Test")
     print(f"Sequence: {seq}  (length {len(seq)})")
     print("=" * 70)
 
@@ -329,7 +329,7 @@ if __name__ == "__main__":
 
     if results:
         best = results[0]
-        print(f"\nBest diastereomer:")
+        print("\nBest diastereomer:")
         print(f"  Pattern:   {best['chirality_pattern']}")
         print(f"  D residues: {best['n_d']}")
         print(f"  L residues: {best['n_l']}")

@@ -31,7 +31,7 @@ Reference:
     https://doi.org/10.1101/2025.03.14.643307
 """
 
-__version__ = "3.4.0"
+__version__ = "3.5.0"
 __author__ = "Tommaso R. Marena"
 
 from .model import (

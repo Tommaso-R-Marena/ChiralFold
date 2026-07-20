@@ -23,7 +23,6 @@ Usage::
 
 import os
 import math
-import warnings
 import numpy as np
 from typing import Optional, List, Dict, Any
 
@@ -371,7 +370,7 @@ if __name__ == '__main__':
     print(f"compute_chi1 result: {chi:.2f}° (non-degenerate geometry test)")
     # Just verify it doesn't raise and returns a float in [-180, 180]
     assert -180.0 <= chi <= 180.0, f"Chi1 out of range: {chi:.2f}°"
-    print(f"compute_chi1: OK")
+    print("compute_chi1: OK")
 
     # Test gauche- classification
     # For a g- geometry (chi1 = -60°), use atoms that produce that dihedral
@@ -380,9 +379,12 @@ if __name__ == '__main__':
     cb2 = np.array([1.936, 1.440, 0.0])
     import math as _m
     # Place CG at dihedral = -60° around CA-CB bond
-    b1_ = ca2 - n2;  b1_ /= np.linalg.norm(b1_)
-    b2_ = cb2 - ca2; b2_ /= np.linalg.norm(b2_)
-    perp_ = np.cross(b1_, b2_); perp_ /= np.linalg.norm(perp_)
+    b1_ = ca2 - n2
+    b1_ /= np.linalg.norm(b1_)
+    b2_ = cb2 - ca2
+    b2_ /= np.linalg.norm(b2_)
+    perp_ = np.cross(b1_, b2_)
+    perp_ /= np.linalg.norm(perp_)
     m_  = np.cross(perp_, b2_)
     phi = -60.0
     cg2 = cb2 + 1.52 * (
@@ -418,7 +420,7 @@ if __name__ == '__main__':
         tmp_path = tmp.name
 
     result = validate_rotamers(tmp_path)
-    print(f"\nvalidate_rotamers on synthetic VAL:")
+    print("\nvalidate_rotamers on synthetic VAL:")
     print(f"  n_residues_checked : {result['n_residues_checked']}")
     print(f"  n_favored          : {result['n_favored']}")
     print(f"  n_allowed          : {result['n_allowed']}")

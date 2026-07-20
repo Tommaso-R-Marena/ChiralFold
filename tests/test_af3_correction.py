@@ -14,7 +14,6 @@ For each fixture we check three properties of the correction pipeline:
 
 from __future__ import annotations
 
-import os
 import shutil
 import textwrap
 from pathlib import Path
@@ -23,8 +22,14 @@ import numpy as np
 import pytest
 
 from chiralfold.af3_correct import (
-    correct_af3_output,
     detect_chirality_violations,
+    correct_af3_output,
+    correct_chirality,
+    _estimate_cb,
+    _format_coord,
+    _parse_pdb_full,
+    _reflect_across_plane,
+    _rewrite_atom_coords,
     _signed_volume,
 )
 
@@ -172,6 +177,118 @@ def test_correction_is_noop_on_clean_input(fixtures):
     assert result["before"]["n_violations"] == 0
     assert result["after"]["n_violations"] == 0
     assert result["correction"]["n_corrected"] == 0
+
+
+def test_parse_pdb_full_skips_water_altloc_duplicates_and_short_lines(tmp_path):
+    pdb = tmp_path / "parse_edges.pdb"
+    pdb.write_text(
+        textwrap.dedent(
+            """\
+            ATOM      1  N   HOH A   1       0.000   0.000   0.000  1.00  0.00           O
+            ATOM      2  CA AALA A   2       0.000   0.000   0.000  1.00  0.00           C
+            ATOM      3  CA BALA A   2       1.000   0.000   0.000  1.00  0.00           C
+            ATOM      4  CA AALA A   2       2.000   0.000   0.000  1.00  0.00           C
+            ATOM  broken
+            END
+            """
+        )
+    )
+
+    lines, atoms = _parse_pdb_full(str(pdb))
+
+    assert len(lines) == 6
+    assert len(atoms) == 1
+    assert atoms[0].altloc == "A"
+    assert atoms[0].line_idx == 1
+
+
+def test_detect_skips_gly_pro_missing_backbone_and_uses_estimated_cb(tmp_path):
+    pdb = tmp_path / "detect_edges.pdb"
+    pdb.write_text(
+        textwrap.dedent(
+            """\
+            ATOM      1  N   GLY A   1       1.201   0.847   0.000  1.00  0.00           N
+            ATOM      2  CA  GLY A   1       0.000   0.000   0.000  1.00  0.00           C
+            ATOM      3  C   GLY A   1      -1.250   0.881   0.000  1.00  0.00           C
+            ATOM      4  N   PRO A   2       1.201   0.847   0.000  1.00  0.00           N
+            ATOM      5  CA  PRO A   2       0.000   0.000   0.000  1.00  0.00           C
+            ATOM      6  C   PRO A   2      -1.250   0.881   0.000  1.00  0.00           C
+            ATOM      7  CA  ALA A   3       0.000   0.000   0.000  1.00  0.00           C
+            HETATM    8  N   UNK B   1       1.201   0.847   0.000  1.00  0.00           N
+            HETATM    9  CA  UNK B   1       0.000   0.000   0.000  1.00  0.00           C
+            HETATM   10  C   UNK B   1      -1.250   0.881   0.000  1.00  0.00           C
+            END
+            """
+        )
+    )
+
+    report = detect_chirality_violations(str(pdb))
+
+    assert report["n_residues"] == 4
+    assert report["n_checked"] == 1
+
+
+def test_detect_missing_file_and_correct_chirality_missing_file_raise(tmp_path):
+    missing = tmp_path / "missing.pdb"
+    with pytest.raises(FileNotFoundError):
+        detect_chirality_violations(str(missing))
+    with pytest.raises(FileNotFoundError):
+        correct_chirality(str(missing), str(tmp_path / "out.pdb"))
+    with pytest.raises(FileNotFoundError):
+        correct_af3_output(str(missing), str(tmp_path / "out.pdb"))
+
+
+def test_correct_chirality_noop_copies_clean_input(fixtures):
+    inp = fixtures["fixtures"]["l_ala_correct"]
+    out = fixtures["scratch"] / "direct_noop.pdb"
+
+    result = correct_chirality(str(inp), str(out))
+
+    assert result == {
+        "n_corrected": 0,
+        "violations_before": 0,
+        "violations_after": 0,
+        "output_path": str(out),
+    }
+    assert out.read_text() == Path(inp).read_text()
+
+
+def test_correct_af3_output_derives_default_output_path(tmp_path, fixtures):
+    inp = tmp_path / "clean_copy.pdb"
+    shutil.copy2(fixtures["fixtures"]["l_ala_correct"], inp)
+
+    result = correct_af3_output(str(inp))
+
+    assert result["output_path"].endswith("_corrected.pdb")
+    assert result["success"] is True
+    assert Path(result["output_path"]).exists()
+
+
+def test_af3_geometry_helpers_handle_edge_cases():
+    line = "ATOM      1  CA  ALA A   1       1.000   2.000   3.000  1.00  0.00           C\n"
+
+    assert _format_coord(1.25) == "   1.250"
+    assert _rewrite_atom_coords("short", 9.0, 8.0, 7.0) == "short"
+    rewritten = _rewrite_atom_coords(line, -1.0, -2.0, -3.0)
+    assert float(rewritten[30:38]) == -1.0
+    assert float(rewritten[38:46]) == -2.0
+    assert float(rewritten[46:54]) == -3.0
+
+    point = np.array([1.0, 2.0, 3.0])
+    reflected = _reflect_across_plane(
+        point,
+        np.array([0.0, 0.0, 0.0]),
+        np.array([1.0, 0.0, 0.0]),
+        np.array([2.0, 0.0, 0.0]),
+    )
+    np.testing.assert_allclose(reflected, point)
+
+    cb = _estimate_cb(
+        np.array([0.0, 0.0, 0.0]),
+        np.array([1.0, 0.0, 0.0]),
+        np.array([-1.0, 0.0, 0.0]),
+    )
+    assert cb.shape == (3,)
 
 
 # ----- Helpers -----------------------------------------------------------

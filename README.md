@@ -2,25 +2,66 @@
 
 **Chirality-correct protein stereochemistry toolkit: PDB auditing, D-peptide construction, AF3 chirality correction, and mirror-image binder design.**
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Quick_Demo.ipynb)
-[![Open expanded Ramachandran benchmark in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Expanded_Ramachandran_Benchmark.ipynb)
 ![Tests](https://github.com/Tommaso-R-Marena/ChiralFold/actions/workflows/ci.yml/badge.svg?branch=master)
+[![Open Web App](https://img.shields.io/badge/Web%20App-Launch%20ChiralFold-0D9488?style=for-the-badge&logo=googlechrome&logoColor=white)](#web-app-no-install-required)
+[![Quick Demo in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Quick_Demo.ipynb)
+[![Toy Dataset Demo in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Toy_Dataset_Demo.ipynb)
+[![Expanded Ramachandran Benchmark in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Expanded_Ramachandran_Benchmark.ipynb)
+[![D-residue experimental validation (Colab)](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/D_Residue_Experimental_Validation.ipynb)
 
 ChiralFold provides `pip install`-able stereochemistry validation and coordinate generation for L-proteins, D-peptides, diastereomers, and any PDB structure. It guarantees **0% chirality violations** at stereogenic centers and includes a MolProbity-calibrated quality auditor validated against wwPDB reports on 31 structures.
 
-> **Try it instantly:** Click the badge above to open the [Quick Demo notebook](demos/ChiralFold_Quick_Demo.ipynb) in Google Colab — no setup required. Runs a full PDB audit, D-peptide prediction (16/16 conformers converged), and AF3 violation check in under a minute.
+> **Try it instantly:** Open the [Quick Demo](demos/ChiralFold_Quick_Demo.ipynb) or the fast [Toy Dataset Demo](demos/ChiralFold_Toy_Dataset_Demo.ipynb) in Google Colab. The toy demo audits the packaged ubiquitin fragment, predicts `AFWKELDR`, enumerates `AFK`, and corrects a synthetic AF3-mimetic inverted residue in under two minutes.
 
 ## Key Results
 
 **Chirality validation** — 30/31 PDB structures audit at 100% Cα correctness across X-ray (0.48–3.4 Å), NMR, and cryo-EM. One NMR structure (2JXR) flagged with a genuine stereochemical issue.
 
-**Ramachandran agreement with wwPDB/MolProbity** — On a seeded **era-representative** stratified sample of **362 standard-protein structures** (X-ray ultra/high/med/low resolution + NMR + cryo-EM, spanning all deposition eras), produced after fixing an mmCIF→PDB chain-ID collision bug in the converter, Spearman ρ = 0.52 (95% CI [0.42, 0.61], p = 1.5 × 10⁻²⁶), Pearson r = 0.853 (95% CI [0.717, 0.917], p = 6.1 × 10⁻¹⁰⁴) on outlier percentage, with ChiralFold reporting 0.78% mean outliers vs wwPDB's 0.83%. One non-protein entry (5M2K, vancomycin–Zn²⁺ complex, 2 analyzable backbone residues) was excluded under the pre-specified criterion wwpdb_rama_outlier_pct > 50%; its exclusion is documented in `results/ramachandran_279struct_chainfix_summary.json`. This supersedes the earlier 279-structure run (ρ = 0.48, p = 2.4 × 10⁻¹⁷; r = 0.80), which used the buggy converter; the rank result is stable across both. The 104-structure run (ρ = 0.56, p = 4.4 × 10⁻¹⁰) and the original 31-structure benchmark (ρ = 0.49, p = 0.006) are retained for reference. Reproduce any run with `benchmarks/expand_ramachandran_benchmark.py` (latest outputs: `results/ramachandran_279struct_chainfix_comparison.csv`, `results/ramachandran_279struct_chainfix_summary.json`, `results/ramachandran_279struct_chainfix_plot.png`).
+**Ramachandran agreement with wwPDB/MolProbity** — On a seeded **era-representative** stratified sample of **362 standard-protein structures** (X-ray ultra/high/med/low resolution + NMR + cryo-EM, spanning all deposition eras), produced after fixing an mmCIF→PDB chain-ID collision bug in the converter, Spearman ρ = 0.52 (95% CI [0.42, 0.61], p = 1.5 × 10⁻²⁶), Pearson r = 0.853 (95% CI [0.717, 0.917], p = 6.1 × 10⁻¹⁰⁴) on outlier percentage, with ChiralFold reporting 0.78% mean outliers vs wwPDB's 0.83%. One glycopeptide entry (5M2K, vancomycin–Zn²⁺: 7-residue cyclic glycopeptide with one standard amino acid, not a globular protein) was excluded under the pre-specified criterion wwpdb_rama_outlier_pct > 50%; its exclusion is documented in `results/ramachandran_279struct_chainfix_summary.json`. This supersedes the earlier 279-structure run (ρ = 0.48, p = 2.4 × 10⁻¹⁷; r = 0.80), which used the buggy converter; the rank result is stable across both. The 104-structure run (ρ = 0.56, p = 4.4 × 10⁻¹⁰) and the original 31-structure benchmark (ρ = 0.49, p = 0.006) are retained for reference. Reproduce any run with `benchmarks/expand_ramachandran_benchmark.py` (latest outputs: `results/ramachandran_279struct_chainfix_comparison.csv`, `results/ramachandran_279struct_chainfix_summary.json`, `results/ramachandran_279struct_chainfix_plot.png`).
 
 **Mirror-image binder design** — Converted the p53:MDM2 crystal structure (PDB 1YCR) into a D-peptide therapeutic candidate that preserves the Phe19/Trp23/Leu26 binding triad as D-amino acids — the same hotspot the experimental dPMI-γ (Kd = 53 nM) uses. All backbone φ angles exactly sign-inverted, 0.0 Å coordinate error. The mirror transformation is mathematically exact; experimental Kd measurement against MDM2 is required to confirm binding affinity and is outside the scope of this computational study.
 
-**PDB-wide D-residue survey** — Verified 12,573 D-amino acid residues across 4,616 PDB files (>91% of all RCSB entries for each of the 18 standard D-amino acid CCD codes). Found 29 D-label/L-coordinate mismatches in 16 structures: 6 genuine stereochemistry errors (biology requires D, coordinates show L), 18 CCD code misassignments across 5 structures (L-molecule labeled with D-code), 3 polymer residue mislabels, and 2 borderlines. Errors cluster in 5 CCD codes (DTY, DLY, DPN, DSN, DAR); 9 codes confirmed clean at zero errors. All cross-referenced against biological context and primary literature. MolProbity does not flag any of these.
+### Experimental validation (reproducible)
 
-**AF3 chirality correction** — Automatic detection and correction of stereochemistry violations in AlphaFold 3 outputs, directly addressing the 51% violation rate documented by Childs et al. (2025). This is a construction-vs-learning contrast: ChiralFold's 0% rate is guaranteed by explicit SMILES stereochemistry encoding, not by outperforming AF3 on a learned task. See the [Benchmarks](#benchmarks) section for full details.
+Cross-checks all 16 error structures against RCSB metadata + CCD InChI:
+
+```bash
+python benchmarks/experimental_structure_validation.py
+```
+
+[![D-residue experimental validation (Colab)](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/D_Residue_Experimental_Validation.ipynb)
+
+Results: `results/experimental_validation_report.json` (14/14 non-borderline cases pass automated criteria).
+
+**5M2K exclusion:** Vancomycin–Zn²⁺ glycopeptide (7-residue cyclic antibiotic, 1 standard amino acid)—not a globular protein. Documented in `results/5m2k_benchmark_exclusion.json`.
+
+**Lean 4 generalization:** Use [Harmonic Aristotle](https://aristotle.harmonic.fun/) with the Lean project from branch `cursor/aristotle-formal-proofs-9901` (see manuscript supplementary Methods for scope).
+
+**mmCIF expansion:** `python benchmarks/mmcif_d_residue_expansion.py` (requires `gemmi`).
+
+**Rockfish (UMD HPC):** `srun --partition=shared --cpus-per-task=4 --mem=8G --time=02:00:00 bash` then clone repo and run validation scripts above.
+
+**PDB-wide D-residue survey** — Verified 12,573 D-amino acid residues across 4,616 PDB files (>91% of all RCSB entries for each of the 18 standard D-amino acid CCD codes). Found 29 D-label/L-coordinate mismatches in 16 structures: 6 genuine stereochemistry errors (biology requires D, coordinates show L), 18 CCD code misassignments across 5 structures (L-molecule labeled with D-code), 3 polymer residue mislabels, and 2 borderlines. Errors occur in nine CCD codes; nine are confirmed clean at zero errors. All cross-referenced against biological context, primary literature, and automated RCSB/CCD validation. MolProbity does not flag any of these.
+
+**AF3 chirality correction** — Automatic stereochemistry post-processing for AlphaFold 3 outputs, directly addressing the 51% D-peptide violation rate documented by Childs et al. (2025). In the new AF3-mimetic resource benchmark (`results/af3_resource_benchmark.json`), ChiralFold detects 100% of synthetic inverted stereocenters, corrects 100% to the expected signed-volume class, leaves 0% residual violations, and runs the full correction pipeline across three systems in 0.0367 s (~37 ms). This is stereochemistry correction, not de novo fold prediction.
+
+## Web App (no install required)
+
+Launch a browser UI to **upload any PDB**, run a full stereochemistry audit, **download a chirality-corrected structure**, or **generate a mirror-image (L↔D)** file:
+
+```bash
+pip install "chiralfold[web]"
+chiralfold-web
+# open http://localhost:7860
+```
+
+Or with Docker:
+
+```bash
+docker compose up web
+```
+
+[![Open Web App locally](https://img.shields.io/badge/Launch-Web%20UI-0D9488?style=flat-square)](http://localhost:7860)
 
 ## Installation
 
@@ -36,6 +77,15 @@ Or install the latest from GitHub:
 pip install git+https://github.com/Tommaso-R-Marena/ChiralFold.git@v3.4.0
 ```
 
+### conda/mamba development environment
+
+```bash
+mamba env create -f environment.yml
+conda activate chiralfold-dev
+```
+
+`environment.yml` installs Python, RDKit, scientific dependencies from conda-forge, and an editable `pip install -e .[dev]`. ChiralFold is not currently published on conda-forge; `conda-recipe/meta.yaml` is provided for local builds and future conda-forge feedstock submission. After feedstock acceptance, the intended user command will be `conda install -c conda-forge chiralfold`.
+
 ### Docker
 
 ```bash
@@ -50,7 +100,14 @@ docker run --rm -v "$PWD:/data" ghcr.io/tommaso-r-marena/chiralfold:3.4.0 correc
 
 Build locally with `docker compose build` or `docker build -t chiralfold:3.4.0 .`.
 
-If `pip install rdkit` fails on your platform (rare on Linux/macOS, common on some Windows toolchains), use the conda fallback:
+### Dependencies
+
+- Python 3.9–3.12
+- RDKit (`rdkit>=2023.3,<2027`)
+- `numpy`, `scipy`, `pandas`, `matplotlib`, `seaborn`, `scikit-learn`
+- Development extras: `pytest`, `pytest-cov`, `ruff`, `pre-commit`, `mypy`
+
+If `pip install rdkit` fails on your platform, use the conda/mamba environment above or install RDKit from conda-forge first:
 
 ```bash
 conda install -c conda-forge rdkit
@@ -73,6 +130,15 @@ report['ramachandran']['pct_favored']   # Ramachandran favored (%)
 report['planarity']['pct_within_6deg']  # Peptide planarity (%)
 report['clashes']['clash_score']        # Steric clash score
 report['overall_score']                 # Composite 0-100
+```
+
+The packaged toy dataset is available at `chiralfold/data/examples/toy_ubiquitin_fragment.pdb` and is used by the [Toy Dataset Demo](demos/ChiralFold_Toy_Dataset_Demo.ipynb):
+
+```python
+from importlib import resources
+
+toy_pdb = resources.files("chiralfold").joinpath("data/examples/toy_ubiquitin_fragment.pdb")
+report = audit_pdb(str(toy_pdb))
 ```
 
 ### Correct AlphaFold 3 Chirality Errors
@@ -102,8 +168,8 @@ for r in results:
 from chiralfold import score_interface
 
 metrics = score_interface('receptor.pdb', 'ligand.pdb')
-print(f"BSA: {metrics['buried_surface_area']:.0f} Å²")
-print(f"H-bonds: {metrics['n_hbonds']}")
+print(f"BSA: {metrics['bsa']:.0f} Å²")                 # alias: buried_surface_area
+print(f"H-bonds: {metrics['hbonds']}")                 # alias: n_hbonds
 print(f"Interface score: {metrics['interface_score']:.1f}/100")
 ```
 
@@ -152,6 +218,40 @@ chiralfold enumerate AFWKELDR --top 10
 # Interface scoring
 chiralfold score-interface receptor.pdb ligand.pdb
 ```
+
+## Demos and submission package
+
+- [Quick Demo](demos/ChiralFold_Quick_Demo.ipynb): audit, D-peptide prediction, and mirror transform.
+- [Toy Dataset Demo](demos/ChiralFold_Toy_Dataset_Demo.ipynb): fast packaged-data smoke test for Colab.
+- [Expanded Ramachandran Benchmark](demos/Expanded_Ramachandran_Benchmark.ipynb): reproduce the n>=100 benchmark in Colab.
+- `Overleaf/ChiralFold_Bioinformatics_Overleaf.zip`: one-click Overleaf upload package for the Bioinformatics submission. Download the `Overleaf/` folder or zip, upload it to Overleaf as a new project, and set `chiralfold_bioinformatics.tex` as the main document.
+
+## Testing and CI
+
+Local checks mirror GitHub Actions:
+
+```bash
+ruff check chiralfold/
+pytest tests/ -m "not slow" --cov=chiralfold --cov-report=term-missing --cov-fail-under=62
+pre-commit run --all-files
+```
+
+CI runs Python 3.9, 3.10, 3.11, and 3.12, with Ruff plus non-slow pytest coverage. Slow/network benchmark jobs remain manual reproduction tasks documented in `benchmarks/README.md` and `results/REPRODUCIBILITY.md`.
+
+## Optional PyMOL Visualization
+
+ChiralFold can write PyMOL `.pml` scripts without requiring PyMOL as a package
+dependency:
+
+```python
+from chiralfold.viz import write_af3_correction_session
+
+write_af3_correction_session("af3_before.pdb", "af3_after.pdb", "af3_fix.pml")
+```
+
+See `scripts/pymol/README.md` for chirality audit, mirror comparison, and AF3
+correction templates. Install PyMOL separately as a system or conda package to
+open or render the generated scripts.
 
 ## ChiralFold vs MolProbity
 
@@ -340,7 +440,10 @@ ChiralFold/
 ├── results/                  # Generated outputs
 ├── demos/
 │   ├── ChiralFold_Quick_Demo.ipynb           # Colab demo notebook
+│   ├── ChiralFold_Toy_Dataset_Demo.ipynb     # Fast packaged toy-data demo
 │   └── Expanded_Ramachandran_Benchmark.ipynb # Reproduce the n>=100 benchmark in Colab
+├── Overleaf/
+│   └── ChiralFold_Bioinformatics_Overleaf.zip # One-click Bioinformatics upload
 ├── CONTRIBUTING.md           # How to contribute
 ├── pyproject.toml
 ├── LICENSE (MIT)
@@ -374,6 +477,11 @@ The complete verification dataset (12,574 rows, raw N/Cα/C/Cβ coordinates for 
 
 ## Version History
 
+### v3.4.0 (2026-06-22)
+
+- **Added:** Bioinformatics submission package, Docker support, Lean 4 no-go proofs, expanded Ramachandran benchmark, AF3-mimetic resource benchmark, PyMOL script helpers, and CI/release hardening.
+- **Improved:** README, Colab demos, conda environment/recipe scaffolding, pre-commit hooks, and package data inclusion for toy examples.
+
 ### v3.2.1 (2026-05-13)
 
 - **Fixed:** `validate_smiles_chirality()` and `validate_3d_chirality()` in `validator.py` were non-functional (violations counter was never incremented). The 0% violation rate reported in the paper is independently confirmed by 3D coordinate geometry benchmarks (`benchmarks/independent_d_residue_verification.py`, `benchmarks/childs2025_comparison.py`).
@@ -392,7 +500,7 @@ The complete verification dataset (12,574 rows, raw N/Cα/C/Cβ coordinates for 
   author    = {Tommaso R. Marena},
   year      = {2026},
   url       = {https://github.com/Tommaso-R-Marena/ChiralFold},
-  version   = {3.2.1},
+  version   = {3.4.0},
   note      = {PDB auditing calibrated against wwPDB/MolProbity,
                chirality-correct coordinate generation, AF3 correction
                pipeline, mirror-image binder design validated on MDM2

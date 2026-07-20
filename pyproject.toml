@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chiralfold"
-version = "3.4.0"
+version = "3.5.0"
 description = "Chirality-correct protein stereochemistry toolkit: PDB auditing, D-peptide construction, AF3 correction, and mirror-image design"
 readme = "README.md"
 license = {text = "MIT"}
@@ -38,15 +38,20 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+web = [
+    "gradio>=4.44,<6",
+]
 dev = [
     "pytest>=7.0",
     "pytest-cov",
+    "pre-commit",
     "ruff",
     "mypy",
 ]
 
 [project.scripts]
 chiralfold = "chiralfold.cli:main"
+chiralfold-web = "web.app:main"
 
 [project.urls]
 Homepage = "https://github.com/Tommaso-R-Marena/ChiralFold"
@@ -55,10 +60,10 @@ Issues = "https://github.com/Tommaso-R-Marena/ChiralFold/issues"
 Documentation = "https://github.com/Tommaso-R-Marena/ChiralFold/blob/master/README.md"
 
 [tool.setuptools.packages.find]
-include = ["chiralfold*"]
+include = ["chiralfold*", "web*"]
 
 [tool.setuptools.package-data]
-chiralfold = ["data/*.json", "data/*.py"]
+chiralfold = ["data/*.json", "data/*.py", "data/*.pdb", "data/examples/*"]
 
 [tool.setuptools.exclude-package-data]
 "*" = ["*.pyc", "__pycache__/*"]

@@ -1,0 +1,14 @@
+{
+  "pdb_id": "5M2K",
+  "title": "Crystal structure of vancomycin-Zn(II) complex",
+  "experimental_method": "X-RAY DIFFRACTION",
+  "resolution_angstrom": 1.0,
+  "molecule": "vancomycin",
+  "entity_sequence": "(MLU)(OMZ)N(GHP)(GHP)(OMY)(3FG)",
+  "non_standard_monomers": 5,
+  "standard_amino_acids_in_sequence": 1,
+  "benchmark_exclusion_reason": "Not a globular protein: 7-residue glycopeptide antibiotic (vancomycin\u2013Zn\u00b2\u207a) with 6/7 non-standard monomers; only ASN is a standard amino acid. Ramachandran calibration targets standard-protein backbones. wwPDB reports 100% Ramachandran outliers because the backbone geometry is cyclic/modified glycopeptide, not because ChiralFold disagrees on a meaningful protein benchmark point (ChiralFold = 0%).",
+  "is_protein_benchmark_entry": false,
+  "citation": "Zarkan et al., Sci Rep 7:4893 (2017); PMID 28687742",
+  "rcsb_url": "https://www.rcsb.org/structure/5M2K"
+}

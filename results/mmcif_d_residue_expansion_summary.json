@@ -1,0 +1,13 @@
+{
+  "n_structures": 5,
+  "n_d_residues": 12,
+  "n_errors": 5,
+  "error_pdbs": [
+    "1ABI",
+    "1BG0",
+    "1D7T",
+    "1HHZ",
+    "1KO0"
+  ],
+  "note": "mmCIF-native re-verification of known error structures and mmcif-flagged entries"
+}

@@ -8,6 +8,7 @@ Contributions are welcome. This guide covers common tasks.
 git clone https://github.com/Tommaso-R-Marena/ChiralFold.git
 cd ChiralFold
 pip install -e ".[dev]"
+pre-commit install
 ```
 
 ## Running tests
@@ -36,6 +37,11 @@ the v3.2.1 validator bug fix and must remain green on every PR.
 ```bash
 ruff check chiralfold/
 ```
+
+Optional but recommended: run the same checks automatically with
+`pre-commit run --all-files`. The repository hooks trim trailing whitespace,
+fix missing final newlines, validate YAML, reject accidental large-file adds,
+and run `ruff check`/`ruff format` on Python files.
 
 ## Reproducing the benchmarks
 
@@ -104,8 +110,9 @@ and commit the regenerated artefact.
 2. Create a feature branch: `git checkout -b feature/your-feature`
 3. Run tests: `pytest tests/ -v -m "not slow"`
 4. Run linter: `ruff check chiralfold/`
-5. Commit with a descriptive message
-6. Open a pull request against `master`
+5. Run hooks: `pre-commit run --all-files`
+6. Commit with a descriptive message
+7. Open a pull request against `master`
 
 ## Reporting issues
 

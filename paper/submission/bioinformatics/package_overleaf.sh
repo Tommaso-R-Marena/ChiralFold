@@ -4,6 +4,15 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 ZIP=ChiralFold_Bioinformatics_Overleaf.zip
+REPO_ROOT="$(cd ../../.. && pwd)"
+
+echo "==> Syncing bundled benchmark data..."
+if [ -f "$REPO_ROOT/results/d_residue_verification.csv" ]; then
+  cp "$REPO_ROOT/results/d_residue_verification.csv" data/d_residue_verification.csv
+fi
+if [ -f "$REPO_ROOT/results/af3_resource_benchmark.json" ]; then
+  cp "$REPO_ROOT/results/af3_resource_benchmark.json" data/af3_resource_benchmark.json
+fi
 
 echo "==> Regenerating figures (optional; uses bundled data/)..."
 if python3 figures/generate_figures.py 2>/dev/null; then
@@ -22,7 +31,9 @@ zip -r "$ZIP" \
   oup-abbrvnat.bst \
   figures/*.png \
   figures/generate_figures.py \
+  data/af3_resource_benchmark.json \
   data/ccd_code_coverage_summary.csv \
+  data/d_residue_verification.csv \
   data/error_table_verified.csv \
   data/molprobity_comparison.json \
   data/ramachandran_279struct_chainfix_comparison.csv \
