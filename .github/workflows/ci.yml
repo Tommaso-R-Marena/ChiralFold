@@ -81,12 +81,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build Docker image
+      - name: Build CLI Docker image
         run: docker build -t chiralfold:ci .
 
       - name: CLI help via container
         run: docker run --rm chiralfold:ci --help
 
-      - name: Web module present in image
+      - name: Build Web Docker image
+        run: docker build -f Dockerfile.web -t chiralfold-web:ci .
+
+      - name: Web module present in web image
         run: |
-          docker run --rm --entrypoint python chiralfold:ci -c "import web.app; print('web ok')"
+          docker run --rm --entrypoint python chiralfold-web:ci -c "import web.app; print('web ok')"

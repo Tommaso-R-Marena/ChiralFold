@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-pytest.importorskip("gradio")
+pytest.importorskip("gradio", exc_type=ImportError)
 
 from chiralfold.af3_correct import detect_chirality_violations
 from web.app import run_correct, run_mirror, run_audit

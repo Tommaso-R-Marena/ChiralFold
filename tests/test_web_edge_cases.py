@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-pytest.importorskip("gradio")
+pytest.importorskip("gradio", exc_type=ImportError)
 
 from web import app as web_app
 

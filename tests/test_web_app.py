@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-gradio = pytest.importorskip("gradio")
+gradio = pytest.importorskip("gradio", exc_type=ImportError)
 
 from web import app as web_app  # noqa: E402
 

@@ -40,6 +40,8 @@ dependencies = [
 [project.optional-dependencies]
 web = [
     "gradio>=4.44,<6",
+    # Gradio 4.x still imports HfFolder; pin until Gradio 5+ is default
+    "huggingface_hub>=0.23,<1.0",
 ]
 dev = [
     "pytest>=7.0",
