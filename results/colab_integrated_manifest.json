@@ -1,0 +1,247 @@
+{
+  "generated_at": "2026-07-20T15:22:38.781552+00:00",
+  "chiralfold_version": "3.5.0",
+  "dashboard_notebook": "demos/ChiralFold_Results_Dashboard.ipynb",
+  "interpretation": {
+    "paper_headline_ramachandran": "Manuscript headline: n=362 clean (363 minus 5M2K glycopeptide), Spearman \u03c1=0.521, Pearson r=0.853 on Ramachandran outlier percentage.",
+    "colab_replications": "Colab Expanded Ramachandran runs (n=155, n=285) are independent replications at different sample sizes/seeds \u2014 not interchangeable with the chain-ID-fixed n=362 benchmark.",
+    "d_residue_survey": "PDB-wide survey: 12,573 checkable D-residues in 4,616 files; 29 D-label/L-coordinate mismatches in 16 structures (0.23%).",
+    "experimental_validation": "14/14 non-borderline error structures pass automated RCSB+CCD criteria; 2 borderline (1KO0, 2H9E) require manual review.",
+    "af3_correction": "Synthetic AF3-mimetic benchmark: 100% detection and correction of inverted stereocenters; 0% residual violations; ~37 ms full pipeline.",
+    "aristotle_lean": "Harmonic Aristotle Lean 4 formalization in progress on branch cursor/aristotle-formal-proofs-9901 \u2014 not yet integrated here."
+  },
+  "headline_metrics": {
+    "d_residue_survey": {
+      "residues_checked": 12573,
+      "pdb_files": 4623,
+      "errors": 29,
+      "structures_with_errors": 16,
+      "error_rate_pct": 0.23
+    },
+    "ramachandran_paper": {
+      "n_clean": 362,
+      "spearman_rho": 0.520790373976862,
+      "pearson_r": 0.8534968743825598,
+      "excluded": [
+        {
+          "pdb_id": "5M2K",
+          "bin": "xray_ultra",
+          "wwpdb_rama_outlier_pct": 100.0
+        }
+      ]
+    },
+    "experimental_validation": {
+      "n_structures": 16,
+      "n_automated_pass": 14,
+      "n_borderline": 2
+    },
+    "af3_correction": {
+      "detection_recall_pct": 100.0,
+      "residual_violation_rate_pct": 0.0,
+      "full_pipeline_ms": 36.7
+    }
+  },
+  "runs": [
+    {
+      "id": "d_residue_survey",
+      "label": "PDB-wide D-residue survey",
+      "source": "repo",
+      "notebook": null,
+      "artifacts": [
+        "results/d_residue_verification.csv",
+        "results/d_residue_verification_summary.json",
+        "results/error_classification.json"
+      ],
+      "metrics": {
+        "residues": 12573,
+        "files": 4616,
+        "errors": 29,
+        "structures": 16
+      }
+    },
+    {
+      "id": "experimental_validation",
+      "label": "D-residue experimental validation",
+      "source": "colab+repo",
+      "notebook": "demos/D_Residue_Experimental_Validation.ipynb",
+      "artifacts": [
+        "results/experimental_validation_report.json",
+        "results/experimental_validation_summary.csv"
+      ],
+      "metrics": {
+        "n_automated_pass": 14,
+        "n_borderline": 2,
+        "n_structures": 16
+      }
+    },
+    {
+      "id": "ramachandran_chainfix",
+      "label": "Ramachandran era-representative (paper headline)",
+      "source": "repo",
+      "notebook": null,
+      "role": "manuscript_headline",
+      "artifacts": [
+        "results/ramachandran_279struct_chainfix_summary.json",
+        "results/ramachandran_279struct_chainfix_comparison.csv",
+        "results/ramachandran_279struct_chainfix_plot.png"
+      ],
+      "metrics": {
+        "n_success": 362,
+        "spearman_rho": 0.520790373976862,
+        "pearson_r": 0.8534968743825598
+      }
+    },
+    {
+      "id": "ramachandran_colab_100",
+      "label": "Ramachandran Colab replication (~100 target)",
+      "source": "colab",
+      "notebook": "demos/Expanded_Ramachandran_Benchmark.ipynb",
+      "role": "independent_replication",
+      "artifacts": [
+        "results/colab_runs/ramachandran_100struct/ramachandran_100struct_summary.json",
+        "results/colab_runs/ramachandran_100struct/ramachandran_100struct_comparison.csv",
+        "results/colab_runs/ramachandran_100struct/ramachandran_100struct_plot.png"
+      ],
+      "metrics": {
+        "n_success": 155,
+        "spearman_rho": 0.5683665299329677,
+        "pearson_r": 0.9400553382385274
+      }
+    },
+    {
+      "id": "ramachandran_colab_200",
+      "label": "Ramachandran Colab replication (~200 target)",
+      "source": "colab",
+      "notebook": "demos/Expanded_Ramachandran_Benchmark.ipynb",
+      "role": "independent_replication",
+      "artifacts": [
+        "results/colab_runs/ramachandran_200struct/ramachandran_200struct_summary.json"
+      ],
+      "metrics": {
+        "n_success": 285,
+        "spearman_rho": 0.442,
+        "pearson_r": 0.796
+      }
+    },
+    {
+      "id": "af3_resource_benchmark",
+      "label": "AF3 synthetic correction benchmark",
+      "source": "repo",
+      "notebook": "demos/ChiralFold_Toy_Dataset_Demo.ipynb",
+      "artifacts": [
+        "results/af3_resource_benchmark.json",
+        "results/af3_accuracy_comparison.png"
+      ],
+      "metrics": {
+        "n_systems": 3,
+        "detection_recall_pct": 100.0,
+        "residual_violation_rate_pct": 0.0
+      }
+    },
+    {
+      "id": "quick_demo",
+      "label": "ChiralFold Quick Demo (Colab)",
+      "source": "colab",
+      "notebook": "demos/ChiralFold_Quick_Demo.ipynb",
+      "metrics": {
+        "audit_pdb": "1LDF",
+        "audit_score": 83.6,
+        "chirality_violations": 0,
+        "conformers_converged": "45/45"
+      }
+    },
+    {
+      "id": "toy_demo",
+      "label": "ChiralFold Toy Dataset Demo (Colab)",
+      "source": "colab",
+      "notebook": "demos/ChiralFold_Toy_Dataset_Demo.ipynb",
+      "metrics": {
+        "af3_correction": "1 violation \u2192 0 after correct_af3_output"
+      }
+    }
+  ],
+  "error_taxonomy": {
+    "Stereochem": {
+      "structures": 6,
+      "errors": 6,
+      "pdbs": [
+        "1ABI",
+        "1D7T",
+        "1HHZ",
+        "1XT7",
+        "2RMI",
+        "2W76"
+      ],
+      "description": "Biology unambiguously requires D-stereochemistry; deposited C\u03b1 coordinates show L-configuration"
+    },
+    "CCD-Code": {
+      "structures": 5,
+      "errors": 18,
+      "pdbs": [
+        "1BG0",
+        "1OF6",
+        "1P52",
+        "2ATS",
+        "3RIT"
+      ],
+      "description": "Non-polymer ligand deposited with D-form CCD code; C\u03b1 coordinates correctly model L-form"
+    },
+    "Mislabel": {
+      "structures": 3,
+      "errors": 3,
+      "pdbs": [
+        "1MCB",
+        "1UHG",
+        "2AOU"
+      ],
+      "description": "Polymer residue in L-protein labeled with D-amino acid code; no biological justification"
+    },
+    "Borderline": {
+      "structures": 2,
+      "errors": 2,
+      "pdbs": [
+        "1KO0",
+        "2H9E"
+      ],
+      "description": "Signed volume below +1.0; near-zero or low magnitude; inconclusive without additional evidence"
+    }
+  },
+  "ramachandran_progression": [
+    {
+      "label": "Original (31 struct)",
+      "n": 31,
+      "spearman_rho": 0.49,
+      "source": "repo_historical"
+    },
+    {
+      "label": "Expanded (104 struct)",
+      "n": 104,
+      "spearman_rho": 0.564,
+      "source": "repo"
+    },
+    {
+      "label": "Colab (~100 target)",
+      "n": 155,
+      "spearman_rho": 0.5683665299329677,
+      "source": "colab"
+    },
+    {
+      "label": "Expanded (279 struct)",
+      "n": 279,
+      "spearman_rho": 0.478,
+      "source": "repo_historical"
+    },
+    {
+      "label": "Colab (~200 target)",
+      "n": 285,
+      "spearman_rho": 0.442,
+      "source": "colab"
+    },
+    {
+      "label": "Paper headline (362 clean)",
+      "n": 362,
+      "spearman_rho": 0.520790373976862,
+      "source": "repo_manuscript"
+    }
+  ]
+}

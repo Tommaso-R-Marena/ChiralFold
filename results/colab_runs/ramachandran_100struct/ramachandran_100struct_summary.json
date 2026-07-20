@@ -1,0 +1,47 @@
+{
+  "n_structures": 155,
+  "n_success": 155,
+  "n_planned": 159,
+  "n_failures": 4,
+  "failures": [
+    {
+      "pdb_id": "8A55",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "3DVZ",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "3DW5",
+      "bin": "xray_ultra",
+      "reason": "wwpdb_validation_unavailable"
+    },
+    {
+      "pdb_id": "8K85",
+      "bin": "xray_low",
+      "reason": "wwpdb_validation_unavailable"
+    }
+  ],
+  "spearman_rho": 0.5683665299329677,
+  "spearman_p_value": 1.2207124499528395e-14,
+  "spearman_p": 1.2207124499528395e-14,
+  "spearman_rho_ci95": [
+    0.42419142975988217,
+    0.6939276267648402
+  ],
+  "pearson_r": 0.9400553382385274,
+  "pearson_p_value": 2.2441799683357474e-73,
+  "pearson_p": 2.2441799683357474e-73,
+  "pearson_r_ci95": [
+    0.45369581715921264,
+    0.9814422488999488
+  ],
+  "bootstrap_n_iter": 2000,
+  "chiralfold_mean_outlier_pct": 0.569741935483871,
+  "wwpdb_mean_outlier_pct": 0.582,
+  "seed": 20260514,
+  "note": "Expanded benchmark via benchmarks/expand_ramachandran_benchmark.py. Candidates drawn by seeded era-representative sampling across the full RCSB result range per bin. See the *_comparison.csv for the per-structure data."
+}
