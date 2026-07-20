@@ -105,6 +105,7 @@ chiralfold-web   # http://localhost:7860
 | Ramachandran vs wwPDB (paper) | **n=362** · Spearman **ρ=0.52** · Pearson **r=0.853** | `results/ramachandran_279struct_chainfix_summary.json` |
 | AF3 synthetic correction | **100%** detection · **0%** residual · ~37 ms | `results/af3_resource_benchmark.json` |
 | Mirror clashscore | **Unchanged** (isometry — distances preserved) | `tests/test_clash_preservation.py` |
+| Lean 4 chirality no-go | Distance-only reps cannot recover signed orientation | [`formal/chirality_nogo/`](formal/chirality_nogo/) |
 
 MolProbity does **not** flag the D-residue annotation errors (L-only Cα check).
 
