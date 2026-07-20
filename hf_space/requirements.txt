@@ -1,0 +1,11 @@
+# ChiralFold Hugging Face Space dependencies
+# Installs the published GitHub package + Gradio UI stack.
+gradio>=4.44,<6
+numpy>=1.21,<3.0
+scipy>=1.9,<2.0
+pandas>=1.3,<3.0
+matplotlib>=3.5,<4.0
+seaborn>=0.11,<1.0
+scikit-learn>=1.0,<2.0
+rdkit>=2023.3,<2027
+chiralfold @ git+https://github.com/Tommaso-R-Marena/ChiralFold.git@master

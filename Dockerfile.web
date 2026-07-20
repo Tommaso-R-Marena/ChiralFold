@@ -1,0 +1,28 @@
+# ChiralFold Web — Gradio UI for PDB audit / correct / mirror
+FROM python:3.11-slim-bookworm
+
+LABEL org.opencontainers.image.source="https://github.com/Tommaso-R-Marena/ChiralFold"
+LABEL org.opencontainers.image.description="ChiralFold stereochemistry web UI"
+LABEL org.opencontainers.image.licenses="MIT"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libxrender1 \
+    libxext6 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY pyproject.toml setup.py README.md LICENSE ./
+COPY chiralfold/ chiralfold/
+COPY web/ web/
+COPY tests/fixtures/af3_correction/ tests/fixtures/af3_correction/
+
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir "rdkit>=2023.3,<2027" \
+    && pip install --no-cache-dir ".[web]"
+
+ENV CHIRALFOLD_WEB_HOST=0.0.0.0
+ENV CHIRALFOLD_WEB_PORT=7860
+EXPOSE 7860
+
+CMD ["chiralfold-web"]

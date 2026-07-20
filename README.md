@@ -3,7 +3,8 @@
 **Chirality-correct protein stereochemistry toolkit: PDB auditing, D-peptide construction, AF3 chirality correction, and mirror-image binder design.**
 
 ![Tests](https://github.com/Tommaso-R-Marena/ChiralFold/actions/workflows/ci.yml/badge.svg?branch=master)
-[![Open Web App](https://img.shields.io/badge/Web%20App-Launch%20ChiralFold-0D9488?style=for-the-badge&logo=googlechrome&logoColor=white)](#web-app-no-install-required)
+[![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-ChiralFold%20Web-0D9488?style=for-the-badge)](https://huggingface.co/spaces/The-Philosopher/ChiralFold)
+[![Open Web App](https://img.shields.io/badge/Web%20App-Launch%20locally-0D9488?style=for-the-badge&logo=googlechrome&logoColor=white)](#web-app-no-install-required)
 [![Quick Demo in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Quick_Demo.ipynb)
 [![Toy Dataset Demo in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Toy_Dataset_Demo.ipynb)
 [![Expanded Ramachandran Benchmark in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Expanded_Ramachandran_Benchmark.ipynb)
@@ -47,7 +48,13 @@ Results: `results/experimental_validation_report.json` (14/14 non-borderline cas
 
 ## Web App (no install required)
 
-Launch a browser UI to **upload any PDB**, run a full stereochemistry audit, **download a chirality-corrected structure**, or **generate a mirror-image (L↔D)** file:
+**Instant (recommended):** open the hosted app on Hugging Face —
+
+[![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-lg.svg)](https://huggingface.co/spaces/The-Philosopher/ChiralFold)
+
+Upload any PDB → **audit** stereochemistry → **download a chirality-corrected structure** or an exact **mirror-image (L↔D)** file. Also supports RCSB PDB-ID fetch and offline examples.
+
+### Run locally
 
 ```bash
 pip install "chiralfold[web]"
@@ -62,6 +69,8 @@ docker compose up web
 ```
 
 [![Open Web App locally](https://img.shields.io/badge/Launch-Web%20UI-0D9488?style=flat-square)](http://localhost:7860)
+
+Space source lives in [`hf_space/`](hf_space/) and deploys via `.github/workflows/deploy-hf-space.yml` (requires `HF_TOKEN` secret).
 
 ## Installation
 

@@ -1,0 +1,10 @@
+# Hugging Face Space
+#
+# Source for https://huggingface.co/spaces/The-Philosopher/ChiralFold
+#
+# Deploy:
+#   export HF_TOKEN=hf_...
+#   python scripts/deploy_hf_space.py
+#
+# Or merge to master with GitHub secret HF_TOKEN set —
+# `.github/workflows/deploy-hf-space.yml` syncs this folder automatically.

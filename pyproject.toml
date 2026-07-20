@@ -75,8 +75,8 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["chiralfold"]
-omit = ["tests/*", "benchmarks/*", "paper/*"]
+source = ["chiralfold", "web"]
+omit = ["tests/*", "benchmarks/*", "paper/*", "hf_space/*"]
 
 [tool.ruff]
 line-length = 100
