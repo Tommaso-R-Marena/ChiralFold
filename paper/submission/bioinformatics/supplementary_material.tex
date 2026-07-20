@@ -36,6 +36,9 @@ The signed-volume C$\alpha$ classifier does not require standard protein geometr
 \subsection{Five-minute offline reproduction}
 Reviewers can recompute the 12{,}573-residue / 29-error survey without network access after clone: \texttt{python benchmarks/reproduce\_d\_residue\_errors.py} (numpy only; Colab: \texttt{demos/Reproduce\_PDB\_D\_Residue\_Errors\_5min.ipynb}). Unusual cases and clash-safety: \texttt{demos/Demo\_Unusual\_Cases\_Clash\_Safety.ipynb}.
 
+\subsection{mmCIF re-verification of known errors}
+The primary survey used legacy PDB coordinate files and therefore excluded mmCIF-only deposits ($\sim$245 for DPN/DAS/DAL alone). To close the format question for the reported error set, we re-parsed all 16 known-error structures from native RCSB mmCIF (\texttt{benchmarks/mmcif\_d\_residue\_expansion.py}; Colab: \texttt{demos/Reproduce\_mmCIF\_D\_Residue\_Survey.ipynb}). The mmCIF path recovers the same 29 D-label/L-coordinate mismatches in the same 16 structures (\texttt{results/mmcif\_d\_residue\_expansion\_summary.json}). A full re-survey of the mmCIF-only universe is not claimed here.
+
 \subsection{AF3-mimetic correction resource benchmark}
 Because AF3 outputs are not redistributed or rerun, we benchmarked synthetic AF3-mimetic Childs-system peptide PDBs with the published 51\% AF3 D-peptide chirality violation rate as the external reference. Across DP19, DP9, and DP12 (39 auditable residues; 20 synthetic inverted stereocenters), ChiralFold detected 100\% of inverted stereocenters, corrected 100\% to the expected signed-volume class, and left 0\% residual violations. The full \texttt{correct\_af3\_output} pipeline took 0.0367~s total across the three systems (mean 0.0122~s/system) with peak traced allocations below 0.14~MB; process RSS was dominated by the already-loaded Python/RDKit runtime. Data: \texttt{results/af3\_resource\_benchmark.json}.
 

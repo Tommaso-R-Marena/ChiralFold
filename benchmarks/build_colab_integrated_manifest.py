@@ -27,7 +27,7 @@ def build_manifest() -> dict:
 
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "chiralfold_version": "3.5.0",
+        "chiralfold_version": "3.5.1",
         "dashboard_notebook": "demos/ChiralFold_Results_Dashboard.ipynb",
         "interpretation": {
             "paper_headline_ramachandran": (
@@ -40,8 +40,11 @@ def build_manifest() -> dict:
                 "with the chain-ID-fixed n=362 benchmark."
             ),
             "d_residue_survey": (
-                "PDB-wide survey: 12,573 checkable D-residues in 4,616 files; "
-                "29 D-label/L-coordinate mismatches in 16 structures (0.23%)."
+                f"PDB-wide survey: {d_survey['checkable_residues']:,} checkable D-residues "
+                f"in {d_survey.get('pdb_files_scanned', 4623):,} files; "
+                f"{d_survey['l_error']} D-label/L-coordinate mismatches in "
+                f"{len(d_survey.get('errors_by_structure', {}))} structures "
+                f"({d_survey['error_rate_pct']}%)."
             ),
             "experimental_validation": (
                 "14/14 non-borderline error structures pass automated RCSB+CCD criteria; "
@@ -55,6 +58,12 @@ def build_manifest() -> dict:
                 "Machine-checked Lean 4 chirality no-go theorems in "
                 "formal/chirality_nogo/ (Aristotle / Harmonic): distance-only "
                 "representations cannot recover signed orientation; lake build clean."
+            ),
+            "mmcif_reverification": (
+                "Native mmCIF re-verification of all 16 known-error structures recovers "
+                "the same 29 mismatches (demos/Reproduce_mmCIF_D_Residue_Survey.ipynb). "
+                "Full mmCIF-only universe (~245+ deposits for primary CCD codes) remains "
+                "out of scope for the legacy-PDB survey."
             ),
         },
         "headline_metrics": {
@@ -98,9 +107,23 @@ def build_manifest() -> dict:
                 ],
                 "metrics": {
                     "residues": d_survey["checkable_residues"],
-                    "files": 4616,
+                    "files": d_survey.get("pdb_files_scanned", 4623),
                     "errors": d_survey["l_error"],
                     "structures": 16,
+                },
+            },
+            {
+                "id": "mmcif_reverification",
+                "label": "mmCIF re-verification of known errors",
+                "source": "repo+colab",
+                "notebook": "demos/Reproduce_mmCIF_D_Residue_Survey.ipynb",
+                "artifacts": [
+                    "results/mmcif_d_residue_expansion.csv",
+                    "results/mmcif_d_residue_expansion_summary.json",
+                ],
+                "metrics": {
+                    "structures": 16,
+                    "errors": 29,
                 },
             },
             {

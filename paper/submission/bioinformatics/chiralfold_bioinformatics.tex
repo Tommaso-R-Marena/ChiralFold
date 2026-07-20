@@ -20,8 +20,8 @@
 
 \abstract{%
 \textbf{Motivation:} D-amino acids are essential in therapeutics and natural products, yet standard validators do not audit D-residue stereochemistry in deposited structures, and diffusion predictors violate D-chirality at high rates.\\
-\textbf{Results:} We audited 12{,}573 D-residues in 4{,}616 PDB files and found 29 D-label/L-coordinate mismatches (0.23\%) in 16 structures not covered by MolProbity's L-residue C$\alpha$ check. ChiralFold, calibrated on 362 structures (Ramachandran Spearman $\rho=0.52$ vs wwPDB), detects errors via signed C$\alpha$ volume; Lean~4 proofs show chirality sign cannot factor through pairwise distances alone.\\
-\textbf{Availability:} \url{https://github.com/Tommaso-R-Marena/ChiralFold}; \texttt{pip install chiralfold}; Python~3.9+; Linux/macOS/Windows (RDKit required).\\
+\textbf{Results:} We audited 12{,}573 D-residues in 4{,}623 PDB files and found 29 D-label/L-coordinate mismatches (0.23\%) in 16 structures not covered by MolProbity's L-residue C$\alpha$ check. ChiralFold, calibrated on 362 structures (Ramachandran Spearman $\rho=0.52$ vs wwPDB), detects errors via signed C$\alpha$ volume; Lean~4 proofs show chirality sign cannot factor through pairwise distances alone.\\
+\textbf{Availability:} \url{https://github.com/Tommaso-R-Marena/ChiralFold}; \texttt{pip install chiralfold} (v3.5.1); Python~3.9+; Linux/macOS/Windows (RDKit required); web UI at \url{https://huggingface.co/spaces/The-Philosopher/ChiralFold-App}.\\
 \textbf{Contact:} \href{marena@cua.edu}{marena@cua.edu}\\
 \textbf{Supplementary information:} Supplementary data and extended analyses are available at Bioinformatics online and at \url{https://github.com/Tommaso-R-Marena/ChiralFold/tree/master/paper/submission/bioinformatics}.}
 
@@ -33,7 +33,7 @@
 
 D-amino acids resist proteolysis and underpin mirror-image therapeutics, NRPS natural products, and bacterial cell-wall chemistry. AlphaFold~3 (AF3) produces a 51\% per-residue chirality violation rate on D-peptides \citep{childs2025}, and MolProbity---the standard PDB validator \citep{chen2010}---does not extend C$\alpha$ chirality checks to D-labeled residues. Deposited D-amino acid coordinates may therefore carry annotation errors that persist undetected.
 
-We present ChiralFold, a pip-installable stereochemistry toolkit, and the first systematic PDB-wide audit of D-residue chirality. We classify error modes, benchmark the auditor against wwPDB/MolProbity, formalize a no-go theorem for distance-based chirality in Lean~4, and release reproducible code (v3.4.0).
+We present ChiralFold, a pip-installable stereochemistry toolkit, and the first systematic PDB-wide audit of D-residue chirality. We classify error modes, benchmark the auditor against wwPDB/MolProbity, formalize a no-go theorem for distance-based chirality in Lean~4, and release reproducible code (v3.5.1).
 
 \section{Materials and methods}
 
@@ -43,7 +43,7 @@ Chirality at C$\alpha$ uses the signed volume of the tetrahedron formed by backb
 \begin{equation}
 V = (\mathbf{N}-\mathbf{C}_\alpha)\cdot\left[(\mathbf{C}-\mathbf{C}_\alpha)\times(\mathbf{C}_\beta-\mathbf{C}_\alpha)\right].
 \end{equation}
-For correctly deposited D-residues, $V<0$ by CIP convention; $V>0$ at a D-label indicates L-coordinates. The PDB survey used an independent numpy-only script (no ChiralFold imports). mmCIF-only entries ($n=245$) were excluded from legacy-PDB coverage statistics.
+For correctly deposited D-residues, $V<0$ by CIP convention; $V>0$ at a D-label indicates L-coordinates. The PDB survey used an independent numpy-only script (no ChiralFold imports). mmCIF-only entries ($\sim$245 for the primary CCD codes DPN/DAS/DAL alone) were excluded from legacy-PDB coverage statistics; all 16 known-error structures were subsequently re-verified in native mmCIF and recovered the same 29 mismatches.
 
 \subsection{ChiralFold auditor}
 
@@ -86,15 +86,15 @@ Lean~4 proofs establish that any chirality readout factoring only through pairwi
 
 The signed C$\alpha$ volume distinguishes stereochemistry errors, CCD misassignments, and mislabels without biological context. The 1HHZ case (0.99~\AA\ resolution, D-Ala with $V=+2.70$) shows errors are labeling failures, not density limitations. CCD misassignments are fixable by comparing deposited coordinates to the InChI \texttt{/m} flag at deposition \citep{shao2015,outcome2016}.
 
-ChiralFold is a stereochemistry post-processor, not a de novo folder: use AF3 or ESMFold for folding, then audit or correct with ChiralFold. Limitations include mmCIF-only exclusions (245 structures; native mmCIF re-survey in progress), chi1-only rotamer scoring, two borderline cases with signed volume $<1.0$~\AA$^3$, and no experimental binding validation of mirror-designed peptides.
+ChiralFold is a stereochemistry post-processor, not a de novo folder: use AF3 or ESMFold for folding, then audit or correct with ChiralFold. Limitations include exclusion of mmCIF-only deposits from the primary legacy-PDB survey ($\sim$245 for DPN/DAS/DAL; known errors re-verified via mmCIF), chi1-only rotamer scoring, two borderline cases with signed volume $<1.0$~\AA$^3$, and no experimental binding validation of mirror-designed peptides.
 
 \section{Conclusion}
 
-ChiralFold identifies D-residue annotation errors invisible to existing pipelines and motivates a one-line deposition check: compare signed C$\alpha$ volume to the selected CCD stereochemistry flag. Code, data, formal proofs, and reproduction scripts are publicly available (v3.4.0).
+ChiralFold identifies D-residue annotation errors invisible to existing pipelines and motivates a one-line deposition check: compare signed C$\alpha$ volume to the selected CCD stereochemistry flag. Code, data, formal proofs, and reproduction scripts are publicly available (v3.5.1).
 
 \section*{Data availability}
 
-Verification data: \url{https://github.com/Tommaso-R-Marena/ChiralFold/blob/master/results/d_residue_verification.csv}. Experimental validation: \texttt{results/experimental\_validation\_report.json}. Benchmark outputs: \texttt{results/ramachandran\_279struct\_chainfix\_*}. Software: PyPI \texttt{chiralfold}, Docker \texttt{ghcr.io/tommaso-r-marena/chiralfold:3.4.0}, GitHub release v3.4.0.
+Verification data: \url{https://github.com/Tommaso-R-Marena/ChiralFold/blob/master/results/d_residue_verification.csv}. Experimental validation: \texttt{results/experimental\_validation\_report.json}. mmCIF re-verification: \texttt{results/mmcif\_d\_residue\_expansion\_*}. Benchmark outputs: \texttt{results/ramachandran\_279struct\_chainfix\_*}. Software: PyPI \texttt{chiralfold} (v3.5.1), Docker \texttt{ghcr.io/tommaso-r-marena/chiralfold:3.5.1}, GitHub release v3.5.1, Hugging Face Space \url{https://huggingface.co/spaces/The-Philosopher/ChiralFold-App}.
 
 \section*{Funding}
 

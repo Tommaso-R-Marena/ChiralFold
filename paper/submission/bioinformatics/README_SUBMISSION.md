@@ -55,7 +55,7 @@ Outputs:
 - [ ] **Title:** ChiralFold: systematic detection of D-amino acid stereochemistry errors in the Protein Data Bank
 - [ ] **Abstract:** copy from `chiralfold_bioinformatics.tex` (structured, ≤150 words)
 - [ ] **Keywords:** D-amino acid; chirality; Protein Data Bank; structure validation; AlphaFold 3; stereochemistry
-- [ ] **Data availability:** GitHub https://github.com/Tommaso-R-Marena/ChiralFold (v3.4.0); PyPI `chiralfold`; Zenodo DOI (optional, recommended)
+- [ ] **Data availability:** GitHub https://github.com/Tommaso-R-Marena/ChiralFold (v3.5.1); PyPI `chiralfold`; Zenodo DOI (optional, recommended)
 
 ### Author information (you must complete in portal)
 - [ ] ORCID for Tommaso R. Marena
@@ -67,7 +67,7 @@ Outputs:
 ### Software availability (Bioinformatics requirement)
 - [ ] URL works: https://github.com/Tommaso-R-Marena/ChiralFold
 - [ ] PyPI: https://pypi.org/project/chiralfold/
-- [ ] Version cited: 3.4.0
+- [ ] Version cited: 3.5.1
 - [ ] License: MIT
 - [ ] Test data: `results/d_residue_verification.csv`, `tests/fixtures/`
 - [ ] Documentation: README.md
@@ -85,6 +85,6 @@ Bioinformatics Original Papers are limited to **7 printed pages**. The condensed
 
 ## After acceptance
 
-- Deposit code DOI on Zenodo from GitHub release v3.4.0
+- Deposit code DOI on Zenodo from GitHub release v3.5.1
 - Update manuscript with Bioinformatics DOI
 - Add citation to README

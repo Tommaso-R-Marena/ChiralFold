@@ -1,14 +1,15 @@
 {
-  "generated_at": "2026-07-20T15:22:38.781552+00:00",
-  "chiralfold_version": "3.5.0",
+  "generated_at": "2026-07-20T18:05:55.571194+00:00",
+  "chiralfold_version": "3.5.1",
   "dashboard_notebook": "demos/ChiralFold_Results_Dashboard.ipynb",
   "interpretation": {
     "paper_headline_ramachandran": "Manuscript headline: n=362 clean (363 minus 5M2K glycopeptide), Spearman \u03c1=0.521, Pearson r=0.853 on Ramachandran outlier percentage.",
     "colab_replications": "Colab Expanded Ramachandran runs (n=155, n=285) are independent replications at different sample sizes/seeds \u2014 not interchangeable with the chain-ID-fixed n=362 benchmark.",
-    "d_residue_survey": "PDB-wide survey: 12,573 checkable D-residues in 4,616 files; 29 D-label/L-coordinate mismatches in 16 structures (0.23%).",
+    "d_residue_survey": "PDB-wide survey: 12,573 checkable D-residues in 4,623 files; 29 D-label/L-coordinate mismatches in 16 structures (0.23%).",
     "experimental_validation": "14/14 non-borderline error structures pass automated RCSB+CCD criteria; 2 borderline (1KO0, 2H9E) require manual review.",
     "af3_correction": "Synthetic AF3-mimetic benchmark: 100% detection and correction of inverted stereocenters; 0% residual violations; ~37 ms full pipeline.",
-    "aristotle_lean": "Harmonic Aristotle Lean 4 formalization in progress on branch cursor/aristotle-formal-proofs-9901 \u2014 not yet integrated here."
+    "aristotle_lean": "Machine-checked Lean 4 chirality no-go theorems in formal/chirality_nogo/ (Aristotle / Harmonic): distance-only representations cannot recover signed orientation; lake build clean.",
+    "mmcif_reverification": "Native mmCIF re-verification of all 16 known-error structures recovers the same 29 mismatches (demos/Reproduce_mmCIF_D_Residue_Survey.ipynb). Full mmCIF-only universe (~245+ deposits for primary CCD codes) remains out of scope for the legacy-PDB survey."
   },
   "headline_metrics": {
     "d_residue_survey": {
@@ -54,9 +55,23 @@
       ],
       "metrics": {
         "residues": 12573,
-        "files": 4616,
+        "files": 4623,
         "errors": 29,
         "structures": 16
+      }
+    },
+    {
+      "id": "mmcif_reverification",
+      "label": "mmCIF re-verification of known errors",
+      "source": "repo+colab",
+      "notebook": "demos/Reproduce_mmCIF_D_Residue_Survey.ipynb",
+      "artifacts": [
+        "results/mmcif_d_residue_expansion.csv",
+        "results/mmcif_d_residue_expansion_summary.json"
+      ],
+      "metrics": {
+        "structures": 16,
+        "errors": 29
       }
     },
     {
