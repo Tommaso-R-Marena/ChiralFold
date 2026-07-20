@@ -122,3 +122,15 @@ be removed by `.gitignore`:
 | `3IWY.pdb` | MDM2:dPMI-γ complex (PDB original) |
 | `3IWY_D_mirror.pdb` | Mirror-image binder candidate (1YCR derivative) |
 | `5HHD_D_mirror.pdb` | 5HHD mirror-image reference |
+
+
+## Coordinate caches (not in git)
+
+Raw PDB downloads under `d_survey/` and `pdb50/` are **not** tracked (too large).
+Re-download with `benchmarks/d_residue_survey.py` / `benchmarks/pdb_50_set.py` if needed.
+Frozen verification outputs (`d_residue_verification.csv`, summaries) remain the publication source of truth.
+mmCIF downloads cache under `mmcif_cache/` (gitignored); regenerate with:
+
+```bash
+python benchmarks/mmcif_d_residue_expansion.py --mode both
+```

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-20T18:05:55.571194+00:00",
+  "generated_at": "2026-07-20T18:25:22.783113+00:00",
   "chiralfold_version": "3.5.1",
   "dashboard_notebook": "demos/ChiralFold_Results_Dashboard.ipynb",
   "interpretation": {
@@ -9,7 +9,7 @@
     "experimental_validation": "14/14 non-borderline error structures pass automated RCSB+CCD criteria; 2 borderline (1KO0, 2H9E) require manual review.",
     "af3_correction": "Synthetic AF3-mimetic benchmark: 100% detection and correction of inverted stereocenters; 0% residual violations; ~37 ms full pipeline.",
     "aristotle_lean": "Machine-checked Lean 4 chirality no-go theorems in formal/chirality_nogo/ (Aristotle / Harmonic): distance-only representations cannot recover signed orientation; lake build clean.",
-    "mmcif_reverification": "Native mmCIF re-verification of all 16 known-error structures recovers the same 29 mismatches (demos/Reproduce_mmCIF_D_Residue_Survey.ipynb). Full mmCIF-only universe (~245+ deposits for primary CCD codes) remains out of scope for the legacy-PDB survey."
+    "mmcif_reverification": "Native mmCIF: known-error cohort recovers 29/29 mismatches; live mmCIF-only universe (79 entries) adds 1 new error(s) ['9BC4'] (demos/Reproduce_mmCIF_D_Residue_Survey.ipynb)."
   },
   "headline_metrics": {
     "d_residue_survey": {
@@ -18,6 +18,15 @@
       "errors": 29,
       "structures_with_errors": 16,
       "error_rate_pct": 0.23
+    },
+    "mmcif_universe": {
+      "n_mmcif_only": 79,
+      "n_universe_entries": 1324,
+      "known_errors_recovered": 29,
+      "universe_new_errors": 1,
+      "universe_error_pdbs": [
+        "9BC4"
+      ]
     },
     "ramachandran_paper": {
       "n_clean": 362,
@@ -62,16 +71,22 @@
     },
     {
       "id": "mmcif_reverification",
-      "label": "mmCIF re-verification of known errors",
+      "label": "mmCIF known-error re-verification + universe survey",
       "source": "repo+colab",
       "notebook": "demos/Reproduce_mmCIF_D_Residue_Survey.ipynb",
       "artifacts": [
         "results/mmcif_d_residue_expansion.csv",
-        "results/mmcif_d_residue_expansion_summary.json"
+        "results/mmcif_d_residue_expansion_summary.json",
+        "results/mmcif_only_universe_ids.json"
       ],
       "metrics": {
-        "structures": 16,
-        "errors": 29
+        "known_structures": 16,
+        "known_errors": 29,
+        "universe_structures": 79,
+        "universe_errors": 1,
+        "universe_error_pdbs": [
+          "9BC4"
+        ]
       }
     },
     {
