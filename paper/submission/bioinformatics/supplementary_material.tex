@@ -24,6 +24,9 @@ Automated cross-check of all 16 error structures: \texttt{benchmarks/experimenta
 \subsection{Mirror-image, AF3 correction, and enumeration}
 L$\leftrightarrow$D reflection: $(x,y,z)\to(-x,y,z)$. AF3 correction reflects violating C$\alpha$ across the N--C--C$\beta$ plane. Diastereomer enumeration scores $2^k$ L/D patterns. Interface scoring uses BSA, H-bonds, and salt bridges.
 
+\subsection{AF3-mimetic correction resource benchmark}
+Because AF3 outputs are not redistributed or rerun, we benchmarked synthetic AF3-mimetic Childs-system peptide PDBs with the published 51\% AF3 D-peptide chirality violation rate as the external reference. Across DP19, DP9, and DP12 (39 auditable residues; 20 synthetic inverted stereocenters), ChiralFold detected 100\% of inverted stereocenters, corrected 100\% to the expected signed-volume class, and left 0\% residual violations. The full \texttt{correct\_af3\_output} pipeline took 0.0367~s total across the three systems (mean 0.0122~s/system) with peak traced allocations below 0.14~MB; process RSS was dominated by the already-loaded Python/RDKit runtime. Data: \texttt{results/af3\_resource\_benchmark.json}.
+
 \subsection{Lean~4 formalization}
 Proofs in \texttt{formal/chirality\_nogo/} (Lean 4.28.0, Mathlib). Build: \texttt{lake build}.
 
@@ -65,6 +68,12 @@ Theorem & File & Consequence \\
 \centering
 \includegraphics[width=0.9\textwidth]{fig4_bland_altman.png}
 \caption{Bland--Altman plot, 31-structure pilot benchmark.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{fig7_af3_resource_benchmark.png}
+\caption{Synthetic AF3-mimetic resource benchmark. ChiralFold correction is a fast stereochemistry post-processing step: 100\% detection/correction recall, 0\% residual violations, and 0.0367~s total local pipeline time across three Childs-system peptides.}
 \end{figure}
 
 \section{Extended statistics}

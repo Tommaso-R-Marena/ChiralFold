@@ -22,7 +22,6 @@ Metrics computed
 from __future__ import annotations
 
 import os
-from collections import defaultdict
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
@@ -220,8 +219,8 @@ def _compute_bsa(pairs: List[Tuple[_Atom, _Atom, float]]) -> float:
     Counts unique receptor and ligand atoms at the interface and
     multiplies by SA_PER_ATOM per atom.
     """
-    rec_atoms_at_iface = {id(r) for r, l, d in pairs}
-    lig_atoms_at_iface = {id(l) for r, l, d in pairs}
+    rec_atoms_at_iface = {id(rec) for rec, lig, dist in pairs}
+    lig_atoms_at_iface = {id(lig) for rec, lig, dist in pairs}
     n_interface_atoms  = len(rec_atoms_at_iface) + len(lig_atoms_at_iface)
     return n_interface_atoms * SA_PER_ATOM
 
@@ -244,9 +243,9 @@ def _compute_shape_complementarity(
         return {"n_clashing": 0, "n_complementary": 0, "n_no_contact": 0,
                 "sc_fraction": 0.0}
 
-    n_clash  = sum(1 for r, l, d in pairs if d < CLASH_CUTOFF)
-    n_comp   = sum(1 for r, l, d in pairs if CLASH_CUTOFF <= d <= COMPLEMENTARY_MAX)
-    n_no     = sum(1 for r, l, d in pairs if d > COMPLEMENTARY_MAX)
+    n_clash  = sum(1 for rec, lig, dist in pairs if dist < CLASH_CUTOFF)
+    n_comp   = sum(1 for rec, lig, dist in pairs if CLASH_CUTOFF <= dist <= COMPLEMENTARY_MAX)
+    n_no     = sum(1 for rec, lig, dist in pairs if dist > COMPLEMENTARY_MAX)
     total    = len(pairs)
     sc_frac  = n_comp / total if total > 0 else 0.0
 
@@ -346,8 +345,8 @@ def _interface_residues(
 
     Returns dicts of receptor and ligand interface residue identifiers.
     """
-    rec_iface_atoms = {id(r) for r, l, d in pairs}
-    lig_iface_atoms = {id(l) for r, l, d in pairs}
+    rec_iface_atoms = {id(rec) for rec, lig, dist in pairs}
+    lig_iface_atoms = {id(lig) for rec, lig, dist in pairs}
 
     rec_residues = sorted({
         (a.chain, a.resseq, a.resname)
@@ -465,8 +464,10 @@ def score_interface(
 
     return {
         "bsa":                    round(bsa, 1),
+        "buried_surface_area":    round(bsa, 1),  # backward-compatible alias
         "shape_complementarity":  sc,
         "hbonds":                 hbonds,
+        "n_hbonds":               hbonds,  # backward-compatible alias
         "salt_bridges":           salt_bridges,
         "hydrophobic_contacts":   hydrophobic,
         "interface_residues":     iface_residues,

@@ -24,11 +24,9 @@ Usage::
 """
 
 import os
-import math
 import glob
 import warnings
-import numpy as np
-from typing import Optional, Dict, Any, List, Tuple
+from typing import Dict, Any, List, Tuple
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -276,7 +274,7 @@ def thread_sequence(
     serial  = 1
 
     with open(output_pdb, 'w') as fh:
-        fh.write(f"REMARK  Threaded by ChiralFold threading.py\n")
+        fh.write("REMARK  Threaded by ChiralFold threading.py\n")
         fh.write(f"REMARK  Template: {os.path.basename(template_pdb)} chain {template_chain}\n")
         fh.write(f"REMARK  Target:   {target_seq}\n")
         fh.write(f"REMARK  Chirality: {chirality}\n")

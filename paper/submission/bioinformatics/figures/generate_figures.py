@@ -319,6 +319,63 @@ def figure6_ramachandran_expanded() -> str:
     return out
 
 
+def figure7_af3_resource_benchmark() -> str:
+    with open(os.path.join(DATA, "af3_resource_benchmark.json")) as fp:
+        data = json.load(fp)
+
+    ops = data["operations"]
+    pipeline_ms = ops["full_correct_af3_output_pipeline"]["total_wall_time_s"] * 1000.0
+    residual = data["post_correction_residual_violation_rate_pct"]
+    synthetic = data["synthetic_input_violation_rate_pct"]
+    recall = data["aggregate_detection_recall_pct"]
+    corrected = data["aggregate_corrected_to_expected_signed_volume_pct"]
+    af3_ref = data["af3_reference"]["published_violation_rate_pct"]
+
+    fig, (ax_acc, ax_time) = plt.subplots(1, 2, figsize=(10, 4.2))
+
+    acc_labels = ["Detection\nrecall", "Corrected to\nexpected sign", "Residual\nviolations"]
+    acc_vals = [recall, corrected, residual]
+    acc_colors = [PAL["clean"], PAL["clean"], PAL["muted"]]
+    bars = ax_acc.bar(acc_labels, acc_vals, color=acc_colors, edgecolor=PAL["navy"], linewidth=0.6)
+    ax_acc.set_ylim(0, 110)
+    ax_acc.set_ylabel("Percent")
+    ax_acc.set_title("AF3-mimetic correction accuracy")
+    for bar, value in zip(bars, acc_vals):
+        ax_acc.text(
+            bar.get_x() + bar.get_width() / 2,
+            min(value + 3, 104),
+            f"{value:.0f}%",
+            ha="center",
+            va="bottom",
+            fontsize=9,
+            color=PAL["navy"],
+        )
+    ax_acc.spines["top"].set_visible(False)
+    ax_acc.spines["right"].set_visible(False)
+
+    time_labels = ["Synthetic\ninput", "Published\nAF3 rate", "Post-\ncorrection", "Pipeline\nwall time"]
+    time_vals = [synthetic, af3_ref, residual, pipeline_ms]
+    time_colors = [PAL["amber"], PAL["error_prone"], PAL["clean"], PAL["xray"]]
+    ax_time.bar(time_labels, time_vals, color=time_colors, edgecolor=PAL["navy"], linewidth=0.6)
+    ax_time.set_ylabel("Percent or milliseconds")
+    ax_time.set_title(f"Correction removes violations in {pipeline_ms:.1f} ms")
+    for i, value in enumerate(time_vals):
+        suffix = " ms" if i == 3 else "%"
+        ax_time.text(i, value + 2.5, f"{value:.1f}{suffix}", ha="center", fontsize=8)
+    ax_time.spines["top"].set_visible(False)
+    ax_time.spines["right"].set_visible(False)
+
+    fig.suptitle(
+        "AF3-mimetic stereochemistry post-processing: 3 systems, 39 auditable residues",
+        fontsize=11,
+    )
+    fig.tight_layout()
+    out = os.path.join(HERE, "fig7_af3_resource_benchmark.png")
+    fig.savefig(out, dpi=180)
+    plt.close(fig)
+    return out
+
+
 def main() -> int:
     ccd_rows = _read_ccd_coverage()
     err_rows = _read_error_table()
@@ -331,6 +388,7 @@ def main() -> int:
         figure4_bland_altman(),
         figure5_ccd_heatmap(ccd_rows, err_rows),
         figure6_ramachandran_expanded(),
+        figure7_af3_resource_benchmark(),
     ]
     for path in outputs:
         print(f"wrote {path}")

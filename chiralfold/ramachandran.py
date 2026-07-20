@@ -21,8 +21,7 @@ References:
 from __future__ import annotations
 
 import math
-import warnings
-from typing import List, Optional, Sequence, Tuple
+from typing import List, Tuple
 
 import numpy as np
 
@@ -368,7 +367,6 @@ def filter_conformers_by_ramachandran(mol, residues, conf_ids,
         List of (conf_id, pct_favored) tuples that pass the threshold,
         sorted by quality (best first).
     """
-    from .geometry import find_peptide_bonds
 
     def _compute_dihedral(p1, p2, p3, p4):
         b1, b2, b3 = p2 - p1, p3 - p2, p4 - p3

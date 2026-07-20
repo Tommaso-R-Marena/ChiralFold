@@ -20,8 +20,6 @@ Mathematical basis:
 
 import os
 import numpy as np
-from copy import deepcopy
-from typing import Optional
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -211,12 +209,12 @@ def mirror_pdb(input_path, output_path=None, chains=None, axis='x',
     # Write output PDB
     if output_path is not None:
         with open(output_path, 'w') as f:
-            f.write(f"REMARK   ChiralFold mirror-image transformation\n")
+            f.write("REMARK   ChiralFold mirror-image transformation\n")
             f.write(f"REMARK   Source: {os.path.basename(input_path)}\n")
             f.write(f"REMARK   Reflection axis: {axis}\n")
-            f.write(f"REMARK   All L-amino acids converted to D-enantiomers\n")
-            f.write(f"REMARK   Bond lengths, angles, and torsion magnitudes preserved\n")
-            f.write(f"REMARK   RMSD to ideal mirror = 0.000 A\n")
+            f.write("REMARK   All L-amino acids converted to D-enantiomers\n")
+            f.write("REMARK   Bond lengths, angles, and torsion magnitudes preserved\n")
+            f.write("REMARK   RMSD to ideal mirror = 0.000 A\n")
             for a in atoms:
                 f.write(a.to_line() + '\n')
             f.write('END\n')
@@ -256,7 +254,7 @@ def mirror_pdb_string(pdb_string, chains=None, axis='x', rename_residues=True):
         tmp_out_path = tmp_out.name
 
     try:
-        result = mirror_pdb(tmp_in_path, tmp_out_path, chains, axis, rename_residues)
+        mirror_pdb(tmp_in_path, tmp_out_path, chains, axis, rename_residues)
         with open(tmp_out_path) as f:
             return f.read()
     finally:

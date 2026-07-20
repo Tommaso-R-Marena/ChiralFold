@@ -32,9 +32,10 @@ cd paper/submission/bioinformatics
 
 ```bash
 ./package_overleaf.sh   # creates ChiralFold_Bioinformatics_Overleaf.zip
+# from the repository root, scripts/build_overleaf_package.sh also copies it to Overleaf/
 ```
 
-Upload the zip to Overleaf, set main document to `chiralfold_bioinformatics.tex`, and compile. All figures are included as PNGs in `figures/`. See `OVERLEAF.md`.
+Upload the zip to Overleaf, set main document to `chiralfold_bioinformatics.tex`, and compile. A one-click copy is available at `Overleaf/ChiralFold_Bioinformatics_Overleaf.zip` after running the root helper. All figures are included as PNGs in `figures/`. See `OVERLEAF.md`.
 
 Outputs:
 - `chiralfold_bioinformatics.pdf`

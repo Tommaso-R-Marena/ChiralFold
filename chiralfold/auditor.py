@@ -27,7 +27,6 @@ dependencies beyond NumPy.  RDKit is *not* required for audit_pdb().
 from __future__ import annotations
 
 import math
-import warnings
 from collections import defaultdict
 from typing import Dict, List, Optional, Set, Tuple
 
