@@ -1,11 +1,10 @@
 ---
 title: ChiralFold
 emoji: 🧬
-colorFrom: teal
-colorTo: cyan
-sdk: gradio
-sdk_version: 4.44.1
-app_file: app.py
+colorFrom: green
+colorTo: blue
+sdk: docker
+app_port: 7860
 pinned: true
 license: mit
 tags:
@@ -16,10 +15,12 @@ tags:
   - stereochemistry
   - alphafold
   - pdb
-short_description: Audit, correct, and mirror protein PDB stereochemistry in-browser
+short_description: Audit, correct, and mirror PDB stereochemistry
 ---
 
 # ChiralFold — Stereochemistry Web App
+
+**Live:** https://huggingface.co/spaces/The-Philosopher/ChiralFold-App
 
 Upload any PDB structure to:
 
@@ -30,7 +31,7 @@ Upload any PDB structure to:
 ## Links
 
 - [GitHub](https://github.com/Tommaso-R-Marena/ChiralFold)
-- [Results Dashboard (Colab)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Results_Dashboard.ipynb)
-- Paper & benchmarks: see the repository README
+- Landing redirect: https://huggingface.co/spaces/The-Philosopher/ChiralFold
+- Local: `pip install "chiralfold[web]" && chiralfold-web`
 
 **Privacy:** files are processed in this Space session and are not retained.
