@@ -4,7 +4,7 @@
 
 ![Tests](https://github.com/Tommaso-R-Marena/ChiralFold/actions/workflows/ci.yml/badge.svg?branch=master)
 [![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-Launch%20Web%20UI-0D9488?style=for-the-badge)](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App)
-[![Reviewer 5-min](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Reviewer_5min_Reproduce.ipynb)
+[![Reproduce D-residue errors (5 min)](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Reproduce_PDB_D_Residue_Errors_5min.ipynb)
 [![Quick Demo](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Quick_Demo.ipynb)
 
 ---
@@ -14,9 +14,9 @@
 | Goal | Link |
 |------|------|
 | **Use in a browser** (upload PDB → correct / mirror → download) | [Hugging Face Space](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App) |
-| **Reviewer: reproduce PDB D-residue errors in &lt;5 min** | [Colab notebook](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Reviewer_5min_Reproduce.ipynb) · or `python benchmarks/reproduce_d_residue_errors.py` |
+| **Reproduce D-residue survey errors (&lt;5 min)** | [Colab notebook](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Reproduce_PDB_D_Residue_Errors_5min.ipynb) · or `python benchmarks/reproduce_d_residue_errors.py` |
 | **Interactive results dashboard** | [Colab dashboard](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Results_Dashboard.ipynb) ⚠️ auto-installs (~1–2 min) |
-| **Unusual cases + clash-safety demo** | [Colab notebook](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Unusual_Cases_and_Clash_Safety.ipynb) |
+| **Demo: unusual cases + clash-safety** | [Colab notebook](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Demo_Unusual_Cases_Clash_Safety.ipynb) |
 
 ---
 
@@ -71,7 +71,7 @@ python benchmarks/reproduce_d_residue_errors.py
 
 Expected output: `12,573` checkable residues · `29` errors · `16` structures · rate `0.23%`.
 
-Or open the [Reviewer 5-min Colab](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Reviewer_5min_Reproduce.ipynb).
+Or open the [Reproduce D-residue errors Colab](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Reproduce_PDB_D_Residue_Errors_5min.ipynb).
 
 ---
 
@@ -120,7 +120,7 @@ ChiralFold is tested on structures that break naive assumptions:
 | **Ultra-high resolution** | **1HHZ** (0.99 Å) DAL error | Not a density/resolution artifact |
 | **Low-res / non-protein Rama** | **5M2K** vancomycin glycopeptide | Excluded from protein Rama benchmark by pre-specified rule |
 
-See [`demos/Unusual_Cases_and_Clash_Safety.ipynb`](demos/Unusual_Cases_and_Clash_Safety.ipynb) and `results/5m2k_benchmark_exclusion.json`.
+See [`demos/Demo_Unusual_Cases_Clash_Safety.ipynb`](demos/Demo_Unusual_Cases_Clash_Safety.ipynb) and `results/5m2k_benchmark_exclusion.json`.
 
 ### “By construction” does not invent clashes
 
@@ -135,7 +135,7 @@ See [`demos/Unusual_Cases_and_Clash_Safety.ipynb`](demos/Unusual_Cases_and_Clash
 chiralfold/          # Installable Python package
 web/                 # Gradio UI (chiralfold-web)
 hf_space/            # Hugging Face Space source
-demos/               # Colab notebooks (start with Reviewer_5min_Reproduce)
+demos/               # Colab notebooks (start with Reproduce_PDB_D_Residue_Errors_5min)
 benchmarks/          # Reproducible survey / validation / Rama scripts
 results/             # Frozen CSV/JSON artefacts (do not hand-edit)
 tests/               # pytest suite

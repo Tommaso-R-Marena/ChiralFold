@@ -13,10 +13,12 @@
 
 | Notebook | Time | Purpose |
 |----------|------|---------|
-| `Reviewer_5min_Reproduce.ipynb` | &lt;5 min | Offline survey recompute |
-| `Unusual_Cases_and_Clash_Safety.ipynb` | ~3 min | Macrocycles, CCD ligands, clash isometry |
+| `Reproduce_PDB_D_Residue_Errors_5min.ipynb` | &lt;5 min | Offline survey recompute (12,573 / 29 errors) |
+| `Demo_Unusual_Cases_Clash_Safety.ipynb` | ~3 min | Macrocycles, CCD ligands, clash isometry |
 | `ChiralFold_Quick_Demo.ipynb` | ~2 min | Audit / predict / mirror |
 | `ChiralFold_Toy_Dataset_Demo.ipynb` | ~2 min | Offline toy + AF3 fix |
 | `ChiralFold_Results_Dashboard.ipynb` | ~2 min | Interactive Plotly dashboard |
 | `D_Residue_Experimental_Validation.ipynb` | ~2 min | RCSB/CCD cross-check (network) |
 | `Expanded_Ramachandran_Benchmark.ipynb` | longer | Full Rama expansion |
+
+> The two reviewer-facing notebooks have **distinct filenames** so Colab downloads are not confused (`Reproduce_…` vs `Demo_Unusual_…`).

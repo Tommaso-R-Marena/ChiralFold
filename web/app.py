@@ -42,7 +42,7 @@ RCSB_DOWNLOAD = "https://files.rcsb.org/download/{pdb_id}.pdb"
 _PKG_ROOT = Path(__file__).resolve().parent.parent
 _EXAMPLE_TOY = _PKG_ROOT / "chiralfold" / "data" / "examples" / "toy_ubiquitin_fragment.pdb"
 _FIXTURE_INVERTED = (
-    _PKG_ROOT / "tests" / "fixtures" / "af3_correction" / "synthetic_l_ala_inverted.pdb"
+    _PKG_ROOT / "chiralfold" / "data" / "examples" / "synthetic_l_ala_inverted.pdb"
 )
 
 CUSTOM_CSS = """

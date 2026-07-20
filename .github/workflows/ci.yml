@@ -7,9 +7,14 @@ on:
     branches: [master, main]
 
 jobs:
-  test:
+  # ------------------------------------------------------------------
+  # Linux matrix (full coverage + ruff)
+  # ------------------------------------------------------------------
+  test-linux:
+    name: Linux / Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12"]
 
@@ -31,26 +36,100 @@ jobs:
           pip install -e ".[dev,web]"
 
       - name: Run Ruff
-        run: |
-          ruff check chiralfold/ web/
+        run: ruff check chiralfold/ web/
 
-      # NOTE: `-m "not slow"` excludes tests marked @pytest.mark.slow, which
-      # cover network-dependent benchmarks (RCSB structure downloads, wwPDB
-      # validation XML fetches for the MolProbity comparison) and long-running
-      # compute (the >=100-structure Ramachandran benchmark and full Childs et al.
-      # 2025 enumeration). These are designed to be run manually or in scheduled
-      # benchmark workflows, not on every PR/push.
+      # NOTE: `-m "not slow"` excludes network / long-running benchmarks.
       - name: Run tests with coverage
         run: |
           pytest tests/ -v --tb=short -m "not slow" --cov=chiralfold --cov-report=term-missing --cov-report=xml --cov-fail-under=75
 
+      - name: Offline survey reproduce script
+        run: python benchmarks/reproduce_d_residue_errors.py
+
       - name: Upload coverage
+        if: matrix.python-version == '3.11'
         uses: codecov/codecov-action@v4
         with:
           file: ./coverage.xml
           fail_ci_if_error: false
 
+  # ------------------------------------------------------------------
+  # macOS
+  # ------------------------------------------------------------------
+  test-macos:
+    name: macOS / Python ${{ matrix.python-version }}
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install "rdkit>=2023.3"
+          pip install -e ".[dev]"
+
+      - name: Run tests
+        run: pytest tests/ -q --tb=short -m "not slow"
+
+      - name: Offline survey reproduce script
+        run: python benchmarks/reproduce_d_residue_errors.py
+
+      - name: Import package smoke
+        run: python -c "import chiralfold; from chiralfold import audit_pdb, mirror_pdb; print(chiralfold.__version__)"
+
+  # ------------------------------------------------------------------
+  # Windows
+  # ------------------------------------------------------------------
+  test-windows:
+    name: Windows / Python ${{ matrix.python-version }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install "rdkit>=2023.3"
+          pip install -e ".[dev]"
+
+      - name: Run tests
+        shell: bash
+        run: pytest tests/ -q --tb=short -m "not slow"
+
+      - name: Offline survey reproduce script
+        shell: bash
+        run: python benchmarks/reproduce_d_residue_errors.py
+
+      - name: Import package smoke
+        shell: bash
+        run: python -c "import chiralfold; from chiralfold import audit_pdb, mirror_pdb; print(chiralfold.__version__)"
+
+  # ------------------------------------------------------------------
+  # Web UI smoke (Linux + Gradio)
+  # ------------------------------------------------------------------
   web-smoke:
+    name: Web UI smoke
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -70,13 +149,21 @@ jobs:
 
       - name: Web UI unit + integration tests
         run: |
-          pytest tests/test_web_app.py tests/test_web_integration.py tests/test_web_packaging.py -v --tb=short -m "not slow"
+          pytest tests/test_web_app.py tests/test_web_integration.py tests/test_web_packaging.py tests/test_web_edge_cases.py -v --tb=short -m "not slow"
 
       - name: Import and build Gradio app
         run: |
           python -c "from web.app import build_app; d=build_app(); print('OK', type(d))"
 
+      - name: Example PDBs bundled in package data
+        run: |
+          python -c "from pathlib import Path; import chiralfold; root=Path(chiralfold.__file__).parent; assert (root/'data/examples/toy_ubiquitin_fragment.pdb').is_file(); assert (root/'data/examples/synthetic_l_ala_inverted.pdb').is_file(); print('examples ok')"
+
+  # ------------------------------------------------------------------
+  # Docker CLI + Web images
+  # ------------------------------------------------------------------
   docker-web:
+    name: Docker CLI + Web
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -92,4 +179,4 @@ jobs:
 
       - name: Web module present in web image
         run: |
-          docker run --rm --entrypoint python chiralfold-web:ci -c "import web.app; print('web ok')"
+          docker run --rm --entrypoint python chiralfold-web:ci -c "import web.app; from pathlib import Path; import chiralfold; p=Path(chiralfold.__file__).parent/'data/examples/synthetic_l_ala_inverted.pdb'; assert p.is_file(), p; print('web ok', p)"
