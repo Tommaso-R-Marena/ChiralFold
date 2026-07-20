@@ -28,11 +28,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install "rdkit>=2023.3" || pip install rdkit-pypi
-          pip install -e ".[dev]"
+          pip install -e ".[dev,web]"
 
       - name: Run Ruff
         run: |
-          ruff check chiralfold/
+          ruff check chiralfold/ web/
 
       # NOTE: `-m "not slow"` excludes tests marked @pytest.mark.slow, which
       # cover network-dependent benchmarks (RCSB structure downloads, wwPDB
@@ -49,3 +49,47 @@ jobs:
         with:
           file: ./coverage.xml
           fail_ci_if_error: false
+
+  web-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libxrender1 libxext6
+
+      - name: Install web extras
+        run: |
+          python -m pip install --upgrade pip
+          pip install "rdkit>=2023.3" || pip install rdkit-pypi
+          pip install -e ".[dev,web]"
+
+      - name: Web UI unit + integration tests
+        run: |
+          pytest tests/test_web_app.py tests/test_web_integration.py tests/test_web_packaging.py -v --tb=short -m "not slow"
+
+      - name: Import and build Gradio app
+        run: |
+          python -c "from web.app import build_app; d=build_app(); print('OK', type(d))"
+
+  docker-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build CLI Docker image
+        run: docker build -t chiralfold:ci .
+
+      - name: CLI help via container
+        run: docker run --rm chiralfold:ci --help
+
+      - name: Build Web Docker image
+        run: docker build -f Dockerfile.web -t chiralfold-web:ci .
+
+      - name: Web module present in web image
+        run: |
+          docker run --rm --entrypoint python chiralfold-web:ci -c "import web.app; print('web ok')"

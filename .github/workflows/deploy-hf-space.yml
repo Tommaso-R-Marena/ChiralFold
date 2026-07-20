@@ -1,0 +1,61 @@
+name: Deploy Hugging Face Space
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - "hf_space/**"
+      - "web/**"
+      - "chiralfold/**"
+      - ".github/workflows/deploy-hf-space.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install huggingface_hub
+        run: pip install "huggingface_hub>=0.24"
+
+      - name: Sync hf_space/ → Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ -z "$HF_TOKEN" ]; then
+            echo "HF_TOKEN secret not set — skipping Space deploy."
+            echo "Add a write token at Settings → Secrets → HF_TOKEN"
+            exit 0
+          fi
+          python <<'PY'
+          import os
+          from pathlib import Path
+          from huggingface_hub import HfApi, create_repo
+
+          token = os.environ["HF_TOKEN"]
+          repo_id = "The-Philosopher/ChiralFold-App"
+          api = HfApi(token=token)
+          create_repo(
+              repo_id=repo_id,
+              repo_type="space",
+              space_sdk="docker",
+              exist_ok=True,
+              token=token,
+          )
+          api.upload_folder(
+              folder_path=str(Path("hf_space").resolve()),
+              repo_id=repo_id,
+              repo_type="space",
+              commit_message="Deploy ChiralFold web Space from CI",
+              ignore_patterns=["__pycache__", "*.pyc", ".git*"],
+          )
+          print(f"Deployed https://huggingface.co/spaces/{repo_id}")
+          PY

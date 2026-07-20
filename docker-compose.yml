@@ -1,18 +1,19 @@
 services:
   chiralfold:
     build: .
-    image: ghcr.io/tommaso-r-marena/chiralfold:3.4.0
+    image: ghcr.io/tommaso-r-marena/chiralfold:3.5.1
     volumes:
       - ./data:/data
     working_dir: /data
 
   web:
-    build: .
-    image: ghcr.io/tommaso-r-marena/chiralfold-web:3.5.0
-    command: >
-      sh -c "pip install --no-cache-dir '.[web]' && python web/app.py"
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    image: ghcr.io/tommaso-r-marena/chiralfold-web:3.5.1
     ports:
       - "7860:7860"
     environment:
       CHIRALFOLD_WEB_HOST: "0.0.0.0"
       CHIRALFOLD_WEB_PORT: "7860"
+      CHIRALFOLD_MAX_UPLOAD_MB: "25"
