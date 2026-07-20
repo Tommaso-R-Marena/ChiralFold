@@ -3,7 +3,8 @@
 ChiralFold Hugging Face Space entrypoint.
 
 Self-contained Gradio UI that depends on the `chiralfold` package
-(installed via requirements.txt from GitHub).
+(installed via requirements.txt from GitHub). Theme/CSS is loaded from
+``web.theme`` when available, otherwise from bundled ``theme.css``.
 """
 from __future__ import annotations
 
@@ -30,56 +31,35 @@ SPACE_ROOT = Path(__file__).resolve().parent
 EXAMPLE_TOY = SPACE_ROOT / "examples" / "toy_ubiquitin_fragment.pdb"
 EXAMPLE_INV = SPACE_ROOT / "examples" / "synthetic_l_ala_inverted.pdb"
 
-CUSTOM_CSS = """
-:root { --cf-teal: #0d9488; --cf-navy: #0f172a; --cf-slate: #334155; }
-.gradio-container {
-  font-family: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif !important;
-  background:
-    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(13,148,136,0.18), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 90% 0%, rgba(14,165,233,0.12), transparent 50%),
-    linear-gradient(165deg, #f0fdfa 0%, #f8fafc 50%, #f1f5f9 100%) !important;
-  max-width: 1100px !important;
-  margin: 0 auto !important;
-}
-#cf-header { text-align: center; padding: 1.75rem 1rem 0.75rem; }
-#cf-header h1 {
-  color: var(--cf-navy); font-weight: 800; font-size: 2.35rem;
-  letter-spacing: -0.03em; margin: 0 0 0.35rem;
-}
-#cf-header .cf-tagline {
-  color: var(--cf-slate); font-size: 1.05rem; max-width: 36rem;
-  margin: 0 auto 0.75rem; line-height: 1.45;
-}
-#cf-header .cf-meta {
-  display: inline-flex; gap: 0.5rem; flex-wrap: wrap;
-  justify-content: center; font-size: 0.8rem; color: #64748b;
-}
-#cf-header .cf-badge {
-  background: #ccfbf1; color: #0f766e; border: 1px solid #99f6e4;
-  border-radius: 999px; padding: 0.15rem 0.65rem; font-weight: 600;
-}
-.cf-panel {
-  border: 1px solid #e2e8f0 !important; border-radius: 18px !important;
-  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06) !important;
-  background: rgba(255,255,255,0.92) !important;
-}
-.cf-kpi {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 0.65rem; margin: 0.75rem 0 1rem;
-}
-.cf-kpi .cell {
-  background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;
-  padding: 0.7rem 0.85rem; text-align: center;
-}
-.cf-kpi .cell .label {
-  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: #64748b;
-}
-.cf-kpi .cell .value { font-size: 1.35rem; font-weight: 700; color: #0f172a; margin-top: 0.15rem; }
-.cf-kpi .ok .value { color: #0d9488; }
-.cf-kpi .warn .value { color: #d97706; }
-.cf-kpi .bad .value { color: #dc2626; }
-footer { visibility: hidden; }
-"""
+
+def _load_css() -> str:
+    """Prefer packaged theme (post-install); fall back to bundled theme.css."""
+    try:
+        from web.theme import CUSTOM_CSS as css  # type: ignore
+
+        return css
+    except Exception:
+        css_path = SPACE_ROOT / "theme.css"
+        if css_path.is_file():
+            return css_path.read_text()
+        return "/* missing theme */"
+
+
+def _make_theme():
+    try:
+        from web.theme import make_theme
+
+        return make_theme()
+    except Exception:
+        return gr.themes.Soft(
+            primary_hue="teal",
+            secondary_hue="slate",
+            neutral_hue="slate",
+            font=["IBM Plex Sans", "Segoe UI", "Helvetica", "Arial", "sans-serif"],
+        )
+
+
+CUSTOM_CSS = _load_css()
 
 
 def _as_path(uploaded) -> str:
@@ -93,7 +73,10 @@ def _as_path(uploaded) -> str:
         raise gr.Error("Only PDB files are supported (.pdb or .ent).")
     size = Path(path).stat().st_size
     if size > MAX_UPLOAD_BYTES:
-        raise gr.Error(f"File too large ({size / 1e6:.1f} MB). Limit is {MAX_UPLOAD_BYTES / 1e6:.0f} MB.")
+        raise gr.Error(
+            f"File too large ({size / 1e6:.1f} MB). "
+            f"Limit is {MAX_UPLOAD_BYTES / 1e6:.0f} MB."
+        )
     if size == 0:
         raise gr.Error("Uploaded file is empty.")
     return path
@@ -146,7 +129,10 @@ def fetch_pdb_id(pdb_id: str) -> Tuple[Optional[str], str]:
 def load_example(which: str) -> Tuple[Optional[str], str]:
     mapping = {
         "toy": (EXAMPLE_TOY, "Toy ubiquitin fragment (10 residues) — bundled, offline."),
-        "inverted": (EXAMPLE_INV, "Synthetic inverted L-Ala — demonstrates chirality correction."),
+        "inverted": (
+            EXAMPLE_INV,
+            "Synthetic inverted L-Ala — demonstrates chirality correction.",
+        ),
     }
     path, msg = mapping.get(which, (None, "Unknown example."))
     if path is None or not Path(path).is_file():
@@ -203,22 +189,23 @@ def run_correct(uploaded) -> Tuple[str, Optional[str]]:
         result = correct_af3_output(src, out_raw.name)
         corr = result.get("correction", {})
         after = result.get("after", {})
-        n_before = before.get("n_violations", result.get("before", {}).get("n_violations", 0))
+        n_before = before.get(
+            "n_violations", result.get("before", {}).get("n_violations", 0)
+        )
         n_after = after.get("n_violations", 0)
         n_fixed = corr.get("n_corrected", max(0, n_before - n_after))
         before_cls = "ok" if n_before == 0 else "bad"
-        after_cls = "ok" if n_after == 0 else "warn"
+        after_cls = "ok" if n_after == 0 else "bad"
         kpis = _kpi_html(
             [
-                ("Violations before", str(n_before), before_cls),
-                ("Violations after", str(n_after), after_cls),
+                ("Before", str(n_before), before_cls),
                 ("Fixed", str(n_fixed), "ok"),
-                ("Residual rate", f"{after.get('pct_violations', 0):.1f}%", after_cls),
+                ("After (residual)", str(n_after), after_cls),
             ]
         )
         md = (
             f"## Chirality correction\n\n{kpis}\n\n"
-            "Detects inverted Cα stereocenters and rewrites coordinates.\n\n"
+            f"**File:** `{Path(src).name}`\n\n"
             "**Download the corrected PDB below.**"
         )
         return md, _copy_with_name(out_raw.name, _stem_from_path(src), "_corrected.pdb")
@@ -262,12 +249,7 @@ def build_app() -> gr.Blocks:
     with gr.Blocks(
         title=f"ChiralFold Web v{__version__}",
         css=CUSTOM_CSS,
-        theme=gr.themes.Soft(
-            primary_hue="teal",
-            secondary_hue="cyan",
-            neutral_hue="slate",
-            font=[gr.themes.GoogleFont("Source Sans 3"), "system-ui", "sans-serif"],
-        ),
+        theme=_make_theme(),
     ) as demo:
         gr.HTML(
             f"""
@@ -283,7 +265,8 @@ def build_app() -> gr.Blocks:
                 <span class="cf-badge">open source</span>
               </div>
             </div>
-            """
+            """,
+            padding=False,
         )
         with gr.Row():
             with gr.Column(scale=5, elem_classes=["cf-panel"]):
@@ -294,36 +277,67 @@ def build_app() -> gr.Blocks:
                     type="filepath",
                 )
                 with gr.Row():
-                    pdb_id = gr.Textbox(label="Or fetch from RCSB", placeholder="1UBQ", max_lines=1, scale=3)
+                    pdb_id = gr.Textbox(
+                        label="Or fetch from RCSB",
+                        placeholder="1UBQ",
+                        max_lines=1,
+                        scale=3,
+                    )
                     fetch_btn = gr.Button("Fetch PDB", scale=1)
                 with gr.Row():
                     ex_toy = gr.Button("Example: ubiquitin fragment", size="sm")
                     ex_inv = gr.Button("Example: inverted Ala", size="sm")
-                status = gr.Markdown("Upload a file, fetch a PDB ID, or load an example.")
+                status = gr.Markdown(
+                    "Upload a file, fetch a PDB ID, or load an example."
+                )
                 gr.Markdown("### 2 · Mirror options")
-                axis = gr.Radio(choices=["X", "Y", "Z"], value="X", label="Reflection axis")
-                rename = gr.Checkbox(value=True, label="Rename residue codes L↔D after mirroring")
+                axis = gr.Radio(
+                    choices=["X", "Y", "Z"], value="X", label="Reflection axis"
+                )
+                rename = gr.Checkbox(
+                    value=True, label="Rename residue codes L↔D after mirroring"
+                )
             with gr.Column(scale=7, elem_classes=["cf-panel"]):
                 gr.Markdown("### 3 · Choose an action")
                 with gr.Tabs():
                     with gr.Tab("Audit"):
-                        gr.Markdown("Full stereochemistry report with downloadable JSON.")
-                        audit_btn = gr.Button("Run audit → download JSON", variant="primary", size="lg")
+                        gr.Markdown(
+                            "Full stereochemistry report with downloadable JSON."
+                        )
+                        audit_btn = gr.Button(
+                            "Run audit → download JSON", variant="primary", size="lg"
+                        )
                     with gr.Tab("Correct chirality"):
-                        gr.Markdown("Fix inverted stereocenters (AF3 / diffusion outputs).")
-                        correct_btn = gr.Button("Correct → download PDB", variant="primary", size="lg")
+                        gr.Markdown(
+                            "Fix inverted stereocenters (AF3 / diffusion outputs)."
+                        )
+                        correct_btn = gr.Button(
+                            "Correct → download PDB", variant="primary", size="lg"
+                        )
                     with gr.Tab("Mirror image"):
-                        gr.Markdown("Exact L↔D coordinate reflection for binder design.")
-                        mirror_btn = gr.Button("Mirror → download PDB", variant="primary", size="lg")
-                report_out = gr.Markdown(value="Results appear here after you run an action.")
+                        gr.Markdown(
+                            "Exact L↔D coordinate reflection for binder design."
+                        )
+                        mirror_btn = gr.Button(
+                            "Mirror → download PDB", variant="primary", size="lg"
+                        )
+                report_out = gr.Markdown(
+                    value="Results appear here after you run an action."
+                )
                 download_out = gr.File(label="Download result")
 
         fetch_btn.click(fetch_pdb_id, inputs=pdb_id, outputs=[pdb_in, status])
         ex_toy.click(lambda: load_example("toy"), outputs=[pdb_in, status])
         ex_inv.click(lambda: load_example("inverted"), outputs=[pdb_in, status])
         audit_btn.click(run_audit, inputs=pdb_in, outputs=[report_out, download_out])
-        correct_btn.click(run_correct, inputs=pdb_in, outputs=[report_out, download_out])
-        mirror_btn.click(run_mirror, inputs=[pdb_in, axis, rename], outputs=[report_out, download_out])
+        correct_btn.click(
+            run_correct, inputs=pdb_in, outputs=[report_out, download_out]
+        )
+        mirror_btn.click(
+            run_mirror,
+            inputs=[pdb_in, axis, rename],
+            outputs=[report_out, download_out],
+        )
 
         gr.Markdown(
             "---\n"

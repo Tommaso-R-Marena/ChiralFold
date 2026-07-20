@@ -8,4 +8,5 @@ matplotlib>=3.5,<4.0
 seaborn>=0.11,<1.0
 scikit-learn>=1.0,<2.0
 rdkit>=2023.3,<2027
+huggingface_hub>=0.23,<1.0
 chiralfold @ git+https://github.com/Tommaso-R-Marena/ChiralFold.git@master

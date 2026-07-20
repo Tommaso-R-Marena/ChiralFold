@@ -149,7 +149,7 @@ jobs:
 
       - name: Web UI unit + integration tests
         run: |
-          pytest tests/test_web_app.py tests/test_web_integration.py tests/test_web_packaging.py tests/test_web_edge_cases.py -v --tb=short -m "not slow"
+          pytest tests/test_web_app.py tests/test_web_integration.py tests/test_web_packaging.py tests/test_web_edge_cases.py tests/test_web_e2e.py -v --tb=short -m "not slow"
 
       - name: Import and build Gradio app
         run: |
