@@ -55,7 +55,11 @@ Outputs:
 - [ ] **Title:** ChiralFold: systematic detection of D-amino acid stereochemistry errors in the Protein Data Bank
 - [ ] **Abstract:** copy from `chiralfold_bioinformatics.tex` (structured, ≤150 words)
 - [ ] **Keywords:** D-amino acid; chirality; Protein Data Bank; structure validation; AlphaFold 3; stereochemistry
-- [ ] **Data availability:** GitHub https://github.com/Tommaso-R-Marena/ChiralFold (v3.5.1); PyPI `chiralfold`; Zenodo DOI (optional, recommended)
+- [ ] **Data availability:** GitHub https://github.com/Tommaso-R-Marena/ChiralFold (v3.5.1); PyPI `chiralfold` (Zenodo DOI optional — see below)
+
+### Zenodo DOI (optional)
+A Zenodo DOI is a permanent archive link for a specific GitHub release. Bioinformatics accepts GitHub+PyPI without it.
+Skip for initial submission unless your institution requires a DOI. After acceptance (or if you want one now): create a free Zenodo account, connect GitHub, and archive release `v3.5.1`.
 
 ### Author information (you must complete in portal)
 - [ ] ORCID for Tommaso R. Marena
@@ -81,10 +85,10 @@ Outputs:
 
 ## Page limit note
 
-Bioinformatics Original Papers are limited to **7 printed pages**. The condensed `chiralfold_bioinformatics.tex` targets this limit; extended tables, statistics, and figures are in `supplementary_material.tex`. The full unabridged manuscript remains at `paper/chiralfold_paper.tex` for reference.
+Bioinformatics Original Papers are limited to **7 printed pages** (~5,000 words excl. figures). The main manuscript is written to be substantive within that cap; extended Lean proofs with derivations, tables, statistics, and figures are in `supplementary_material.tex` (Notes S1). Compile the OUP template and confirm ≤7 pages before submit—do **not** pad past the limit (desk-reject risk above ~20% over). The full unabridged manuscript remains at `paper/chiralfold_paper.tex` for reference.
 
 ## After acceptance
 
-- Deposit code DOI on Zenodo from GitHub release v3.5.1
+- Optional: deposit a Zenodo DOI for GitHub release v3.5.1 (not required if GitHub+PyPI already cited)
 - Update manuscript with Bioinformatics DOI
 - Add citation to README

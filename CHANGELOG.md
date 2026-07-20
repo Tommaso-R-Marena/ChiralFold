@@ -8,6 +8,7 @@
 
 ### Fixed
 - Windows CI `UnicodeDecodeError` when reading Colab notebooks (`tests/test_colab_publication.py` now forces UTF-8).
+- `conda-recipe/meta.yaml` version bumped **3.4.0 → 3.5.1** to match PyPI.
 
 ### Changed
 - README covers all headline results, Lean 4 proofs, and setup avenues (pip, conda, Docker, HF Space, Colab).
