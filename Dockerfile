@@ -16,6 +16,7 @@ WORKDIR /app
 
 COPY pyproject.toml setup.py README.md LICENSE ./
 COPY chiralfold/ chiralfold/
+COPY web/ web/
 
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir "rdkit>=2023.3,<2027" \
