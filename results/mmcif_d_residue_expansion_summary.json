@@ -1,7 +1,9 @@
 {
-  "n_structures": 16,
-  "n_d_residues": 52,
-  "n_errors": 29,
+  "mode": "both",
+  "n_structures": 95,
+  "n_structures_with_d_residues": 91,
+  "n_d_residues": 1201,
+  "n_errors": 30,
   "error_pdbs": [
     "1ABI",
     "1BG0",
@@ -18,9 +20,65 @@
     "2H9E",
     "2RMI",
     "2W76",
-    "3RIT"
+    "3RIT",
+    "9BC4"
   ],
-  "note": "Native mmCIF re-verification of all 16 known D-residue error structures from the legacy-PDB survey. Recovers the same 29 D-label/L-coordinate mismatches. Does not survey the full mmCIF-only universe (~245+ for primary CCD codes); that remains future work.",
+  "known_error_cohort": {
+    "n_structures": 16,
+    "n_errors": 29,
+    "error_pdbs": [
+      "1ABI",
+      "1BG0",
+      "1D7T",
+      "1HHZ",
+      "1KO0",
+      "1MCB",
+      "1OF6",
+      "1P52",
+      "1UHG",
+      "1XT7",
+      "2AOU",
+      "2ATS",
+      "2H9E",
+      "2RMI",
+      "2W76",
+      "3RIT"
+    ]
+  },
+  "universe_cohort": {
+    "n_structures_requested": 79,
+    "n_errors": 1,
+    "error_pdbs": [
+      "9BC4"
+    ]
+  },
+  "cohorts": {
+    "known-errors": {
+      "cohort": "known-errors",
+      "n_requested": 16,
+      "n_scanned": 16,
+      "n_skipped": 0,
+      "n_failed": 0,
+      "skipped": {},
+      "failed": {}
+    },
+    "universe": {
+      "cohort": "universe",
+      "n_requested": 79,
+      "n_scanned": 79,
+      "n_skipped": 0,
+      "n_failed": 0,
+      "skipped": {},
+      "failed": {},
+      "discovery": {
+        "n_universe_entries": 1324,
+        "n_legacy_pdb": 1245,
+        "n_mmcif_only": 79
+      }
+    }
+  },
+  "max_cif_mb": 25.0,
   "matches_legacy_survey_errors": true,
-  "legacy_error_count": 29
+  "legacy_error_count": 29,
+  "note": "Native mmCIF survey. known-errors re-verifies the 16 legacy mismatches; universe scans all live mmCIF-only entries containing the 18 D-AA CCD codes."
 }

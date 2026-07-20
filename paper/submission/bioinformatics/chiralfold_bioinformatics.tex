@@ -43,7 +43,7 @@ Chirality at C$\alpha$ uses the signed volume of the tetrahedron formed by backb
 \begin{equation}
 V = (\mathbf{N}-\mathbf{C}_\alpha)\cdot\left[(\mathbf{C}-\mathbf{C}_\alpha)\times(\mathbf{C}_\beta-\mathbf{C}_\alpha)\right].
 \end{equation}
-For correctly deposited D-residues, $V<0$ by CIP convention; $V>0$ at a D-label indicates L-coordinates. The PDB survey used an independent numpy-only script (no ChiralFold imports). mmCIF-only entries ($\sim$245 for the primary CCD codes DPN/DAS/DAL alone) were excluded from legacy-PDB coverage statistics; all 16 known-error structures were subsequently re-verified in native mmCIF and recovered the same 29 mismatches.
+For correctly deposited D-residues, $V<0$ by CIP convention; $V>0$ at a D-label indicates L-coordinates. The PDB survey used an independent numpy-only script (no ChiralFold imports). mmCIF-only entries were excluded from the primary legacy-PDB coverage statistics; a subsequent native-mmCIF survey re-verified all 16 known-error structures (29/29 mismatches recovered) and scanned the live mmCIF-only D-amino-acid universe (RCSB CCD search + legacy-\texttt{.pdb} filter; $n=79$ entries at freeze), finding one additional clear DLE mismatch (9BC4, $V=+2.82$~\AA$^3$).
 
 \subsection{ChiralFold auditor}
 
@@ -86,7 +86,7 @@ Lean~4 proofs establish that any chirality readout factoring only through pairwi
 
 The signed C$\alpha$ volume distinguishes stereochemistry errors, CCD misassignments, and mislabels without biological context. The 1HHZ case (0.99~\AA\ resolution, D-Ala with $V=+2.70$) shows errors are labeling failures, not density limitations. CCD misassignments are fixable by comparing deposited coordinates to the InChI \texttt{/m} flag at deposition \citep{shao2015,outcome2016}.
 
-ChiralFold is a stereochemistry post-processor, not a de novo folder: use AF3 or ESMFold for folding, then audit or correct with ChiralFold. Limitations include exclusion of mmCIF-only deposits from the primary legacy-PDB survey ($\sim$245 for DPN/DAS/DAL; known errors re-verified via mmCIF), chi1-only rotamer scoring, two borderline cases with signed volume $<1.0$~\AA$^3$, and no experimental binding validation of mirror-designed peptides.
+ChiralFold is a stereochemistry post-processor, not a de novo folder: use AF3 or ESMFold for folding, then audit or correct with ChiralFold. Limitations include chi1-only rotamer scoring, two borderline cases with signed volume $<1.0$~\AA$^3$, no experimental binding validation of mirror-designed peptides, and the primary survey's use of legacy PDB format (closed for known errors and the live mmCIF-only D-AA universe via \texttt{benchmarks/mmcif\_d\_residue\_expansion.py}).
 
 \section{Conclusion}
 

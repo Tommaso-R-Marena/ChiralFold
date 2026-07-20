@@ -9,3 +9,5 @@
 4. Machine-checked Lean 4 proofs: chirality sign cannot factor through pairwise distances alone.
 
 5. Open software: pip install chiralfold, Docker image, GitHub v3.5.1, 48 tests, full reproduction package.
+
+- Full live mmCIF-only D-residue universe survey (79 entries): recovers 29/29 known errors; finds 9BC4 DLE mismatch.

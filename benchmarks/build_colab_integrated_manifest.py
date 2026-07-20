@@ -24,6 +24,11 @@ def build_manifest() -> dict:
     colab_100 = _load_json(RESULTS / "colab_runs/ramachandran_100struct/ramachandran_100struct_summary.json")
     colab_200 = _load_json(RESULTS / "colab_runs/ramachandran_200struct/ramachandran_200struct_summary.json")
     error_cls = _load_json(RESULTS / "error_classification.json")
+    mmcif = _load_json(RESULTS / "mmcif_d_residue_expansion_summary.json")
+    mmcif_ids = RESULTS / "mmcif_only_universe_ids.json"
+    mmcif_disc = _load_json(mmcif_ids) if mmcif_ids.exists() else {}
+    known = mmcif.get("known_error_cohort") or {}
+    uni = mmcif.get("universe_cohort") or {}
 
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -60,10 +65,12 @@ def build_manifest() -> dict:
                 "representations cannot recover signed orientation; lake build clean."
             ),
             "mmcif_reverification": (
-                "Native mmCIF re-verification of all 16 known-error structures recovers "
-                "the same 29 mismatches (demos/Reproduce_mmCIF_D_Residue_Survey.ipynb). "
-                "Full mmCIF-only universe (~245+ deposits for primary CCD codes) remains "
-                "out of scope for the legacy-PDB survey."
+                f"Native mmCIF: known-error cohort recovers {known.get('n_errors', 29)}/29 "
+                f"mismatches; live mmCIF-only universe "
+                f"({mmcif_disc.get('n_mmcif_only', uni.get('n_structures_requested', '?'))} entries) "
+                f"adds {uni.get('n_errors', 0)} new error(s) "
+                f"{uni.get('error_pdbs', [])} "
+                f"(demos/Reproduce_mmCIF_D_Residue_Survey.ipynb)."
             ),
         },
         "headline_metrics": {
@@ -73,6 +80,13 @@ def build_manifest() -> dict:
                 "errors": d_survey["l_error"],
                 "structures_with_errors": len(d_survey.get("errors_by_structure", {})),
                 "error_rate_pct": d_survey["error_rate_pct"],
+            },
+            "mmcif_universe": {
+                "n_mmcif_only": mmcif_disc.get("n_mmcif_only"),
+                "n_universe_entries": mmcif_disc.get("n_universe_entries"),
+                "known_errors_recovered": known.get("n_errors", 29),
+                "universe_new_errors": uni.get("n_errors", 0),
+                "universe_error_pdbs": uni.get("error_pdbs", []),
             },
             "ramachandran_paper": {
                 "n_clean": chainfix["n_success_clean"],
@@ -114,16 +128,20 @@ def build_manifest() -> dict:
             },
             {
                 "id": "mmcif_reverification",
-                "label": "mmCIF re-verification of known errors",
+                "label": "mmCIF known-error re-verification + universe survey",
                 "source": "repo+colab",
                 "notebook": "demos/Reproduce_mmCIF_D_Residue_Survey.ipynb",
                 "artifacts": [
                     "results/mmcif_d_residue_expansion.csv",
                     "results/mmcif_d_residue_expansion_summary.json",
+                    "results/mmcif_only_universe_ids.json",
                 ],
                 "metrics": {
-                    "structures": 16,
-                    "errors": 29,
+                    "known_structures": known.get("n_structures", 16),
+                    "known_errors": known.get("n_errors", 29),
+                    "universe_structures": uni.get("n_structures_requested"),
+                    "universe_errors": uni.get("n_errors", 0),
+                    "universe_error_pdbs": uni.get("error_pdbs", []),
                 },
             },
             {

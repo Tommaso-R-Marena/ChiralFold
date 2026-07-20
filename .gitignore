@@ -18,10 +18,15 @@ __pycache__/
 *.py[cod]
 *.pyo
 .pytest_cache/
+.ruff_cache/
+results/mmcif_cache/
+results/d_survey/*.pdb
+results/d_survey/*.PDB
+results/pdb50/*.pdb
+results/pdb50/*.PDB
+results/*.pdb
 !results/3IWY.pdb
 !results/*_D_mirror.pdb
-results/mmcif_cache/
-results/*.pdb
 results/ramachandran_expansion_cache/
 results/ramachandran_*run.log
 *.so
