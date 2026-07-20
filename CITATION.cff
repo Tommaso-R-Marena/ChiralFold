@@ -10,7 +10,7 @@ authors:
 repository-code: "https://github.com/Tommaso-R-Marena/ChiralFold"
 url: "https://github.com/Tommaso-R-Marena/ChiralFold"
 license: MIT
-version: "3.4.0"
+version: "3.5.1"
 date-released: "2026-06-22"
 keywords:
   - chirality
