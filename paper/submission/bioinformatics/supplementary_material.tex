@@ -18,6 +18,9 @@
 \subsection{Ramachandran benchmark protocol}
 Era-representative stratified sampling across X-ray ultra ($\leq$1.20~\AA), high, medium, low, NMR, and cryo-EM bins (seed 20260612). mmCIF$\to$PDB conversion uses chain-ID remapping (A--Z, 0--9). Structures with $>$36 chains skipped. Script: \texttt{benchmarks/expand\_ramachandran\_benchmark.py}.
 
+\subsection{Experimental validation protocol}
+Automated cross-check of all 16 error structures: \texttt{benchmarks/experimental\_structure\_validation.py} queries RCSB entry metadata (method, resolution) and wwPDB CCD InChI stereochemistry; results in \texttt{results/experimental\_validation\_report.json}. Reproduce in Colab: \texttt{demos/D\_Residue\_Experimental\_Validation.ipynb}. PDB 5M2K exclusion documented in \texttt{results/5m2k\_benchmark\_exclusion.json} (vancomycin glycopeptide, not a globular protein).
+
 \subsection{Mirror-image, AF3 correction, and enumeration}
 L$\leftrightarrow$D reflection: $(x,y,z)\to(-x,y,z)$. AF3 correction reflects violating C$\alpha$ across the N--C--C$\beta$ plane. Diastereomer enumeration scores $2^k$ L/D patterns. Interface scoring uses BSA, H-bonds, and salt bridges.
 

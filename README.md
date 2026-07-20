@@ -4,6 +4,7 @@
 
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Quick_Demo.ipynb)
 [![Open expanded Ramachandran benchmark in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Expanded_Ramachandran_Benchmark.ipynb)
+[![D-residue experimental validation (Colab)](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/D_Residue_Experimental_Validation.ipynb)
 ![Tests](https://github.com/Tommaso-R-Marena/ChiralFold/actions/workflows/ci.yml/badge.svg?branch=master)
 
 ChiralFold provides `pip install`-able stereochemistry validation and coordinate generation for L-proteins, D-peptides, diastereomers, and any PDB structure. It guarantees **0% chirality violations** at stereogenic centers and includes a MolProbity-calibrated quality auditor validated against wwPDB reports on 31 structures.
@@ -14,11 +15,31 @@ ChiralFold provides `pip install`-able stereochemistry validation and coordinate
 
 **Chirality validation** — 30/31 PDB structures audit at 100% Cα correctness across X-ray (0.48–3.4 Å), NMR, and cryo-EM. One NMR structure (2JXR) flagged with a genuine stereochemical issue.
 
-**Ramachandran agreement with wwPDB/MolProbity** — On a seeded **era-representative** stratified sample of **362 standard-protein structures** (X-ray ultra/high/med/low resolution + NMR + cryo-EM, spanning all deposition eras), produced after fixing an mmCIF→PDB chain-ID collision bug in the converter, Spearman ρ = 0.52 (95% CI [0.42, 0.61], p = 1.5 × 10⁻²⁶), Pearson r = 0.853 (95% CI [0.717, 0.917], p = 6.1 × 10⁻¹⁰⁴) on outlier percentage, with ChiralFold reporting 0.78% mean outliers vs wwPDB's 0.83%. One non-protein entry (5M2K, vancomycin–Zn²⁺ complex, 2 analyzable backbone residues) was excluded under the pre-specified criterion wwpdb_rama_outlier_pct > 50%; its exclusion is documented in `results/ramachandran_279struct_chainfix_summary.json`. This supersedes the earlier 279-structure run (ρ = 0.48, p = 2.4 × 10⁻¹⁷; r = 0.80), which used the buggy converter; the rank result is stable across both. The 104-structure run (ρ = 0.56, p = 4.4 × 10⁻¹⁰) and the original 31-structure benchmark (ρ = 0.49, p = 0.006) are retained for reference. Reproduce any run with `benchmarks/expand_ramachandran_benchmark.py` (latest outputs: `results/ramachandran_279struct_chainfix_comparison.csv`, `results/ramachandran_279struct_chainfix_summary.json`, `results/ramachandran_279struct_chainfix_plot.png`).
+**Ramachandran agreement with wwPDB/MolProbity** — On a seeded **era-representative** stratified sample of **362 standard-protein structures** (X-ray ultra/high/med/low resolution + NMR + cryo-EM, spanning all deposition eras), produced after fixing an mmCIF→PDB chain-ID collision bug in the converter, Spearman ρ = 0.52 (95% CI [0.42, 0.61], p = 1.5 × 10⁻²⁶), Pearson r = 0.853 (95% CI [0.717, 0.917], p = 6.1 × 10⁻¹⁰⁴) on outlier percentage, with ChiralFold reporting 0.78% mean outliers vs wwPDB's 0.83%. One glycopeptide entry (5M2K, vancomycin–Zn²⁺: 7-residue cyclic glycopeptide with one standard amino acid, not a globular protein) was excluded under the pre-specified criterion wwpdb_rama_outlier_pct > 50%; its exclusion is documented in `results/ramachandran_279struct_chainfix_summary.json`. This supersedes the earlier 279-structure run (ρ = 0.48, p = 2.4 × 10⁻¹⁷; r = 0.80), which used the buggy converter; the rank result is stable across both. The 104-structure run (ρ = 0.56, p = 4.4 × 10⁻¹⁰) and the original 31-structure benchmark (ρ = 0.49, p = 0.006) are retained for reference. Reproduce any run with `benchmarks/expand_ramachandran_benchmark.py` (latest outputs: `results/ramachandran_279struct_chainfix_comparison.csv`, `results/ramachandran_279struct_chainfix_summary.json`, `results/ramachandran_279struct_chainfix_plot.png`).
 
 **Mirror-image binder design** — Converted the p53:MDM2 crystal structure (PDB 1YCR) into a D-peptide therapeutic candidate that preserves the Phe19/Trp23/Leu26 binding triad as D-amino acids — the same hotspot the experimental dPMI-γ (Kd = 53 nM) uses. All backbone φ angles exactly sign-inverted, 0.0 Å coordinate error. The mirror transformation is mathematically exact; experimental Kd measurement against MDM2 is required to confirm binding affinity and is outside the scope of this computational study.
 
-**PDB-wide D-residue survey** — Verified 12,573 D-amino acid residues across 4,616 PDB files (>91% of all RCSB entries for each of the 18 standard D-amino acid CCD codes). Found 29 D-label/L-coordinate mismatches in 16 structures: 6 genuine stereochemistry errors (biology requires D, coordinates show L), 18 CCD code misassignments across 5 structures (L-molecule labeled with D-code), 3 polymer residue mislabels, and 2 borderlines. Errors cluster in 5 CCD codes (DTY, DLY, DPN, DSN, DAR); 9 codes confirmed clean at zero errors. All cross-referenced against biological context and primary literature. MolProbity does not flag any of these.
+### Experimental validation (reproducible)
+
+Cross-checks all 16 error structures against RCSB metadata + CCD InChI:
+
+```bash
+python benchmarks/experimental_structure_validation.py
+```
+
+[![D-residue experimental validation (Colab)](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/D_Residue_Experimental_Validation.ipynb)
+
+Results: `results/experimental_validation_report.json` (14/14 non-borderline cases pass automated criteria).
+
+**5M2K exclusion:** Vancomycin–Zn²⁺ glycopeptide (7-residue cyclic antibiotic, 1 standard amino acid)—not a globular protein. Documented in `results/5m2k_benchmark_exclusion.json`.
+
+**Lean 4 generalization:** Paste `formal/chirality_nogo/ARISTOTLE_PROMPT.md` into [Harmonic Aristotle](https://aristotle.harmonic.fun/) with the Lean project from branch `cursor/aristotle-formal-proofs-9901`.
+
+**mmCIF expansion:** `python benchmarks/mmcif_d_residue_expansion.py` (requires `gemmi`).
+
+**Rockfish (UMD HPC):** `srun --partition=shared --cpus-per-task=4 --mem=8G --time=02:00:00 bash` then clone repo and run validation scripts above.
+
+**PDB-wide D-residue survey** — Verified 12,573 D-amino acid residues across 4,616 PDB files (>91% of all RCSB entries for each of the 18 standard D-amino acid CCD codes). Found 29 D-label/L-coordinate mismatches in 16 structures: 6 genuine stereochemistry errors (biology requires D, coordinates show L), 18 CCD code misassignments across 5 structures (L-molecule labeled with D-code), 3 polymer residue mislabels, and 2 borderlines. Errors occur in nine CCD codes; nine are confirmed clean at zero errors. All cross-referenced against biological context, primary literature, and automated RCSB/CCD validation. MolProbity does not flag any of these.
 
 **AF3 chirality correction** — Automatic detection and correction of stereochemistry violations in AlphaFold 3 outputs, directly addressing the 51% violation rate documented by Childs et al. (2025). This is a construction-vs-learning contrast: ChiralFold's 0% rate is guaranteed by explicit SMILES stereochemistry encoding, not by outperforming AF3 on a learned task. See the [Benchmarks](#benchmarks) section for full details.
 

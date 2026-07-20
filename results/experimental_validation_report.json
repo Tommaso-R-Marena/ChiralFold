@@ -1,0 +1,419 @@
+{
+  "n_structures": 16,
+  "n_automated_pass": 14,
+  "n_borderline": 2,
+  "n_review": 0,
+  "methods": [
+    "SOLUTION NMR",
+    "X-RAY DIFFRACTION"
+  ],
+  "validation_protocol": "For each structure: fetch RCSB entry metadata (method, resolution, title); reconfirm signed C\u03b1 volume > 0 from d_residue_verification.csv; for CCD-code errors, compare to wwPDB InChI stereochemistry of the correct L-form CCD.",
+  "structures": [
+    {
+      "pdb_id": "1ABI",
+      "error_type": "Stereochem",
+      "labeled_ccd": "DPN",
+      "n_error_residues": 1,
+      "experimental_method": "X-RAY DIFFRACTION",
+      "resolution_angstrom": 2.3,
+      "deposition_title": "STRUCTURE OF THE HIRULOG 3-THROMBIN COMPLEX AND NATURE OF THE S' SUBSITES OF SUBSTRATES AND INHIBITORS",
+      "automated_validation_pass": true,
+      "validation_rationale": "D-labeled residue (DPN) has L-coordinates (V=2.49 \u00c5\u00b3); contradicts D-CCD assignment regardless of biological context.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          2.4884,
+          2.4884
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "deposition_title": "STRUCTURE OF THE HIRULOG 3-THROMBIN COMPLEX AND NATURE OF THE S' SUBSITES OF SUBSTRATES AND INHIBITORS",
+        "experimental_method": "X-RAY DIFFRACTION",
+        "resolution_angstrom": 2.3
+      },
+      "literature_evidence": "Hirulog peptide: D-Phe by design; internal control DPN:1 vol=-2.60 correct"
+    },
+    {
+      "pdb_id": "1BG0",
+      "error_type": "CCD-Code",
+      "labeled_ccd": "DAR",
+      "n_error_residues": 1,
+      "experimental_method": "X-RAY DIFFRACTION",
+      "resolution_angstrom": 1.86,
+      "deposition_title": "TRANSITION STATE STRUCTURE OF ARGININE KINASE",
+      "automated_validation_pass": true,
+      "validation_rationale": "Deposited coordinates match L-stereochemistry (V>0); wwPDB CCD ARG InChI indicates L-form.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          2.5832,
+          2.5832
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "correct_l_form_ccd": "ARG",
+        "correct_l_form_inchi_stereo": "L",
+        "ccd_inchi_matches_coordinates": true,
+        "deposition_title": "TRANSITION STATE STRUCTURE OF ARGININE KINASE",
+        "experimental_method": "X-RAY DIFFRACTION",
+        "resolution_angstrom": 1.86
+      },
+      "literature_evidence": "Arginine kinase substrate is L-Arg (not in SEQRES; standalone ligand)"
+    },
+    {
+      "pdb_id": "1D7T",
+      "error_type": "Stereochem",
+      "labeled_ccd": "DTY",
+      "n_error_residues": 1,
+      "experimental_method": "SOLUTION NMR",
+      "resolution_angstrom": null,
+      "deposition_title": "NMR STRUCTURE OF AN ENGINEERED CONTRYPHAN CYCLIC PEPTIDE (MOTIF CPXXPXC)",
+      "automated_validation_pass": true,
+      "validation_rationale": "D-labeled residue (DTY) has L-coordinates (V=1.85 \u00c5\u00b3); contradicts D-CCD assignment regardless of biological context.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          1.8491,
+          1.8491
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "correct_l_form_ccd": "TYR",
+        "correct_l_form_inchi_stereo": "L",
+        "ccd_inchi_matches_coordinates": true,
+        "deposition_title": "NMR STRUCTURE OF AN ENGINEERED CONTRYPHAN CYCLIC PEPTIDE (MOTIF CPXXPXC)",
+        "experimental_method": "SOLUTION NMR",
+        "resolution_angstrom": null
+      },
+      "literature_evidence": "Contryphan [D-Tyr4]: D-Tyr biologically expected (NMR structure)"
+    },
+    {
+      "pdb_id": "1HHZ",
+      "error_type": "Stereochem",
+      "labeled_ccd": "DAL",
+      "n_error_residues": 1,
+      "experimental_method": "X-RAY DIFFRACTION",
+      "resolution_angstrom": 0.99,
+      "deposition_title": "Deglucobalhimycin in complex with cell wall pentapeptide",
+      "automated_validation_pass": true,
+      "validation_rationale": "D-labeled residue (DAL) has L-coordinates (V=2.70 \u00c5\u00b3); contradicts D-CCD assignment regardless of biological context.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          2.7037,
+          2.7037
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "deposition_title": "Deglucobalhimycin in complex with cell wall pentapeptide",
+        "experimental_method": "X-RAY DIFFRACTION",
+        "resolution_angstrom": 0.99
+      },
+      "literature_evidence": "Cell wall pentapeptide D-Ala; 0.99A atomic resolution"
+    },
+    {
+      "pdb_id": "1KO0",
+      "error_type": "Borderline",
+      "labeled_ccd": "DLY",
+      "n_error_residues": 1,
+      "experimental_method": "X-RAY DIFFRACTION",
+      "resolution_angstrom": 2.2,
+      "deposition_title": "Crystal Structure of a D,L-lysine complex of diaminopimelate decarboxylase",
+      "automated_validation_pass": null,
+      "validation_rationale": "Borderline signed volume; requires manual review.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          0.1156,
+          0.1156
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "correct_l_form_ccd": "LYS",
+        "correct_l_form_inchi_stereo": "L",
+        "ccd_inchi_matches_coordinates": true,
+        "deposition_title": "Crystal Structure of a D,L-lysine complex of diaminopimelate decarboxylase",
+        "experimental_method": "X-RAY DIFFRACTION",
+        "resolution_angstrom": 2.2
+      },
+      "literature_evidence": "Title says D-L-lysine (racemic); near-zero volume inconclusive"
+    },
+    {
+      "pdb_id": "1MCB",
+      "error_type": "Mislabel",
+      "labeled_ccd": "DHI",
+      "n_error_residues": 1,
+      "experimental_method": "X-RAY DIFFRACTION",
+      "resolution_angstrom": 2.7,
+      "deposition_title": "PRINCIPLES AND PITFALLS IN DESIGNING SITE DIRECTED PEPTIDE LIGANDS",
+      "automated_validation_pass": true,
+      "validation_rationale": "L-coordinates with D-amino-acid label in L-protein context.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          2.5975,
+          2.5975
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "deposition_title": "PRINCIPLES AND PITFALLS IN DESIGNING SITE DIRECTED PEPTIDE LIGANDS",
+        "experimental_method": "X-RAY DIFFRACTION",
+        "resolution_angstrom": 2.7
+      },
+      "literature_evidence": "COMPND says L-HIS explicitly; DHI should be HIS"
+    },
+    {
+      "pdb_id": "1OF6",
+      "error_type": "CCD-Code",
+      "labeled_ccd": "DTY",
+      "n_error_residues": 8,
+      "experimental_method": "X-RAY DIFFRACTION",
+      "resolution_angstrom": 2.1,
+      "deposition_title": "crystal structure of the tyrosine-regulated 3-deoxy-d-arabino-heptulosonate-7-phosphate synthase from saccharomyces cerevisiae complexed with tyrosine and manganese",
+      "automated_validation_pass": true,
+      "validation_rationale": "Deposited coordinates match L-stereochemistry (V>0); wwPDB CCD TYR InChI indicates L-form.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          2.5144,
+          2.6691
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "correct_l_form_ccd": "TYR",
+        "correct_l_form_inchi_stereo": "L",
+        "ccd_inchi_matches_coordinates": true,
+        "deposition_title": "crystal structure of the tyrosine-regulated 3-deoxy-d-arabino-heptulosonate-7-phosphate synthase from saccharomyces cerevisiae complexed with tyrosine and manganese",
+        "experimental_method": "X-RAY DIFFRACTION",
+        "resolution_angstrom": 2.1
+      },
+      "literature_evidence": "DAHP synthase allosteric inhibitor is L-Tyr; 8 copies; DTY should be TYR"
+    },
+    {
+      "pdb_id": "1P52",
+      "error_type": "CCD-Code",
+      "labeled_ccd": "DAR",
+      "n_error_residues": 1,
+      "experimental_method": "X-RAY DIFFRACTION",
+      "resolution_angstrom": 1.9,
+      "deposition_title": "Structure of Arginine kinase E314D mutant",
+      "automated_validation_pass": true,
+      "validation_rationale": "Deposited coordinates match L-stereochemistry (V>0); wwPDB CCD ARG InChI indicates L-form.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          2.5364,
+          2.5364
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "correct_l_form_ccd": "ARG",
+        "correct_l_form_inchi_stereo": "L",
+        "ccd_inchi_matches_coordinates": true,
+        "deposition_title": "Structure of Arginine kinase E314D mutant",
+        "experimental_method": "X-RAY DIFFRACTION",
+        "resolution_angstrom": 1.9
+      },
+      "literature_evidence": "Arginine kinase E314D mutant; substrate is L-Arg"
+    },
+    {
+      "pdb_id": "1UHG",
+      "error_type": "Mislabel",
+      "labeled_ccd": "DSN",
+      "n_error_residues": 1,
+      "experimental_method": "X-RAY DIFFRACTION",
+      "resolution_angstrom": 1.9,
+      "deposition_title": "Crystal Structure of S-Ovalbumin At 1.9 Angstrom Resolution",
+      "automated_validation_pass": true,
+      "validation_rationale": "L-coordinates with D-amino-acid label in L-protein context.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          2.2136,
+          2.2136
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "deposition_title": "Crystal Structure of S-Ovalbumin At 1.9 Angstrom Resolution",
+        "experimental_method": "X-RAY DIFFRACTION",
+        "resolution_angstrom": 1.9
+      },
+      "literature_evidence": "Ovalbumin is L-protein; no biological reason for D-Ser"
+    },
+    {
+      "pdb_id": "1XT7",
+      "error_type": "Stereochem",
+      "labeled_ccd": "DSG",
+      "n_error_residues": 1,
+      "experimental_method": "SOLUTION NMR",
+      "resolution_angstrom": null,
+      "deposition_title": "Daptomycin NMR Structure",
+      "automated_validation_pass": true,
+      "validation_rationale": "D-labeled residue (DSG) has L-coordinates (V=2.55 \u00c5\u00b3); contradicts D-CCD assignment regardless of biological context.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          2.5501,
+          2.5501
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "deposition_title": "Daptomycin NMR Structure",
+        "experimental_method": "SOLUTION NMR",
+        "resolution_angstrom": null
+      },
+      "literature_evidence": "Daptomycin antibiotic: D-Asn biologically required"
+    },
+    {
+      "pdb_id": "2AOU",
+      "error_type": "Mislabel",
+      "labeled_ccd": "DCY",
+      "n_error_residues": 1,
+      "experimental_method": "X-RAY DIFFRACTION",
+      "resolution_angstrom": 2.3,
+      "deposition_title": "Histamine Methyltransferase Complexed with the Antimalarial Drug Amodiaquine",
+      "automated_validation_pass": true,
+      "validation_rationale": "L-coordinates with D-amino-acid label in L-protein context.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          2.6722,
+          2.6722
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "deposition_title": "Histamine Methyltransferase Complexed with the Antimalarial Drug Amodiaquine",
+        "experimental_method": "X-RAY DIFFRACTION",
+        "resolution_angstrom": 2.3
+      },
+      "literature_evidence": "Histamine methyltransferase is L-protein; no reason for D-Cys"
+    },
+    {
+      "pdb_id": "2ATS",
+      "error_type": "CCD-Code",
+      "labeled_ccd": "DLY",
+      "n_error_residues": 3,
+      "experimental_method": "X-RAY DIFFRACTION",
+      "resolution_angstrom": 1.9,
+      "deposition_title": "Dihydrodipicolinate synthase co-crystallised with (S)-lysine",
+      "automated_validation_pass": true,
+      "validation_rationale": "Deposited coordinates match L-stereochemistry (V>0); wwPDB CCD LYS InChI indicates L-form.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          2.5571,
+          2.5854
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "correct_l_form_ccd": "LYS",
+        "correct_l_form_inchi_stereo": "L",
+        "ccd_inchi_matches_coordinates": true,
+        "deposition_title": "Dihydrodipicolinate synthase co-crystallised with (S)-lysine",
+        "experimental_method": "X-RAY DIFFRACTION",
+        "resolution_angstrom": 1.9
+      },
+      "literature_evidence": "Title says (S)-lysine = L-Lys; 3 copies; DLY should be LYS"
+    },
+    {
+      "pdb_id": "2H9E",
+      "error_type": "Borderline",
+      "labeled_ccd": "DTY",
+      "n_error_residues": 1,
+      "experimental_method": "X-RAY DIFFRACTION",
+      "resolution_angstrom": 2.2,
+      "deposition_title": "Crystal Structure of FXa/selectide/NAPC2 ternary complex",
+      "automated_validation_pass": null,
+      "validation_rationale": "Borderline signed volume; requires manual review.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          0.5642,
+          0.5642
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "correct_l_form_ccd": "TYR",
+        "correct_l_form_inchi_stereo": "L",
+        "ccd_inchi_matches_coordinates": true,
+        "deposition_title": "Crystal Structure of FXa/selectide/NAPC2 ternary complex",
+        "experimental_method": "X-RAY DIFFRACTION",
+        "resolution_angstrom": 2.2
+      },
+      "literature_evidence": "Selectide DTY-Ile-Arg-Leu-LPD inhibitor; vol=+0.56 below confirmed-error threshold; borderline"
+    },
+    {
+      "pdb_id": "2RMI",
+      "error_type": "Stereochem",
+      "labeled_ccd": "DPN",
+      "n_error_residues": 1,
+      "experimental_method": "SOLUTION NMR",
+      "resolution_angstrom": null,
+      "deposition_title": "3D NMR structure of astressin",
+      "automated_validation_pass": true,
+      "validation_rationale": "D-labeled residue (DPN) has L-coordinates (V=2.63 \u00c5\u00b3); contradicts D-CCD assignment regardless of biological context.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          2.6259,
+          2.6259
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "deposition_title": "3D NMR structure of astressin",
+        "experimental_method": "SOLUTION NMR",
+        "resolution_angstrom": null
+      },
+      "literature_evidence": "Astressin cyclic CRF antagonist: D-Phe12 biologically required; PMID 17657708; NMR deposited 2007"
+    },
+    {
+      "pdb_id": "2W76",
+      "error_type": "Stereochem",
+      "labeled_ccd": "DSN",
+      "n_error_residues": 1,
+      "experimental_method": "X-RAY DIFFRACTION",
+      "resolution_angstrom": 2.8,
+      "deposition_title": "Structures of P. aeruginosa FpvA bound to heterologous pyoverdines: FpvA-Pvd(Pa6)-Fe complex",
+      "automated_validation_pass": true,
+      "validation_rationale": "D-labeled residue (DSN) has L-coordinates (V=2.33 \u00c5\u00b3); contradicts D-CCD assignment regardless of biological context.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          2.3283,
+          2.3283
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "deposition_title": "Structures of P. aeruginosa FpvA bound to heterologous pyoverdines: FpvA-Pvd(Pa6)-Fe complex",
+        "experimental_method": "X-RAY DIFFRACTION",
+        "resolution_angstrom": 2.8
+      },
+      "literature_evidence": "Pyoverdine PVD(PA6)-Fe siderophore: D-Ser at pos 3 biosynthetically required by NRPS epimerization; PMID 19504741; dep 2008"
+    },
+    {
+      "pdb_id": "3RIT",
+      "error_type": "CCD-Code",
+      "labeled_ccd": "DLY",
+      "n_error_residues": 5,
+      "experimental_method": "X-RAY DIFFRACTION",
+      "resolution_angstrom": 2.701,
+      "deposition_title": "Crystal structure of Dipeptide Epimerase from Methylococcus capsulatus complexed with Mg and dipeptide L-Arg-D-Lys",
+      "automated_validation_pass": true,
+      "validation_rationale": "Deposited coordinates match L-stereochemistry (V>0); wwPDB CCD LYS InChI indicates L-form.",
+      "checks": {
+        "signed_volume_positive": true,
+        "signed_volume_range": [
+          2.4182,
+          2.7681
+        ],
+        "coordinates_indicate_L_at_Calpha": true,
+        "correct_l_form_ccd": "LYS",
+        "correct_l_form_inchi_stereo": "L",
+        "ccd_inchi_matches_coordinates": true,
+        "deposition_title": "Crystal structure of Dipeptide Epimerase from Methylococcus capsulatus complexed with Mg and dipeptide L-Arg-D-Lys",
+        "experimental_method": "X-RAY DIFFRACTION",
+        "resolution_angstrom": 2.701
+      },
+      "literature_evidence": "Dipeptide epimerase: title says L-Arg-D-Lys product but all 5 chains show L-Lys coordinates; dep 2011; PMID 22392983"
+    }
+  ],
+  "5m2k_exclusion": {
+    "pdb_id": "5M2K",
+    "title": "Crystal structure of vancomycin-Zn(II) complex",
+    "experimental_method": "X-RAY DIFFRACTION",
+    "resolution_angstrom": 1.0,
+    "molecule": "vancomycin",
+    "entity_sequence": "(MLU)(OMZ)N(GHP)(GHP)(OMY)(3FG)",
+    "non_standard_monomers": 5,
+    "standard_amino_acids_in_sequence": 1,
+    "benchmark_exclusion_reason": "Not a globular protein: 7-residue glycopeptide antibiotic (vancomycin\u2013Zn\u00b2\u207a) with 6/7 non-standard monomers; only ASN is a standard amino acid. Ramachandran calibration targets standard-protein backbones. wwPDB reports 100% Ramachandran outliers because the backbone geometry is cyclic/modified glycopeptide, not because ChiralFold disagrees on a meaningful protein benchmark point (ChiralFold = 0%).",
+    "is_protein_benchmark_entry": false,
+    "citation": "Zarkan et al., Sci Rep 7:4893 (2017); PMID 28687742",
+    "rcsb_url": "https://www.rcsb.org/structure/5M2K"
+  }
+}

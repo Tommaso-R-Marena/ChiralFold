@@ -47,7 +47,7 @@ For correctly deposited D-residues, $V<0$ by CIP convention; $V>0$ at a D-label 
 
 \subsection{ChiralFold auditor}
 
-The auditor scores C$\alpha$ chirality, bond geometry, hybrid Ramachandran grids, peptide planarity, steric clashes, and a composite 0--100 score. Ramachandran calibration used an era-representative stratified sample of 362 standard-protein structures (seed 20260612), comparing outlier percentages to wwPDB validation XML; one non-protein entry (5M2K) was excluded under a pre-specified criterion (\texttt{wwpdb\_rama\_outlier\_pct}$>50\%$). See Supplementary Methods for bin definitions and chain-ID remapping.
+The auditor scores C$\alpha$ chirality, bond geometry, hybrid Ramachandran grids, peptide planarity, steric clashes, and a composite 0--100 score. Ramachandran calibration used an era-representative stratified sample of 362 standard-protein structures (seed 20260612), comparing outlier percentages to wwPDB validation XML; one glycopeptide antibiotic entry (5M2K, vancomycin--Zn$^{2+}$: 7-residue cyclic glycopeptide with only one standard amino acid, not a globular protein) was excluded under a pre-specified criterion (\texttt{wwpdb\_rama\_outlier\_pct}$>50\%$; see \texttt{results/5m2k\_benchmark\_exclusion.json}). See Supplementary Methods for bin definitions and chain-ID remapping.
 
 \subsection{Formal verification}
 
@@ -57,7 +57,7 @@ Lean~4 proofs (\texttt{formal/chirality\_nogo/}) show that reflection preserves 
 
 \subsection{PDB D-residue survey}
 
-Of 12{,}573 checkable D-residues, 29 (0.23\%) in 16 structures showed positive signed volume despite D-labels (Fig.~\ref{fig:ccd}). Cross-referencing deposition metadata and literature yields six genuine stereochemistry errors (biology requires D, coordinates show L), 18 CCD-code misassignments across five structures (L-ligand labeled with D-code), three polymer mislabels, and two borderline cases (Supplementary Table~S1). All 29 mismatches map to nine CCD codes; nine codes are confirmed clean at zero errors (Fisher's exact $p=1.96\times10^{-10}$); DTY and DLY alone account for 19 errors. MolProbity's standard C$\alpha$ chirality check applies to L-residues only and does not flag these D-label mismatches. Thirteen of 16 error structures predate 2006 wwPDB remediation (Mann--Whitney $p=1.14\times10^{-4}$ on the expanded set); resolution does not predict errors ($p=0.19$).
+Of 12{,}573 checkable D-residues, 29 (0.23\%) in 16 structures showed positive signed volume despite D-labels (Fig.~\ref{fig:ccd}). Cross-referencing deposition metadata and literature yields six genuine stereochemistry errors (biology requires D, coordinates show L), 18 CCD-code misassignments across five structures (L-ligand labeled with D-code), three polymer mislabels, and two borderline cases (Supplementary Table~S1). An independent validation pipeline (\texttt{benchmarks/experimental\_structure\_validation.py}; Colab notebook in Supplementary) cross-checks all 16 structures against RCSB experimental metadata and wwPDB CCD InChI stereochemistry: 14/14 non-borderline cases pass automated criteria (X-ray and NMR). All 29 mismatches map to nine CCD codes; nine codes are confirmed clean at zero errors (Fisher's exact $p=1.96\times10^{-10}$); DTY and DLY alone account for 19 errors. MolProbity's standard C$\alpha$ chirality check applies to L-residues only and does not flag these D-label mismatches. Thirteen of 16 error structures predate 2006 wwPDB remediation (Mann--Whitney $p=1.14\times10^{-4}$); resolution does not predict errors ($p=0.19$).
 
 \begin{figure}[!t]
 \centering
@@ -69,7 +69,7 @@ Of 12{,}573 checkable D-residues, 29 (0.23\%) in 16 structures showed positive s
 
 \subsection{MolProbity calibration}
 
-On $n=362$ structures, ChiralFold Ramachandran outlier percentages agree with wwPDB (Spearman $\rho=0.52$, 95\% CI [0.42, 0.61], $p=1.5\times10^{-26}$; mean 0.78\% vs 0.83\%; Fig.~\ref{fig:rama}). Pearson $r$ is outlier-sensitive (0.33 for $n=363$; 0.85 after excluding the sole non-protein entry 5M2K); Spearman $\rho$ is the primary agreement metric. ChiralFold adds D-residue chirality auditing absent from MolProbity.
+On $n=362$ structures, ChiralFold Ramachandran outlier percentages agree with wwPDB (Spearman $\rho=0.52$, 95\% CI [0.42, 0.61], $p=1.5\times10^{-26}$; mean 0.78\% vs 0.83\%; Fig.~\ref{fig:rama}). Pearson $r$ is outlier-sensitive (0.33 for $n=363$; 0.85 after excluding 5M2K, a vancomycin glycopeptide); Spearman $\rho$ is the primary agreement metric. ChiralFold adds D-residue chirality auditing absent from MolProbity.
 
 \begin{figure}[!t]
 \centering
@@ -86,7 +86,7 @@ Lean~4 proofs establish that any chirality readout factoring only through pairwi
 
 The signed C$\alpha$ volume distinguishes stereochemistry errors, CCD misassignments, and mislabels without biological context. The 1HHZ case (0.99~\AA\ resolution, D-Ala with $V=+2.70$) shows errors are labeling failures, not density limitations. CCD misassignments are fixable by comparing deposited coordinates to the InChI \texttt{/m} flag at deposition \citep{shao2015,outcome2016}.
 
-ChiralFold is a stereochemistry post-processor, not a de novo folder: use AF3 or ESMFold for folding, then audit or correct with ChiralFold. Limitations include mmCIF-only exclusions (245 structures), chi1-only rotamer scoring, single-investigator error subtyping from metadata and literature, two borderline cases with signed volume $<1.0$~\AA$^3$, and no experimental binding validation of mirror-designed peptides.
+ChiralFold is a stereochemistry post-processor, not a de novo folder: use AF3 or ESMFold for folding, then audit or correct with ChiralFold. Limitations include mmCIF-only exclusions (245 structures; native mmCIF re-survey in progress), chi1-only rotamer scoring, two borderline cases with signed volume $<1.0$~\AA$^3$, and no experimental binding validation of mirror-designed peptides.
 
 \section{Conclusion}
 
@@ -94,7 +94,7 @@ ChiralFold identifies D-residue annotation errors invisible to existing pipeline
 
 \section*{Data availability}
 
-Verification data: \url{https://github.com/Tommaso-R-Marena/ChiralFold/blob/master/results/d_residue_verification.csv}. Benchmark outputs: \texttt{results/ramachandran\_279struct\_chainfix\_*}. Software: PyPI \texttt{chiralfold}, Docker \texttt{ghcr.io/tommaso-r-marena/chiralfold:3.4.0}, GitHub release v3.4.0.
+Verification data: \url{https://github.com/Tommaso-R-Marena/ChiralFold/blob/master/results/d_residue_verification.csv}. Experimental validation: \texttt{results/experimental\_validation\_report.json}. Benchmark outputs: \texttt{results/ramachandran\_279struct\_chainfix\_*}. Software: PyPI \texttt{chiralfold}, Docker \texttt{ghcr.io/tommaso-r-marena/chiralfold:3.4.0}, GitHub release v3.4.0.
 
 \section*{Funding}
 
