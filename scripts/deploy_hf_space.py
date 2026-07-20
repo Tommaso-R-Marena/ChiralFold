@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-"""Deploy hf_space/ to https://huggingface.co/spaces/The-Philosopher/ChiralFold
+"""Deploy hf_space/ to https://huggingface.co/spaces/The-Philosopher/ChiralFold-App
 
 Usage:
     export HF_TOKEN=hf_...   # write token from https://huggingface.co/settings/tokens
     python scripts/deploy_hf_space.py
+
+Note: New Gradio Spaces require HF Pro. This repo deploys as a Docker Space
+to The-Philosopher/ChiralFold-App (existing CPU hardware). The static Space
+The-Philosopher/ChiralFold redirects to the live app.
 """
 from __future__ import annotations
 
@@ -13,7 +17,7 @@ from pathlib import Path
 
 from huggingface_hub import HfApi, create_repo
 
-REPO_ID = "The-Philosopher/ChiralFold"
+REPO_ID = "The-Philosopher/ChiralFold-App"
 ROOT = Path(__file__).resolve().parents[1]
 SPACE_DIR = ROOT / "hf_space"
 
@@ -33,10 +37,10 @@ def main() -> int:
     create_repo(
         repo_id=REPO_ID,
         repo_type="space",
-        space_sdk="docker",
+        space_sdk="gradio",
         exist_ok=True,
         token=token,
-    )  # Gradio SDK create needs HF Pro; Docker Space is used instead
+    )
     api.upload_folder(
         folder_path=str(SPACE_DIR),
         repo_id=REPO_ID,

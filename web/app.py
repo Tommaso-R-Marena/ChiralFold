@@ -451,7 +451,7 @@ def build_app() -> gr.Blocks:
             "---\n"
             f"**ChiralFold v{__version__}** · "
             "[GitHub](https://github.com/Tommaso-R-Marena/ChiralFold) · "
-            "[Hugging Face Space](https://huggingface.co/spaces/The-Philosopher/ChiralFold) · "
+            "[Hugging Face Space](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App) · "
             "`pip install chiralfold` · "
             "Results stay on your session; nothing is stored permanently."
         )
