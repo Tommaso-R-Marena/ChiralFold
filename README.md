@@ -3,7 +3,7 @@
 **Chirality-correct protein stereochemistry toolkit: PDB auditing, D-peptide construction, AF3 chirality correction, and mirror-image binder design.**
 
 ![Tests](https://github.com/Tommaso-R-Marena/ChiralFold/actions/workflows/ci.yml/badge.svg?branch=master)
-[![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-ChiralFold%20Web-0D9488?style=for-the-badge)](https://huggingface.co/spaces/The-Philosopher/ChiralFold)
+[![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-ChiralFold%20Web-0D9488?style=for-the-badge)](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App)
 [![Open Web App](https://img.shields.io/badge/Web%20App-Launch%20locally-0D9488?style=for-the-badge&logo=googlechrome&logoColor=white)](#web-app-no-install-required)
 [![Quick Demo in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Quick_Demo.ipynb)
 [![Toy Dataset Demo in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Toy_Dataset_Demo.ipynb)
@@ -50,7 +50,7 @@ Results: `results/experimental_validation_report.json` (14/14 non-borderline cas
 
 **Instant (recommended):** open the hosted app on Hugging Face —
 
-[![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-lg.svg)](https://huggingface.co/spaces/The-Philosopher/ChiralFold)
+[![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-lg.svg)](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App)
 
 Upload any PDB → **audit** stereochemistry → **download a chirality-corrected structure** or an exact **mirror-image (L↔D)** file. Also supports RCSB PDB-ID fetch and offline examples.
 

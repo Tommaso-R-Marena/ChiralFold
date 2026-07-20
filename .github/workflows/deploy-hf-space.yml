@@ -41,12 +41,12 @@ jobs:
           from huggingface_hub import HfApi, create_repo
 
           token = os.environ["HF_TOKEN"]
-          repo_id = "The-Philosopher/ChiralFold"
+          repo_id = "The-Philosopher/ChiralFold-App"
           api = HfApi(token=token)
           create_repo(
               repo_id=repo_id,
               repo_type="space",
-              space_sdk="gradio",
+              space_sdk="docker",
               exist_ok=True,
               token=token,
           )

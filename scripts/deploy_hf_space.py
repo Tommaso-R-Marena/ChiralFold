@@ -33,10 +33,10 @@ def main() -> int:
     create_repo(
         repo_id=REPO_ID,
         repo_type="space",
-        space_sdk="gradio",
+        space_sdk="docker",
         exist_ok=True,
         token=token,
-    )
+    )  # Gradio SDK create needs HF Pro; Docker Space is used instead
     api.upload_folder(
         folder_path=str(SPACE_DIR),
         repo_id=REPO_ID,
