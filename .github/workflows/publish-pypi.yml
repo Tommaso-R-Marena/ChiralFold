@@ -17,7 +17,10 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: pypi
+    # Must match the Environment name configured on the PyPI Trusted Publisher.
+    environment:
+      name: pypi
+      url: https://pypi.org/project/chiralfold/
     steps:
       - uses: actions/checkout@v4
         with:
@@ -33,12 +36,37 @@ jobs:
           python -m build
           ls -la dist/
 
+      - name: Preflight — Trusted Publisher checklist
+        env:
+          HAS_API_TOKEN: ${{ secrets.PYPI_API_TOKEN != '' }}
+        run: |
+          echo "Publishing chiralfold from Tommaso-R-Marena/ChiralFold"
+          echo "Workflow file: publish-pypi.yml"
+          echo "GitHub Environment: pypi"
+          echo "API token secret set: ${HAS_API_TOKEN}"
+          if [ "${HAS_API_TOKEN}" != "true" ]; then
+            cat <<'EOF'
+          Using Trusted Publishing (OIDC). PyPI must have a matching publisher:
+
+            PyPI project name : chiralfold
+            Owner             : Tommaso-R-Marena
+            Repository        : ChiralFold
+            Workflow name     : publish-pypi.yml
+            Environment name  : pypi
+
+          For a brand-new project, add a *pending* publisher under your PyPI
+          account Publishing settings, then re-run this workflow.
+          Docs: docs/PYPI_PUBLISHING.md
+          EOF
+          fi
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          # Empty password → Trusted Publisher (OIDC).
-          # Set repo secret PYPI_API_TOKEN to a PyPI API token as a fallback when
-          # Trusted Publisher is not yet linked (see docs/PYPI_PUBLISHING.md).
+          # Empty / unset PYPI_API_TOKEN → OIDC Trusted Publisher.
+          # Set repo secret PYPI_API_TOKEN (pypi-...) as a fallback.
           password: ${{ secrets.PYPI_API_TOKEN }}
           skip-existing: true
           verbose: true
+          # Attestations need extra setup; keep off until Trusted Publisher works.
+          attestations: false

@@ -3,9 +3,9 @@
 `pip install chiralfold` requires a successful upload to
 https://pypi.org/project/chiralfold/.
 
-## Current failure mode
+## Diagnosis from the latest failing run
 
-GitHub Actions logs show:
+Build of `chiralfold-3.5.1` **succeeds**. Upload fails with:
 
 ```text
 Trusted publishing exchange failure:
@@ -13,15 +13,26 @@ Trusted publishing exchange failure:
   (Publisher with matching claims was not found)
 ```
 
-OIDC works on the GitHub side; **PyPI has no Trusted Publisher that matches
-this repository's claims**. That is a PyPI project setting, not a code bug.
+GitHub OIDC is working. **PyPI has no Trusted Publisher (or pending publisher)
+that matches these claims** from the failing job:
 
-## Fix option A — Trusted Publisher (preferred)
+| Claim | Value from the log |
+|-------|--------------------|
+| `repository` | `Tommaso-R-Marena/ChiralFold` |
+| `workflow_ref` | `.../.github/workflows/publish-pypi.yml@refs/heads/master` |
+| `environment` | `pypi` |
+| `sub` | `repo:Tommaso-R-Marena/ChiralFold:environment:pypi` |
 
-1. Log in to PyPI as the owner of project `chiralfold`
-   (or create the project on first publish).
-2. Open **Project settings → Publishing → Add a new pending publisher**.
-3. Enter **exactly**:
+This is a PyPI account/project setting, not a packaging bug.
+
+## Fix option A — Pending / Trusted Publisher (preferred)
+
+Because `chiralfold` is not on PyPI yet, use a **pending publisher**:
+
+1. Log in to PyPI as **Tommaso-R-Marena** (or the account that should own the project).
+2. Open **Your account → Publishing → Add a new pending publisher**
+   (https://pypi.org/manage/account/publishing/).
+3. Enter **exactly** (case-sensitive):
 
 | Field | Value |
 |-------|-------|
@@ -31,37 +42,31 @@ this repository's claims**. That is a PyPI project setting, not a code bug.
 | Workflow name | `publish-pypi.yml` |
 | Environment name | `pypi` |
 
-4. Ensure the GitHub repo has an Environment named **`pypi`**
-   (Settings → Environments). No secrets are required for OIDC.
-5. Re-run **Publish to PyPI** (Actions → workflow_dispatch) or publish a
-   GitHub Release / tag `v*`.
+4. Confirm GitHub has an Environment named **`pypi`**
+   (repo → Settings → Environments). No secrets required for OIDC.
+5. Re-run **Actions → Publish to PyPI → Run workflow** (leave tag blank to
+   publish current `master`, or set `v3.5.1`).
 
-Claims emitted by the failing run (for comparison):
+Common mismatches that cause `invalid-publisher`:
 
-- `repository`: `Tommaso-R-Marena/ChiralFold`
-- `workflow_ref`: `.../.github/workflows/publish-pypi.yml@...`
-- `environment`: `pypi`
-
-If you configure the publisher **without** an Environment name, either leave
-the Environment field blank on PyPI **and** remove `environment: pypi` from
-`.github/workflows/publish-pypi.yml`, or keep both sides set to `pypi`.
+- Workflow name includes a path (`/.github/workflows/publish-pypi.yml`) — use **only** `publish-pypi.yml`
+- Environment left blank on PyPI while the workflow has `environment: pypi` (or the reverse)
+- Repo owner typo / wrong capitalization (`tommaso-r-marena` vs `Tommaso-R-Marena` — use the GitHub owner string PyPI expects; usually the login as shown on GitHub)
+- Publisher registered under a different PyPI account than the one you expect
 
 ## Fix option B — API token fallback
 
-1. Create a PyPI API token scoped to project `chiralfold`
-   (Account settings → API tokens).
-2. Add GitHub Actions secret **`PYPI_API_TOKEN`** with that token value
-   (`pypi-...`).
-3. Re-run the publish workflow. The workflow passes
-   `password: ${{ secrets.PYPI_API_TOKEN }}` into
-   `pypa/gh-action-pypi-publish`; when the secret is set, token auth is used
+1. Create a PyPI API token (Account settings → API tokens). For a new project,
+   use a **user-scoped** token for the first upload, then switch to a
+   project-scoped token.
+2. Add GitHub Actions secret **`PYPI_API_TOKEN`** with the token value (`pypi-...`).
+3. Re-run the publish workflow. When that secret is set, token auth is used
    instead of OIDC.
 
 ## Verify
 
 ```bash
 pip index versions chiralfold
-# or
 pip install chiralfold==3.5.1
 python -c "import chiralfold; print(chiralfold.__version__)"
 ```
@@ -69,5 +74,4 @@ python -c "import chiralfold; print(chiralfold.__version__)"
 ## Related workflows
 
 - `.github/workflows/publish-pypi.yml` — manual / release publish
-- `.github/workflows/release.yml` — tag `v*` release (also publishes when
-  Trusted Publisher or `PYPI_API_TOKEN` is configured)
+- `.github/workflows/release.yml` — tag `v*` release
