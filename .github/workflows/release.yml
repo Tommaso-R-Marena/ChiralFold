@@ -69,6 +69,7 @@ jobs:
           password: ${{ secrets.PYPI_API_TOKEN }}
           skip-existing: true
           verbose: true
+          attestations: false
 
   docker:
     needs: test
