@@ -69,7 +69,7 @@ theorem distSq_transformPoint_of_orthogonal
     distSq (transformPoint A p) (transformPoint A q) = distSq p q := by
   unfold distSq;
   simp +decide only [transformPoint_sub, mul_sub, pow_two];
-  have := orthogonal_entry A hA; simp_all +decide [ Fin.sum_univ_three, mul_sub, sub_mul, mul_assoc, mul_comm, mul_left_comm, Finset.mul_sum _ _ _, Finset.sum_mul ] ;
+  have := orthogonal_entry A hA; simp_all +decide [Fin.sum_univ_three, mul_sub, mul_comm];
   grind +ring
 
 -- ============================================================

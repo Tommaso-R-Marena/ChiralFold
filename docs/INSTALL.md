@@ -50,3 +50,4 @@ docker compose up web   # Gradio on :7860
 - **`ModuleNotFoundError: rdkit`** → install RDKit via conda-forge, then reinstall ChiralFold.
 - **Gradio / `HfFolder` import errors** → `pip install "chiralfold[web]"` pins a compatible `huggingface_hub`.
 - **Slow Colab first cell** → expected; notebooks clone + pip install (~1–2 min).
+- **`pip install chiralfold` fails / package missing on PyPI** → use the Git install above, or configure publishing per [`docs/PYPI_PUBLISHING.md`](PYPI_PUBLISHING.md).

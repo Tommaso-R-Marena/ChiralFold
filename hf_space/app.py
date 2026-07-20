@@ -265,8 +265,7 @@ def build_app() -> gr.Blocks:
                 <span class="cf-badge">open source</span>
               </div>
             </div>
-            """,
-            padding=False,
+            """
         )
         with gr.Row():
             with gr.Column(scale=5, elem_classes=["cf-panel"]):

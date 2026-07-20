@@ -35,8 +35,9 @@ cd ChiralFold
 pip install -e .
 ```
 
-> **Note:** Bare `pip install chiralfold` will work once the PyPI Trusted Publisher is linked
-> (workflow: `.github/workflows/publish-pypi.yml`; release `v3.5.1` is tagged). Until then, use the Git install above — same package, wheels built from source.
+> **Note:** Bare `pip install chiralfold` requires PyPI publishing to succeed.
+> See [`docs/PYPI_PUBLISHING.md`](docs/PYPI_PUBLISHING.md) for Trusted Publisher setup
+> (or set secret `PYPI_API_TOKEN`). Until then, use the Git install above — same package.
 
 Core dependencies: `numpy`, `scipy`, `pandas`, `rdkit`.  
 Optional: `pip install "chiralfold[web]"` (Gradio UI) · `pip install "chiralfold[viz]"` (matplotlib/seaborn for benchmarks).
@@ -104,6 +105,7 @@ chiralfold-web   # http://localhost:7860
 | Ramachandran vs wwPDB (paper) | **n=362** · Spearman **ρ=0.52** · Pearson **r=0.853** | `results/ramachandran_279struct_chainfix_summary.json` |
 | AF3 synthetic correction | **100%** detection · **0%** residual · ~37 ms | `results/af3_resource_benchmark.json` |
 | Mirror clashscore | **Unchanged** (isometry — distances preserved) | `tests/test_clash_preservation.py` |
+| Lean 4 chirality no-go | Distance-only reps cannot recover signed orientation | [`formal/chirality_nogo/`](formal/chirality_nogo/) |
 
 MolProbity does **not** flag the D-residue annotation errors (L-only Cα check).
 
