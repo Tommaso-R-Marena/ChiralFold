@@ -23,6 +23,7 @@ Thumbs.db
 pdb_cache/
 .cache/
 results/ramachandran_expansion_cache/
+results/mmcif_cache/
 results/ramachandran_*run.log
 formal/**/.lake/
 formal/**/.lake-packages/

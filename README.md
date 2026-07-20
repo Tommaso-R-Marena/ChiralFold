@@ -33,7 +33,7 @@ Results: `results/experimental_validation_report.json` (14/14 non-borderline cas
 
 **5M2K exclusion:** Vancomycin–Zn²⁺ glycopeptide (7-residue cyclic antibiotic, 1 standard amino acid)—not a globular protein. Documented in `results/5m2k_benchmark_exclusion.json`.
 
-**Lean 4 generalization:** Paste `formal/chirality_nogo/ARISTOTLE_PROMPT.md` into [Harmonic Aristotle](https://aristotle.harmonic.fun/) with the Lean project from branch `cursor/aristotle-formal-proofs-9901`.
+**Lean 4 generalization:** Use [Harmonic Aristotle](https://aristotle.harmonic.fun/) with the Lean project from branch `cursor/aristotle-formal-proofs-9901` (see manuscript supplementary Methods for scope).
 
 **mmCIF expansion:** `python benchmarks/mmcif_d_residue_expansion.py` (requires `gemmi`).
 
