@@ -25,7 +25,7 @@ Automated cross-check of all 16 error structures: \texttt{benchmarks/experimenta
 L$\leftrightarrow$D reflection: $(x,y,z)\to(-x,y,z)$. Because reflection is an isometry, all pairwise distances (and therefore MolProbity-style clashscore) are unchanged before vs.\ after mirroring; this is asserted in \texttt{tests/test\_clash\_preservation.py}. AF3 correction reflects only the violating C$\alpha$ (and HA if present) across the N--C--C$\beta$ plane, preserving CA--N, CA--C, and CA--C$\beta$ bond lengths exactly and driving residual chirality violations to 0\%. Diastereomer enumeration scores $2^k$ L/D patterns. Interface scoring uses BSA, H-bonds, and salt bridges.
 
 \subsection{Unusual cases: macrocycles, non-standard ligands, and density}
-The signed-volume C$\alpha$ classifier does not require standard protein geometry. Representative edge cases (demo: \texttt{demos/Unusual\_Cases\_and\_Clash\_Safety.ipynb}):
+The signed-volume C$\alpha$ classifier does not require standard protein geometry. Representative edge cases (demo: \texttt{demos/Demo\_Unusual\_Cases\_Clash\_Safety.ipynb}):
 \begin{itemize}
   \item \textbf{Cyclic / strained peptides:} PDB 1XT7 (daptomycin) and 2RMI (astressin) --- Stereochem-class D-label/L-coordinate mismatches detected despite macrocyclic constraints.
   \item \textbf{Non-standard CCD ligands:} PDB 1OF6 deposits eight DTY codes whose coordinates and CCD InChI match L-Tyr (CCD-Code class); similarly 1BG0/1P52 (DAR$\leftarrow$L-Arg).
@@ -34,7 +34,7 @@ The signed-volume C$\alpha$ classifier does not require standard protein geometr
 \end{itemize}
 
 \subsection{Five-minute offline reproduction}
-Reviewers can recompute the 12{,}573-residue / 29-error survey without network access after clone: \texttt{python benchmarks/reproduce\_d\_residue\_errors.py} (numpy only; Colab: \texttt{demos/Reviewer\_5min\_Reproduce.ipynb}).
+Reviewers can recompute the 12{,}573-residue / 29-error survey without network access after clone: \texttt{python benchmarks/reproduce\_d\_residue\_errors.py} (numpy only; Colab: \texttt{demos/Reproduce\_PDB\_D\_Residue\_Errors\_5min.ipynb}). Unusual cases and clash-safety: \texttt{demos/Demo\_Unusual\_Cases\_Clash\_Safety.ipynb}.
 
 \subsection{AF3-mimetic correction resource benchmark}
 Because AF3 outputs are not redistributed or rerun, we benchmarked synthetic AF3-mimetic Childs-system peptide PDBs with the published 51\% AF3 D-peptide chirality violation rate as the external reference. Across DP19, DP9, and DP12 (39 auditable residues; 20 synthetic inverted stereocenters), ChiralFold detected 100\% of inverted stereocenters, corrected 100\% to the expected signed-volume class, and left 0\% residual violations. The full \texttt{correct\_af3\_output} pipeline took 0.0367~s total across the three systems (mean 0.0122~s/system) with peak traced allocations below 0.14~MB; process RSS was dominated by the already-loaded Python/RDKit runtime. Data: \texttt{results/af3\_resource\_benchmark.json}.

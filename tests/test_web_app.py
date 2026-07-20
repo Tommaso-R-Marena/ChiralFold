@@ -133,6 +133,7 @@ def test_load_example_inverted():
     path, msg = web_app.load_example("inverted")
     assert path is not None
     assert Path(path).is_file()
+    assert Path(path).name == "synthetic_l_ala_inverted.pdb"
 
 
 def test_load_example_unknown():
