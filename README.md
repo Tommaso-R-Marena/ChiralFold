@@ -15,6 +15,7 @@
 |------|------|
 | **Use in a browser** (upload PDB → correct / mirror → download) | [Hugging Face Space](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App) |
 | **Reproduce D-residue survey errors (&lt;5 min)** | [Colab notebook](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Reproduce_PDB_D_Residue_Errors_5min.ipynb) · or `python benchmarks/reproduce_d_residue_errors.py` |
+| **mmCIF re-verify known errors** | [Colab notebook](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Reproduce_mmCIF_D_Residue_Survey.ipynb) |
 | **Interactive results dashboard** | [Colab dashboard](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Results_Dashboard.ipynb) ⚠️ auto-installs (~1–2 min) |
 | **Demo: unusual cases + clash-safety** | [Colab notebook](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Demo_Unusual_Cases_Clash_Safety.ipynb) |
 
@@ -25,9 +26,9 @@
 Works on **Linux, macOS, and Windows** (Python 3.9–3.12).
 
 ```bash
-# Recommended — always current (PyPI package pending Trusted Publisher setup)
+# Recommended (PyPI)
 pip install -U pip
-pip install "chiralfold @ git+https://github.com/Tommaso-R-Marena/ChiralFold.git@v3.5.1"
+pip install "chiralfold==3.5.1"
 
 # Or clone + editable
 git clone https://github.com/Tommaso-R-Marena/ChiralFold.git
@@ -35,9 +36,8 @@ cd ChiralFold
 pip install -e .
 ```
 
-> **Note:** Bare `pip install chiralfold` requires PyPI publishing to succeed.
-> See [`docs/PYPI_PUBLISHING.md`](docs/PYPI_PUBLISHING.md) for Trusted Publisher setup
-> (or set secret `PYPI_API_TOKEN`). Until then, use the Git install above — same package.
+> **PyPI:** `pip install chiralfold` installs v3.5.1. Git/editable installs remain supported for development.
+> Publishing notes for future releases: [`docs/PYPI_PUBLISHING.md`](docs/PYPI_PUBLISHING.md).
 
 Core dependencies: `numpy`, `scipy`, `pandas`, `rdkit`.  
 Optional: `pip install "chiralfold[web]"` (Gradio UI) · `pip install "chiralfold[viz]"` (matplotlib/seaborn for benchmarks).

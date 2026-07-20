@@ -5,11 +5,16 @@ All notable changes to this project are documented in this file.
 ## [Unreleased]
 
 ### Added
+- mmCIF Colab: `demos/Reproduce_mmCIF_D_Residue_Survey.ipynb` (16 known-error structures → 29/29)
+- Publication Colab schema CI (`tests/test_colab_publication.py`)
 - Completed Aristotle Lean 4 package: orthogonal generalization, Examples.lean,
   paper Methods snippet (`formal/chirality_nogo/`)
 - `docs/PYPI_PUBLISHING.md` — Trusted Publisher claim checklist + API-token fallback
 
 ### Fixed
+- Results Dashboard AF3 cell (`correction.violations_after`); Lean “in progress” text
+- Colab installs prefer `pip install chiralfold==3.5.1`
+- Bioinformatics submission package bumped to v3.5.1; mmCIF limitation closed
 - Gradio 4 / Python 3.9 CI: remove unsupported `gr.HTML(padding=...)` kwarg
 - PyPI publish workflows accept optional `PYPI_API_TOKEN` and fail clearly when
   Trusted Publisher is not linked (`invalid-publisher`)

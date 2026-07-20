@@ -1,50 +1,27 @@
-# Overleaf upload — ChiralFold Bioinformatics submission
+# Overleaf one-click compile
 
-## Quick start
+## Upload
 
-1. Run locally (optional):
-   ```bash
-   ./package_overleaf.sh
-   # or, from the repository root:
-   scripts/build_overleaf_package.sh
-   ```
-2. Upload `ChiralFold_Bioinformatics_Overleaf.zip` to [Overleaf](https://www.overleaf.com) → **New Project** → **Upload Project**. A ready-to-upload copy is committed at `Overleaf/ChiralFold_Bioinformatics_Overleaf.zip`.
+1. Download `ChiralFold_Bioinformatics_Overleaf.zip` from this folder (or from `Overleaf/` at repo root).
+2. Overleaf → **New Project** → **Upload Project** → select the zip.
 3. Set **Main document** to `chiralfold_bioinformatics.tex` (Menu → Main document).
-4. Click **Recompile**. Use **pdfLaTeX** + **BibTeX** (Overleaf default).
+4. Compiler: **pdfLaTeX** (default). Bibliography: **BibTeX**.
+5. Click **Recompile**.
 
-## What is included
+Supplementary: compile `supplementary_material.tex` as a second document (or upload separately).
 
-| Path | Purpose |
-|------|---------|
-| `chiralfold_bioinformatics.tex` | Main manuscript |
-| `supplementary_material.tex` | Supplementary PDF (compile separately if needed) |
-| `figures/*.png` | All manuscript and supplementary figures (pre-rendered PNG, 180 dpi), including the AF3 resource benchmark |
-| `references.bib` | Bibliography |
-| `oup-authoring-template.cls` | OUP document class |
-| `oup-abbrvnat.bst` | Citation style |
-| `data/` | CSV/JSON sources to regenerate figures |
+## Contents
 
-## Figures
+- `chiralfold_bioinformatics.tex` — main paper (≤7 pages target)
+- `supplementary_material.tex` — methods + tables + extended figures
+- `figures/fig1`–`fig7` PNGs
+- `references.bib`, OUP class/bst
+- Bundled `data/` for figure regeneration
 
-All `\includegraphics` paths use explicit `.png` extensions under `figures/`:
+## Local rebuild of the zip
 
-- `fig1_error_rate_per_ccd.png` — main Fig. 1a
-- `fig2_deposition_year_vs_errors.png` — main Fig. 1b
-- `fig6_ramachandran_expanded.png` — main Fig. 2
-- `fig3_signed_volume_distribution.png` — supplementary
-- `fig4_bland_altman.png` — supplementary
-- `fig5_ccd_heatmap.png` — supplementary
-- `fig7_af3_resource_benchmark.png` — supplementary AF3-mimetic correction resource benchmark
-
-Regenerate from bundled data:
 ```bash
-python3 figures/generate_figures.py
+cd paper/submission/bioinformatics
+./package_overleaf.sh
+cp ChiralFold_Bioinformatics_Overleaf.zip ../../../Overleaf/
 ```
-
-## Supplementary PDF
-
-In Overleaf, change the main document to `supplementary_material.tex` and recompile, or add it as a second project.
-
-## Page limit
-
-After compiling, check the main PDF page count (Bioinformatics Original Paper limit: **7 pages**).
