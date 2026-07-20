@@ -34,13 +34,18 @@ def main() -> int:
     api = HfApi(token=token)
     who = api.whoami()
     print(f"Authenticated as: {who.get('name')}")
-    create_repo(
-        repo_id=REPO_ID,
-        repo_type="space",
-        space_sdk="gradio",
-        exist_ok=True,
-        token=token,
-    )
+    # Existing Space is Docker (free CPU sandbox). Do not recreate as Gradio
+    # (new Gradio Spaces require HF Pro). Upload updates into the live repo.
+    try:
+        create_repo(
+            repo_id=REPO_ID,
+            repo_type="space",
+            space_sdk="docker",
+            exist_ok=True,
+            token=token,
+        )
+    except Exception as exc:  # noqa: BLE001
+        print(f"create_repo skipped/failed (continuing upload): {exc}")
     api.upload_folder(
         folder_path=str(SPACE_DIR),
         repo_id=REPO_ID,
