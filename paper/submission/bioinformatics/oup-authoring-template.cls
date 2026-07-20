@@ -914,12 +914,14 @@
   \fi\fi\fi
   \def\titlemark##1{\markboth{##1}{##1}}%
   }
+%%%% Society logo disabled for Bioinformatics (logo file is PNAS-Nexus-specific)
+\def\societylogo{}%
 %%%% If you want to include society logo please use the below option
-\if@modern%
-\def\societylogo{\raisebox{10pt}{\includegraphics[scale=0.4]{PNAS-Nexus-Logo-CMYK}}}%
-\else%
-\def\societylogo{\raisebox{-12pt}{\includegraphics[scale=0.4]{PNAS-Nexus-Logo-CMYK}}}%
-\fi%
+%\if@modern%
+%\def\societylogo{\raisebox{10pt}{\includegraphics[scale=0.4]{PNAS-Nexus-Logo-CMYK}}}%
+%\else%
+%\def\societylogo{\raisebox{-12pt}{\includegraphics[scale=0.4]{PNAS-Nexus-Logo-CMYK}}}%
+%\fi%
 %%%% If you do not want to include society logo then please use the below option
 %\def\societylogo{}%
 
