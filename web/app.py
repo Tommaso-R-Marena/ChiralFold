@@ -8,7 +8,7 @@ Launch locally:
     # → http://localhost:7860
 
 Hugging Face Space:
-    https://huggingface.co/spaces/The-Philosopher/ChiralFold
+    https://huggingface.co/spaces/The-Philosopher/ChiralFold-App
 
 Docker:
     docker compose up web
@@ -31,6 +31,7 @@ from chiralfold import __version__
 from chiralfold.af3_correct import correct_af3_output, detect_chirality_violations
 from chiralfold.auditor import audit_pdb, format_report
 from chiralfold.pdb_pipeline import mirror_pdb
+from web.theme import CUSTOM_CSS, make_theme
 
 # ---------------------------------------------------------------------------
 # Limits & paths
@@ -44,96 +45,6 @@ _EXAMPLE_TOY = _PKG_ROOT / "chiralfold" / "data" / "examples" / "toy_ubiquitin_f
 _FIXTURE_INVERTED = (
     _PKG_ROOT / "chiralfold" / "data" / "examples" / "synthetic_l_ala_inverted.pdb"
 )
-
-CUSTOM_CSS = """
-:root {
-  --cf-teal: #0d9488;
-  --cf-teal-dark: #0f766e;
-  --cf-navy: #0f172a;
-  --cf-slate: #334155;
-  --cf-bg: #f8fafc;
-}
-.gradio-container {
-  font-family: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif !important;
-  background:
-    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(13,148,136,0.18), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 90% 0%, rgba(14,165,233,0.12), transparent 50%),
-    linear-gradient(165deg, #f0fdfa 0%, #f8fafc 50%, #f1f5f9 100%) !important;
-  max-width: 1100px !important;
-  margin: 0 auto !important;
-}
-#cf-header {
-  text-align: center;
-  padding: 1.75rem 1rem 0.75rem;
-}
-#cf-header h1 {
-  color: var(--cf-navy);
-  font-weight: 800;
-  font-size: 2.35rem;
-  letter-spacing: -0.03em;
-  margin: 0 0 0.35rem;
-}
-#cf-header .cf-tagline {
-  color: var(--cf-slate);
-  font-size: 1.05rem;
-  max-width: 36rem;
-  margin: 0 auto 0.75rem;
-  line-height: 1.45;
-}
-#cf-header .cf-meta {
-  display: inline-flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  font-size: 0.8rem;
-  color: #64748b;
-}
-#cf-header .cf-badge {
-  background: #ccfbf1;
-  color: #0f766e;
-  border: 1px solid #99f6e4;
-  border-radius: 999px;
-  padding: 0.15rem 0.65rem;
-  font-weight: 600;
-}
-.cf-panel {
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 18px !important;
-  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06) !important;
-  background: rgba(255,255,255,0.92) !important;
-  padding: 0.25rem !important;
-}
-.cf-kpi {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 0.65rem;
-  margin: 0.75rem 0 1rem;
-}
-.cf-kpi .cell {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 0.7rem 0.85rem;
-  text-align: center;
-}
-.cf-kpi .cell .label {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #64748b;
-}
-.cf-kpi .cell .value {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-top: 0.15rem;
-}
-.cf-kpi .ok .value { color: #0d9488; }
-.cf-kpi .warn .value { color: #d97706; }
-.cf-kpi .bad .value { color: #dc2626; }
-footer { visibility: hidden; }
-"""
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -347,12 +258,7 @@ def build_app() -> gr.Blocks:
     with gr.Blocks(
         title=f"ChiralFold Web v{__version__}",
         css=CUSTOM_CSS,
-        theme=gr.themes.Soft(
-            primary_hue="teal",
-            secondary_hue="cyan",
-            neutral_hue="slate",
-            font=[gr.themes.GoogleFont("Source Sans 3"), "system-ui", "sans-serif"],
-        ),
+        theme=make_theme(),
     ) as demo:
         gr.HTML(
             f"""
@@ -368,7 +274,8 @@ def build_app() -> gr.Blocks:
                 <span class="cf-badge">open source</span>
               </div>
             </div>
-            """
+            """,
+            padding=False,
         )
 
         with gr.Row(equal_height=False):

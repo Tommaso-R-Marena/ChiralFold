@@ -11,6 +11,7 @@ RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
 COPY app.py .
+COPY theme.css .
 COPY examples/ examples/
 
 ENV CHIRALFOLD_WEB_HOST=0.0.0.0
