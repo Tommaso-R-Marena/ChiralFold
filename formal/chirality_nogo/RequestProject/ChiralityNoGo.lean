@@ -67,7 +67,11 @@ theorem distSq_reflectZPoint (p q : Point3) :
   simp only [distSq, reflectZPoint]
   congr 1
   funext i
-  fin_cases i <;> simp <;> ring
+  fin_cases i
+  · simp
+  · simp
+  · simp
+    ring
 
 theorem distMatrix4_reflectZConfig (P : Config4) :
     distMatrix4 (reflectZConfig P) = distMatrix4 P := by

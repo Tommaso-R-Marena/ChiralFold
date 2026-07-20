@@ -2,6 +2,25 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Added
+- Completed Aristotle Lean 4 package: orthogonal generalization, Examples.lean,
+  paper Methods snippet (`formal/chirality_nogo/`)
+- `docs/PYPI_PUBLISHING.md` — Trusted Publisher claim checklist + API-token fallback
+
+### Fixed
+- Gradio 4 / Python 3.9 CI: remove unsupported `gr.HTML(padding=...)` kwarg
+- PyPI publish workflows accept optional `PYPI_API_TOKEN` and fail clearly when
+  Trusted Publisher is not linked (`invalid-publisher`)
+
+## [3.5.1] - 2026-07-20
+
+### Added
+- Reviewer-ready install path, 5-minute D-residue reproduce, clash-safety demos
+- Hugging Face Space web UI with high-contrast theme + E2E web tests
+- Cross-platform CI (Linux / macOS / Windows)
+
 ## [3.4.0] - 2026-06-22
 
 ### Added

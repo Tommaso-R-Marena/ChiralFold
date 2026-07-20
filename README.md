@@ -35,8 +35,9 @@ cd ChiralFold
 pip install -e .
 ```
 
-> **Note:** Bare `pip install chiralfold` will work once the PyPI Trusted Publisher is linked
-> (workflow: `.github/workflows/publish-pypi.yml`; release `v3.5.1` is tagged). Until then, use the Git install above — same package, wheels built from source.
+> **Note:** Bare `pip install chiralfold` requires PyPI publishing to succeed.
+> See [`docs/PYPI_PUBLISHING.md`](docs/PYPI_PUBLISHING.md) for Trusted Publisher setup
+> (or set secret `PYPI_API_TOKEN`). Until then, use the Git install above — same package.
 
 Core dependencies: `numpy`, `scipy`, `pandas`, `rdkit`.  
 Optional: `pip install "chiralfold[web]"` (Gradio UI) · `pip install "chiralfold[viz]"` (matplotlib/seaborn for benchmarks).

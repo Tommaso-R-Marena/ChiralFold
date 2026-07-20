@@ -52,8 +52,9 @@ def build_manifest() -> dict:
                 "inverted stereocenters; 0% residual violations; ~37 ms full pipeline."
             ),
             "aristotle_lean": (
-                "Harmonic Aristotle Lean 4 formalization in progress on branch "
-                "cursor/aristotle-formal-proofs-9901 — not yet integrated here."
+                "Machine-checked Lean 4 chirality no-go theorems in "
+                "formal/chirality_nogo/ (Aristotle / Harmonic): distance-only "
+                "representations cannot recover signed orientation; lake build clean."
             ),
         },
         "headline_metrics": {

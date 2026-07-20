@@ -1,3 +1,28 @@
+# Summary of changes for run 809d6ded-7601-4139-814a-043b4e584602
+Completed and pushed the chirality no-go generalization.
+
+### Formal results
+- Generalized distance-factoring invariance from the fixed z-reflection to every orthogonal transformation.
+- Added a reusable obstruction theorem for any distance-preserving transformation that changes a target.
+- Added explicit improper-orthogonal results, including `orient4_not_distance_factorable_via_improper_orthogonal`: any determinant-`-1` orthogonal map reverses signed orientation at a nondegenerate witness while preserving distances.
+- Added `DistanceOnlyRepresentation`, recording both distance factorization and continuity.
+- Proved that neither a continuous distance-only representation with an arbitrary downstream classifier nor a continuous distance-factorable Boolean classifier can reproduce chirality sign everywhere.
+- Added a carefully scoped full-orthogonal-invariance bridge theorem without claiming that all SE(3)-equivariant architectures satisfy its hypotheses.
+- Defined `proteinCaOrient` for the atom order `(N, Cα, C, Cβ)` and proved its signed volume cannot be a function of the six pairwise distances alone.
+- Preserved all existing theorem names.
+
+### Exports and documentation
+- Added `RequestProject/Examples.lean` with `standardTet`, its mirror, `norm_num`-based orientation checks, equal distance matrices, and differing orientations.
+- Reworked `README.md` to distinguish clearly what is proved from what is not proved about AlphaFold 3 and general SE(3)-equivariant predictors, including suggested manuscript wording.
+- Added `paper_methods_snippet.tex` with a Methods paragraph, theorem-to-biological-consequence table, and explicit limitation sentence.
+- Imported the examples from `RequestProject/Main.lean`.
+
+### Verification
+- `lake build` succeeds for all 8,032 jobs.
+- Production Lean files contain no `sorry`, `admit`, new axioms, or unverified implementation hooks.
+- Representative new theorems were checked to depend only on the standard accepted axioms `propext`, `Classical.choice`, and `Quot.sound`.
+- Changes were committed and pushed in commits `f0a6c10` and `81ac40b`.
+
 # Summary of changes for run 79369806-0d7e-4b09-9aaa-ef6fc575bb60
 Created `RequestProject/ModelAbstraction.lean` with all requested theorems, fully proven (no `sorry`, no `admit`, no non-standard axioms).
 

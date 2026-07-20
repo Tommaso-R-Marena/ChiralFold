@@ -1,0 +1,37 @@
+% Suggested text for Bioinformatics Methods §2.8
+\paragraph{Machine-checked scope of the chirality obstruction.}
+Machine-checked Lean~4 proofs establish that the six pairwise distances among
+four points in $\mathbb{R}^3$ determine the squared magnitude, but not the sign,
+of their oriented tetrahedral volume.  More generally, orthogonal coordinate
+transformations preserve the full pairwise distance matrix, whereas an improper
+orthogonal transformation (determinant $-1$) reverses oriented volume.  It
+follows that any representation whose entire geometric dependence factors
+through the pairwise distance matrix is invariant on an enantiomeric pair and
+cannot reproduce either signed volume or its Boolean sign on all configurations.
+For the atom order $(\mathrm{N},\mathrm{C}_{\alpha},\mathrm{C},\mathrm{C}_{\beta})$,
+this proves that the C$\alpha$ signed-volume chirality surrogate is not a
+function of those six distances alone.  The result motivates ChiralFold's use of
+signed volume as an explicit, non-distance stereochemical audit.
+
+\begin{table}[t]
+\centering
+\caption{Lean declarations and their biological interpretation.}
+\begin{tabular}{p{0.47\linewidth} p{0.45\linewidth}}
+\hline
+Lean theorem & Biological consequence \\
+\hline
+\texttt{det\_gram3\_eq\_orient\_sq} & Pairwise distances fix the magnitude of the tetrahedral chirality surrogate through the Gram determinant. \\
+\texttt{same\_distances\_opposite\_orientations\_standardTet} & A tetrahedral atom arrangement and its mirror can have identical distances but opposite signed chirality. \\
+\texttt{improper\_orthogonal\_distance\_chirality\_obstruction} & Every improper orthogonal coordinate change preserves distances while reversing signed volume. \\
+\texttt{factorsThroughDistMatrix\_orthogonal\_invariant} & A representation based only on the distance matrix assigns the same output to orthogonally related enantiomers. \\
+\texttt{chiralitySignBool\_not\_distance\_factorable} & No distance-matrix-only classifier recovers chirality sign on all four-atom configurations. \\
+\texttt{proteinCaOrient\_not\_function\_of\_six\_pairwise\_distances} & The signed volume of $(\mathrm{N},\mathrm{C}_{\alpha},\mathrm{C},\mathrm{C}_{\beta})$ requires information beyond their six distances. \\
+\hline
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Limitation.}
+These theorems characterize distance-only representations; they are not an
+impossibility result for AlphaFold~3 or for general SE(3)-equivariant predictors,
+which may incorporate angular, tensorial, higher-order, sequence-derived, or
+other orientation-sensitive features.

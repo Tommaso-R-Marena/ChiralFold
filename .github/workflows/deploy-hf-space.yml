@@ -38,18 +38,15 @@ jobs:
           python <<'PY'
           import os
           from pathlib import Path
-          from huggingface_hub import HfApi, create_repo
+          from huggingface_hub import HfApi
 
           token = os.environ["HF_TOKEN"]
           repo_id = "The-Philosopher/ChiralFold-App"
           api = HfApi(token=token)
-          create_repo(
-              repo_id=repo_id,
-              repo_type="space",
-              space_sdk="docker",
-              exist_ok=True,
-              token=token,
-          )
+          who = api.whoami()
+          print(f"Authenticated as: {who.get('name')}")
+          # Existing Space is Docker (free CPU). Do not call create_repo with
+          # space_sdk=gradio — that requires HF Pro for new Gradio Spaces.
           api.upload_folder(
               folder_path=str(Path("hf_space").resolve()),
               repo_id=repo_id,
