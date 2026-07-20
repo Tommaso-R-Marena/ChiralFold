@@ -78,6 +78,12 @@ Reflection through the $xy$-plane preserves every entry of $\mathrm{distMatrix4}
 
 All theorems compile without \texttt{sorry} or custom axioms beyond Lean's standard library (\texttt{lake build}). Full informal derivations, theorem-by-theorem biological interpretation, concrete tetrahedron examples, and the SE(3) scope limitation appear in Supplementary Notes~S1. A Methods-ready summary table is also provided there.
 
+Informally, the argument is: (1)~reflection is an isometry, so it preserves $\mathrm{distMatrix4}$; (2)~$\det=-1$, so it negates $\mathrm{orient4}$; (3)~any $M=F\circ\mathrm{distMatrix4}$ is therefore reflection-invariant; (4)~the standard tetrahedron and its mirror share distances but opposite orientation, so no such $M$ can recover signed chirality on all inputs; (5)~the Gram identity $\mathrm{orient4}^2=\det(G)$ shows distances recover magnitude only. ChiralFold's Eq.~\ref{eq:signed_volume} supplies the missing sign at C$\alpha$.
+
+\subsection{Software, availability, and reproducibility}
+
+ChiralFold v3.5.1 is installable via \texttt{pip install chiralfold}, conda (recipe in \texttt{conda-recipe/}), Docker (\texttt{ghcr.io/tommaso-r-marena/chiralfold:3.5.1}), and a Gradio web UI (local \texttt{chiralfold-web} or Hugging Face Space). Reviewers can reproduce the 29-error survey offline after clone with \texttt{python benchmarks/reproduce\_d\_residue\_errors.py} (numpy only). Lean proofs build with \texttt{lake build} under \texttt{formal/chirality\_nogo/}. Colab notebooks cover the five-minute survey, mmCIF expansion, experimental validation, unusual cases, and the interactive results dashboard.
+
 \section{Results}
 
 \subsection{PDB D-residue survey}
