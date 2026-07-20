@@ -1,0 +1,31 @@
+{
+  "n_structures": 285,
+  "n_success": 285,
+  "n_planned": 290,
+  "n_failures": 5,
+  "spearman_rho": 0.442,
+  "spearman_p_value": 4.542e-15,
+  "spearman_p": 4.542e-15,
+  "spearman_rho_ci95": [
+    0.32608365149011576,
+    0.5495173465895398
+  ],
+  "pearson_r": 0.796,
+  "pearson_p_value": null,
+  "pearson_r_ci95": [
+    0.6143990797020247,
+    0.8924619447935288
+  ],
+  "bootstrap_n_iter": 2000,
+  "chiralfold_mean_outlier_pct": null,
+  "wwpdb_mean_outlier_pct": null,
+  "seed": 20260612,
+  "runtime_minutes": 5.8,
+  "provenance": {
+    "notebook": "demos/Expanded_Ramachandran_Benchmark.ipynb",
+    "colab_run_date": "2026-07-20",
+    "authoritative_over": "results/ramachandran_200struct_summary.json (n=279 repo snapshot)",
+    "note": "Colab run completed 285/290 structures. Per-structure CSV and plot were generated in Colab but not re-uploaded; summary statistics extracted from notebook cell output."
+  },
+  "note": "Expanded benchmark via benchmarks/expand_ramachandran_benchmark.py. Independent replication at n≈290 target; differs from the chain-ID-fixed era-representative paper benchmark (n=362 clean)."
+}
