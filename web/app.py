@@ -15,7 +15,6 @@ import json
 import os
 import tempfile
 import traceback
-from pathlib import Path
 from typing import Optional, Tuple
 
 import gradio as gr
