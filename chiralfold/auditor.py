@@ -18,7 +18,8 @@ Checks performed
 3. **Ramachandran**      — φ/ψ region classification (favored/allowed/outlier).
 4. **Peptide Planarity** — ω dihedral deviation from ±180°.
 5. **Clash Detection**   — Non-bonded pairs closer than vdW sum − 0.4 Å, with
-   topology-aware 1–2/1–3/1–4 exclusions (MolProbity-inspired).
+   topology-aware 1–2/1–3/1–4 exclusions, Probe-style HN/HA hydrogens, and
+   geometry-gated H-bond suppression (MolProbity-inspired).
 6. **Summary Score**     — Composite 0–100 quality score.
 
 All parsing is done directly from PDB ATOM/HETATM records with no external
