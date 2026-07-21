@@ -22,6 +22,11 @@ from expand_ramachandran_benchmark import (  # noqa: E402
     CONVERTER_VERSION,
     CONVERTER_REMARK_PREFIX,
 )
+from chiralfold.structure_io import (  # noqa: E402
+    mmcif_to_pdb as package_mmcif_to_pdb,
+    PDB_CHAIN_CHARS as PKG_CHAIN_CHARS,
+    CONVERTER_VERSION as PKG_CONVERTER_VERSION,
+)
 
 
 def _make_cif(chain_ids):
@@ -159,3 +164,11 @@ def test_stale_cache_detection(tmp_path):
         "1.000   1.000   1.000  1.00 10.00           N\nEND\n"
     )
     assert _cached_pdb_is_valid(str(wrongver)) is False
+
+
+def test_package_mmcif_converter_matches_benchmark():
+    """Core package converter stays in sync with the benchmark helper."""
+    assert PKG_CHAIN_CHARS == PDB_CHAIN_CHARS
+    assert PKG_CONVERTER_VERSION == CONVERTER_VERSION
+    cif = _make_cif(["AA", "AB", "BA", "BB"])
+    assert package_mmcif_to_pdb(cif) == _cif_to_pdb(cif)

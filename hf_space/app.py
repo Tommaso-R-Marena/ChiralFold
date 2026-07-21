@@ -24,8 +24,17 @@ from chiralfold.af3_correct import correct_af3_output, detect_chirality_violatio
 from chiralfold.auditor import audit_pdb, format_report
 from chiralfold.pdb_pipeline import mirror_pdb
 
+try:
+    from chiralfold.fetch import FetchError, fetch_structure
+    from chiralfold.structure_io import SUPPORTED_UPLOAD_SUFFIXES
+except ImportError:  # Space image may briefly lag behind master
+    FetchError = ValueError  # type: ignore
+    SUPPORTED_UPLOAD_SUFFIXES = (".pdb", ".ent", ".cif", ".mmcif", ".fasta", ".fa", ".faa")
+    fetch_structure = None  # type: ignore
+
 MAX_UPLOAD_BYTES = int(os.environ.get("CHIRALFOLD_MAX_UPLOAD_MB", "25")) * 1024 * 1024
 RCSB_DOWNLOAD = "https://files.rcsb.org/download/{pdb_id}.pdb"
+AFDB_PDB_URL = "https://alphafold.ebi.ac.uk/files/AF-{uid}-F1-model_v4.pdb"
 SPACE_ROOT = Path(__file__).resolve().parent
 EXAMPLE_TOY = SPACE_ROOT / "examples" / "toy_ubiquitin_fragment.pdb"
 EXAMPLE_INV = SPACE_ROOT / "examples" / "synthetic_l_ala_inverted.pdb"
@@ -111,13 +120,13 @@ CUSTOM_CSS = _load_css()
 
 def _as_path(uploaded) -> str:
     if uploaded is None:
-        raise gr.Error("Upload a PDB file, fetch a PDB ID, or load an example first.")
+        raise gr.Error(
+            "Upload a PDB/mmCIF/FASTA file, fetch an ID, or load an example first."
+        )
     path = uploaded if isinstance(uploaded, str) else getattr(uploaded, "name", None)
     if not path:
         raise gr.Error("Could not read the uploaded file.")
     path = str(path)
-    if not path.lower().endswith((".pdb", ".ent")):
-        raise gr.Error("Only PDB files are supported (.pdb or .ent).")
     size = Path(path).stat().st_size
     if size > MAX_UPLOAD_BYTES:
         raise gr.Error(
@@ -126,6 +135,16 @@ def _as_path(uploaded) -> str:
         )
     if size == 0:
         raise gr.Error("Uploaded file is empty.")
+    if fetch_structure is not None:
+        try:
+            return fetch_structure(path, max_bytes=MAX_UPLOAD_BYTES).path
+        except FetchError as exc:
+            raise gr.Error(str(exc)) from exc
+    # Legacy fallback: PDB/ENT only until package with fetch is installed.
+    if not path.lower().endswith((".pdb", ".ent")):
+        raise gr.Error(
+            "Upgrade chiralfold for mmCIF/FASTA support, or upload a .pdb file."
+        )
     return path
 
 
@@ -154,23 +173,58 @@ def _kpi_html(cells):
     return "".join(parts)
 
 
-def fetch_pdb_id(pdb_id: str) -> Tuple[Optional[str], str]:
-    pid = (pdb_id or "").strip().upper()
-    if len(pid) != 4 or not pid.isalnum():
-        return None, "Enter a valid 4-character PDB ID (e.g. 1UBQ)."
-    url = RCSB_DOWNLOAD.format(pdb_id=pid)
+def _legacy_fetch(query: str) -> Tuple[Optional[str], str]:
+    """Minimal RCSB / AFDB fetch when chiralfold.fetch is unavailable."""
+    q = (query or "").strip()
+    if len(q) == 4 and q.isalnum():
+        pid = q.upper()
+        url = RCSB_DOWNLOAD.format(pdb_id=pid)
+        try:
+            with urllib.request.urlopen(url, timeout=30) as resp:
+                data = resp.read()
+        except Exception as exc:  # noqa: BLE001
+            return None, f"Could not fetch {pid}: {exc}"
+        if not data or (b"ATOM" not in data and b"HETATM" not in data):
+            return None, f"Downloaded file for {pid} does not look like a PDB."
+        out = Path(tempfile.mkdtemp(prefix="chiralfold_rcsb_")) / f"{pid}.pdb"
+        out.write_bytes(data)
+        return str(out), f"Loaded **{pid}** from RCSB ({len(data) / 1024:.0f} KB)."
+    uid = q.upper()
+    if uid.startswith("AF-") and "-F" in uid:
+        uid = uid.split("-")[1]
+    url = AFDB_PDB_URL.format(uid=uid)
     try:
-        with urllib.request.urlopen(url, timeout=30) as resp:
+        with urllib.request.urlopen(url, timeout=45) as resp:
             data = resp.read()
-    except urllib.error.HTTPError as exc:
-        return None, f"RCSB returned HTTP {exc.code} for {pid}."
     except Exception as exc:  # noqa: BLE001
-        return None, f"Could not fetch {pid}: {exc}"
+        return None, f"Could not fetch AFDB/{uid}: {exc}"
     if not data or (b"ATOM" not in data and b"HETATM" not in data):
-        return None, f"Downloaded file for {pid} does not look like a PDB."
-    out = Path(tempfile.mkdtemp(prefix="chiralfold_rcsb_")) / f"{pid}.pdb"
+        return None, f"AFDB download for {uid} does not look like a PDB."
+    out = Path(tempfile.mkdtemp(prefix="chiralfold_afdb_")) / f"AF-{uid}-F1.pdb"
     out.write_bytes(data)
-    return str(out), f"Loaded **{pid}** from RCSB ({len(data) / 1024:.0f} KB)."
+    return str(out), f"Loaded **AF-{uid}-F1** from AlphaFold DB ({len(data) / 1024:.0f} KB)."
+
+
+def fetch_pdb_id(query: str) -> Tuple[Optional[str], str]:
+    q = (query or "").strip()
+    if not q:
+        return (
+            None,
+            "Enter a PDB ID (1UBQ), UniProt accession (P04637), or AFDB id (AF-P04637-F1).",
+        )
+    if fetch_structure is not None:
+        try:
+            result = fetch_structure(q, max_bytes=MAX_UPLOAD_BYTES)
+        except FetchError as exc:
+            return None, str(exc)
+        except Exception as exc:  # noqa: BLE001
+            return None, f"Could not fetch {q}: {exc}"
+        kb = (result.bytes_downloaded or Path(result.path).stat().st_size) / 1024
+        return (
+            result.path,
+            f"Loaded **{result.label}** from `{result.source}` ({kb:.0f} KB).",
+        )
+    return _legacy_fetch(q)
 
 
 def load_example(which: str) -> Tuple[Optional[str], str]:
@@ -299,23 +353,23 @@ def build_app() -> gr.Blocks:
             with gr.Column(scale=5, elem_classes=["cf-panel"]):
                 gr.Markdown("### 1 · Load a structure")
                 pdb_in = gr.File(
-                    label="Upload PDB (.pdb / .ent)",
-                    file_types=[".pdb", ".ent"],
+                    label="Upload PDB / mmCIF / FASTA",
+                    file_types=list(SUPPORTED_UPLOAD_SUFFIXES),
                     type="filepath",
                 )
                 with gr.Row():
                     pdb_id = gr.Textbox(
-                        label="Or fetch from RCSB",
-                        placeholder="1UBQ",
+                        label="Or fetch (RCSB / AlphaFold DB)",
+                        placeholder="1UBQ · P04637 · AF-P04637-F1",
                         max_lines=1,
                         scale=3,
                     )
-                    fetch_btn = gr.Button("Fetch PDB", scale=1)
+                    fetch_btn = gr.Button("Fetch", scale=1)
                 with gr.Row():
                     ex_toy = gr.Button("Example: ubiquitin fragment", size="sm")
                     ex_inv = gr.Button("Example: inverted Ala", size="sm")
                 status = gr.Markdown(
-                    "Upload a file, fetch a PDB ID, or load an example."
+                    "Upload PDB/mmCIF/FASTA, fetch an ID, or load an example."
                 )
                 gr.Markdown("### 2 · Mirror options")
                 axis = gr.Radio(

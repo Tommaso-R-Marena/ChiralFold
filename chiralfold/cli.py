@@ -5,14 +5,19 @@ ChiralFold — Command-Line Interface
 Usage:
     chiralfold predict SEQUENCE [--chirality PATTERN]
     chiralfold validate SEQUENCE --chirality PATTERN
-    chiralfold audit PDB_FILE [--chain CHAIN] [--json]
+    chiralfold audit STRUCTURE [--id PDB|UniProt|AFDB] [--json]
     chiralfold audit --rcsb-batch FILE -o OUTPUT.csv
-    chiralfold correct-af3 PDB_FILE [--output OUTPUT]
+    chiralfold correct-af3 STRUCTURE [--id ID] [--output OUTPUT]
+    chiralfold fetch ID_OR_PATH [-o OUTPUT.pdb]
     chiralfold enumerate SEQUENCE [--top N]
     chiralfold score-interface RECEPTOR LIGAND
-    chiralfold mirror PDB_FILE [--output OUTPUT] [--chains A,B]
+    chiralfold mirror STRUCTURE [--output OUTPUT] [--chains A,B]
     chiralfold mirror-id PDB_ID [--output OUTPUT]
     chiralfold benchmark
+
+STRUCTURE may be PDB (.pdb/.ent), mmCIF (.cif/.mmcif), or FASTA with a
+UniProt accession in the header (resolved via AlphaFold DB when online).
+IDs: RCSB (1UBQ), UniProt (P04637), or AFDB (AF-P04637-F1).
 """
 
 import argparse
@@ -24,6 +29,28 @@ import sys
 from . import __version__
 from .model import ChiralFold, mixed_peptide_smiles
 from .validator import validate_diastereomer
+
+
+def _resolve_structure(path=None, structure_id=None):
+    """Resolve a local path and/or remote ID to a PDB file path."""
+    from .fetch import FetchError, fetch_structure, resolve_to_pdb
+
+    if structure_id:
+        try:
+            result = fetch_structure(structure_id)
+        except FetchError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(1)
+        print(f"Fetched {result.label} from {result.source}", file=sys.stderr)
+        return result.path
+    if path:
+        try:
+            return resolve_to_pdb(path)
+        except FetchError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(1)
+    print("Error: provide a structure file or --id", file=sys.stderr)
+    sys.exit(1)
 
 
 def main():
@@ -52,8 +79,22 @@ def main():
     p.add_argument('--json', action='store_true')
 
     # ── audit ─────────────────────────────────────────────────────────────
-    p = sub.add_parser('audit', help='Audit PDB structure quality')
-    p.add_argument('pdb_file', nargs='?', default=None, help='PDB file path')
+    p = sub.add_parser(
+        'audit',
+        help='Audit structure quality (PDB / mmCIF / FASTA→AFDB / --id)',
+    )
+    p.add_argument(
+        'pdb_file',
+        nargs='?',
+        default=None,
+        help='Structure file (.pdb/.ent/.cif/.mmcif/.fasta)',
+    )
+    p.add_argument(
+        '--id',
+        dest='structure_id',
+        default=None,
+        help='Fetch by PDB ID, UniProt accession, or AFDB id (needs network)',
+    )
     p.add_argument('--chain', default=None)
     p.add_argument('--json', action='store_true')
     p.add_argument('--rcsb-batch', dest='rcsb_batch', default=None,
@@ -63,9 +104,31 @@ def main():
 
     # ── correct-af3 ──────────────────────────────────────────────────────
     p = sub.add_parser('correct-af3',
-                       help='Correct chirality violations in AF3 output')
-    p.add_argument('pdb_file', help='AF3 prediction PDB file')
+                       help='Correct chirality violations in AF3 / AFDB output')
+    p.add_argument(
+        'pdb_file',
+        nargs='?',
+        default=None,
+        help='Structure file (.pdb/.cif/…) or omit with --id',
+    )
+    p.add_argument(
+        '--id',
+        dest='structure_id',
+        default=None,
+        help='Fetch by PDB / UniProt / AFDB id before correcting',
+    )
     p.add_argument('--output', '-o', default=None)
+
+    # ── fetch ─────────────────────────────────────────────────────────────
+    p = sub.add_parser(
+        'fetch',
+        help='Download RCSB or AlphaFold DB structure to a local PDB',
+    )
+    p.add_argument(
+        'query',
+        help='PDB ID, UniProt accession, AFDB id, or local FASTA/mmCIF/PDB path',
+    )
+    p.add_argument('--output', '-o', default=None, help='Output PDB path')
 
     # ── enumerate ─────────────────────────────────────────────────────────
     p = sub.add_parser('enumerate',
@@ -77,15 +140,15 @@ def main():
     # ── score-interface ───────────────────────────────────────────────────
     p = sub.add_parser('score-interface',
                        help='Score binding interface')
-    p.add_argument('receptor', help='Receptor PDB file')
-    p.add_argument('ligand', help='Ligand PDB file')
+    p.add_argument('receptor', help='Receptor PDB / mmCIF file')
+    p.add_argument('ligand', help='Ligand PDB / mmCIF file')
     p.add_argument('--receptor-chain', default=None)
     p.add_argument('--ligand-chain', default=None)
     p.add_argument('--json', action='store_true')
 
     # ── mirror ────────────────────────────────────────────────────────────
-    p = sub.add_parser('mirror', help='Mirror PDB structure (L↔D)')
-    p.add_argument('pdb_file')
+    p = sub.add_parser('mirror', help='Mirror structure (L↔D)')
+    p.add_argument('pdb_file', help='PDB / mmCIF / FASTA→AFDB path')
     p.add_argument('--output', '-o', default=None)
     p.add_argument('--chains', default=None)
 
@@ -106,6 +169,7 @@ def main():
     handlers = {
         'predict': _cmd_predict, 'validate': _cmd_validate,
         'audit': _cmd_audit, 'correct-af3': _cmd_correct_af3,
+        'fetch': _cmd_fetch,
         'enumerate': _cmd_enumerate, 'score-interface': _cmd_score_interface,
         'mirror': _cmd_mirror, 'mirror-id': _cmd_mirror_id,
         'benchmark': _cmd_benchmark,
@@ -161,11 +225,15 @@ def _cmd_audit(args):
         _audit_rcsb_batch(args.rcsb_batch, args.output)
         return
 
-    if args.pdb_file is None:
-        print("Error: provide a PDB file or use --rcsb-batch", file=sys.stderr)
+    if args.pdb_file is None and not args.structure_id:
+        print(
+            "Error: provide a structure file, --id, or --rcsb-batch",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
-    report = audit_pdb(args.pdb_file)
+    pdb_path = _resolve_structure(args.pdb_file, args.structure_id)
+    report = audit_pdb(pdb_path)
     if args.json:
         safe = {k: v for k, v in report.items() if k not in ('_atoms',)}
         print(json.dumps(safe, indent=2, default=str))
@@ -235,12 +303,17 @@ def _audit_rcsb_batch(batch_file, output_csv):
 def _cmd_correct_af3(args):
     from .af3_correct import correct_af3_output
 
+    if args.pdb_file is None and not args.structure_id:
+        print("Error: provide a structure file or --id", file=sys.stderr)
+        sys.exit(1)
+
+    pdb_path = _resolve_structure(args.pdb_file, args.structure_id)
     output = args.output
     if output is None:
-        base = args.pdb_file.rsplit('.', 1)[0]
+        base = os.path.splitext(os.path.basename(pdb_path))[0]
         output = f"{base}_corrected.pdb"
 
-    result = correct_af3_output(args.pdb_file, output)
+    result = correct_af3_output(pdb_path, output)
 
     if 'error' in result:
         print(f"Error: {result['error']}", file=sys.stderr)
@@ -252,6 +325,26 @@ def _cmd_correct_af3(args):
     print(f"Corrected:         {result.get('n_corrected', 0)}")
     print(f"Violations after:  {n_after}")
     print(f"Output: {output}")
+
+
+def _cmd_fetch(args):
+    import shutil
+
+    from .fetch import FetchError, fetch_structure
+
+    try:
+        result = fetch_structure(args.query)
+    except FetchError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)
+
+    output = args.output
+    if output is None:
+        stem = result.label.split()[0].replace("/", "_")
+        output = f"{stem}.pdb"
+    shutil.copy2(result.path, output)
+    nbytes = result.bytes_downloaded or os.path.getsize(result.path)
+    print(f"{result.source}: {result.label} → {output} ({nbytes} bytes)")
 
 
 def _cmd_enumerate(args):
@@ -269,8 +362,10 @@ def _cmd_enumerate(args):
 def _cmd_score_interface(args):
     from .interface_scorer import score_interface
 
+    receptor = _resolve_structure(args.receptor, None)
+    ligand = _resolve_structure(args.ligand, None)
     result = score_interface(
-        args.receptor, args.ligand,
+        receptor, ligand,
         receptor_chain=args.receptor_chain,
         ligand_chain=args.ligand_chain,
     )
@@ -297,12 +392,13 @@ def _cmd_score_interface(args):
 
 def _cmd_mirror(args):
     from .pdb_pipeline import mirror_pdb
+    pdb_path = _resolve_structure(args.pdb_file, None)
     output = args.output
     if output is None:
-        base = args.pdb_file.rsplit('.', 1)[0]
+        base = os.path.splitext(pdb_path)[0]
         output = f"{base}_mirror.pdb"
     chains = args.chains.split(',') if args.chains else None
-    result = mirror_pdb(args.pdb_file, output, chains=chains)
+    result = mirror_pdb(pdb_path, output, chains=chains)
     print(f"Mirrored {result['n_atoms']} atoms, "
           f"{result['n_residues']} residues → {result['output_path']}")
 

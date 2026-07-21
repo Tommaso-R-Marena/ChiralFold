@@ -24,10 +24,11 @@ short_description: Audit, correct, and mirror PDB stereochemistry
 
 Use the in-app **Light / Dark** toggle (or `?__theme=light` / `?__theme=dark`). Both themes keep file names, audit reports, and the footer readable.
 
-Upload any PDB structure to:
+Upload a **PDB**, **mmCIF**, or **FASTA** (UniProt header → AlphaFold DB), or fetch by
+PDB ID / UniProt / AFDB id when online:
 
 1. **Audit** Cα chirality, Ramachandran, planarity, clashes
-2. **Correct** inverted stereocenters (AF3 / diffusion outputs)
+2. **Correct** inverted stereocenters (AF3 / diffusion / AFDB outputs)
 3. **Mirror** for exact L↔D binder / D-peptide design
 
 ## Links

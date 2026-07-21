@@ -19,8 +19,6 @@ import json
 import os
 import shutil
 import tempfile
-import urllib.error
-import urllib.request
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -29,7 +27,9 @@ import gradio as gr
 from chiralfold import __version__
 from chiralfold.af3_correct import correct_af3_output, detect_chirality_violations
 from chiralfold.auditor import audit_pdb, format_report
+from chiralfold.fetch import FetchError, fetch_structure
 from chiralfold.pdb_pipeline import mirror_pdb
+from chiralfold.structure_io import SUPPORTED_UPLOAD_SUFFIXES
 from web.theme import CUSTOM_CSS, header_html, make_theme
 from web.ui_format import audit_result_markdown, error_markdown, footer_html
 
@@ -38,7 +38,6 @@ from web.ui_format import audit_result_markdown, error_markdown, footer_html
 # ---------------------------------------------------------------------------
 
 MAX_UPLOAD_BYTES = int(os.environ.get("CHIRALFOLD_MAX_UPLOAD_MB", "25")) * 1024 * 1024
-RCSB_DOWNLOAD = "https://files.rcsb.org/download/{pdb_id}.pdb"
 
 _PKG_ROOT = Path(__file__).resolve().parent.parent
 _EXAMPLE_TOY = _PKG_ROOT / "chiralfold" / "data" / "examples" / "toy_ubiquitin_fragment.pdb"
@@ -53,20 +52,24 @@ _FIXTURE_INVERTED = (
 
 def _as_path(uploaded) -> str:
     if uploaded is None:
-        raise gr.Error("Upload a PDB file, fetch a PDB ID, or load an example first.")
+        raise gr.Error(
+            "Upload a PDB/mmCIF/FASTA file, fetch an ID, or load an example first."
+        )
     path = uploaded if isinstance(uploaded, str) else getattr(uploaded, "name", None)
     if not path:
         raise gr.Error("Could not read the uploaded file.")
     path = str(path)
-    if not path.lower().endswith((".pdb", ".ent")):
-        raise gr.Error("Only PDB files are supported (.pdb or .ent).")
     size = Path(path).stat().st_size
     if size > MAX_UPLOAD_BYTES:
         mb = MAX_UPLOAD_BYTES / (1024 * 1024)
         raise gr.Error(f"File too large ({size / 1e6:.1f} MB). Limit is {mb:.0f} MB.")
     if size == 0:
         raise gr.Error("Uploaded file is empty.")
-    return path
+    try:
+        result = fetch_structure(path, max_bytes=MAX_UPLOAD_BYTES)
+    except FetchError as exc:
+        raise gr.Error(str(exc)) from exc
+    return result.path
 
 
 def _copy_with_name(src: str, stem: str, suffix: str) -> str:
@@ -96,26 +99,25 @@ def _kpi_html(cells: List[Tuple[str, str, str]]) -> str:
     return "".join(parts)
 
 
-def fetch_pdb_id(pdb_id: str) -> Tuple[Optional[str], str]:
-    """Download a structure from RCSB by 4-character ID."""
-    pid = (pdb_id or "").strip().upper()
-    if len(pid) != 4 or not pid.isalnum():
-        return None, "Enter a valid 4-character PDB ID (e.g. 1UBQ)."
-    url = RCSB_DOWNLOAD.format(pdb_id=pid)
+def fetch_pdb_id(query: str) -> Tuple[Optional[str], str]:
+    """Download from RCSB or AlphaFold DB (PDB ID / UniProt / AFDB)."""
+    q = (query or "").strip()
+    if not q:
+        return (
+            None,
+            "Enter a PDB ID (1UBQ), UniProt accession (P04637), or AFDB id (AF-P04637-F1).",
+        )
     try:
-        with urllib.request.urlopen(url, timeout=30) as resp:
-            data = resp.read()
-    except urllib.error.HTTPError as exc:
-        return None, f"RCSB returned HTTP {exc.code} for {pid}."
+        result = fetch_structure(q, max_bytes=MAX_UPLOAD_BYTES)
+    except FetchError as exc:
+        return None, str(exc)
     except Exception as exc:  # noqa: BLE001
-        return None, f"Could not fetch {pid}: {exc}"
-    if not data or b"ATOM" not in data and b"HETATM" not in data:
-        return None, f"Downloaded file for {pid} does not look like a PDB."
-    if len(data) > MAX_UPLOAD_BYTES:
-        return None, f"{pid} exceeds the upload size limit."
-    out = Path(tempfile.mkdtemp(prefix="chiralfold_rcsb_")) / f"{pid}.pdb"
-    out.write_bytes(data)
-    return str(out), f"Loaded **{pid}** from RCSB ({len(data) / 1024:.0f} KB)."
+        return None, f"Could not fetch {q}: {exc}"
+    kb = (result.bytes_downloaded or Path(result.path).stat().st_size) / 1024
+    return (
+        result.path,
+        f"Loaded **{result.label}** from `{result.source}` ({kb:.0f} KB).",
+    )
 
 
 def load_example(which: str) -> Tuple[Optional[str], str]:
@@ -261,23 +263,25 @@ def build_app() -> gr.Blocks:
             with gr.Column(scale=5, elem_classes=["cf-panel"]):
                 gr.Markdown("### 1 · Load a structure")
                 pdb_in = gr.File(
-                    label="Upload PDB (.pdb / .ent)",
-                    file_types=[".pdb", ".ent"],
+                    label="Upload PDB / mmCIF / FASTA",
+                    file_types=list(SUPPORTED_UPLOAD_SUFFIXES),
                     type="filepath",
                     height=120,
                 )
                 with gr.Row():
                     pdb_id = gr.Textbox(
-                        label="Or fetch from RCSB",
-                        placeholder="1UBQ",
+                        label="Or fetch (RCSB / AlphaFold DB)",
+                        placeholder="1UBQ · P04637 · AF-P04637-F1",
                         max_lines=1,
                         scale=3,
                     )
-                    fetch_btn = gr.Button("Fetch PDB", scale=1)
+                    fetch_btn = gr.Button("Fetch", scale=1)
                 with gr.Row():
                     ex_toy = gr.Button("Example: ubiquitin fragment", size="sm")
                     ex_inv = gr.Button("Example: inverted Ala (fix demo)", size="sm")
-                status = gr.Markdown("Upload a file, fetch a PDB ID, or load an example.")
+                status = gr.Markdown(
+                    "Upload PDB/mmCIF/FASTA, fetch an ID, or load an example."
+                )
 
                 gr.Markdown("### 2 · Mirror options")
                 axis = gr.Radio(

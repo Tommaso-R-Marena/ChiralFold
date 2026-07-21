@@ -72,6 +72,8 @@ from .fragments import assemble_protein, predict_secondary_structure
 from .af3_correct import correct_af3_output, detect_chirality_violations, correct_chirality
 from .interface_scorer import score_interface, compare_interfaces
 from .enumerate import enumerate_diastereomers
+from .fetch import fetch_structure, fetch_rcsb, fetch_afdb, resolve_to_pdb, FetchResult
+from .structure_io import mmcif_to_pdb, ensure_pdb_path, parse_fasta
 
 __all__ = [
     'ChiralFold',
@@ -106,4 +108,12 @@ __all__ = [
     'score_interface',
     'compare_interfaces',
     'enumerate_diastereomers',
+    'fetch_structure',
+    'fetch_rcsb',
+    'fetch_afdb',
+    'resolve_to_pdb',
+    'FetchResult',
+    'mmcif_to_pdb',
+    'ensure_pdb_path',
+    'parse_fasta',
 ]
