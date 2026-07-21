@@ -2,7 +2,7 @@
   "benchmark": "af3_experimental_systems",
   "scope": "Experimental RCSB structures for Childs et al. systems; no AF3 outputs redistributed.",
   "af3_reference_note": "Published AF3 failure rates are from Childs, Zhou & Donald 2025 bioRxiv 2025.03.14.643307, not from local AF3 predictions.",
-  "elapsed_s": 0.13131803105352446,
+  "elapsed_s": 0.1696966920280829,
   "systems": [
     {
       "pdb_id": "3IWY",
@@ -15,7 +15,7 @@
       "cached_pdb": "results/.cache/childs_experimental_pdbs/3IWY.pdb",
       "audit": {
         "n_residues": 189,
-        "overall_score": 76.3,
+        "overall_score": 79.6,
         "chirality": {
           "n_correct": 181,
           "n_wrong": 0,
@@ -34,8 +34,8 @@
           "pct_within_6deg": 67.57
         },
         "clashes": {
-          "n_clashes": 28,
-          "clash_score": 17.62
+          "n_clashes": 21,
+          "clash_score": 13.22
         },
         "bond_geometry": {
           "n_bonds_checked": 752,
@@ -62,7 +62,7 @@
       "cached_pdb": "results/.cache/childs_experimental_pdbs/5N8T.pdb",
       "audit": {
         "n_residues": 129,
-        "overall_score": 85.5,
+        "overall_score": 78.6,
         "chirality": {
           "n_correct": 113,
           "n_wrong": 0,
@@ -81,8 +81,8 @@
           "pct_within_6deg": 64.57
         },
         "clashes": {
-          "n_clashes": 7,
-          "clash_score": 7.14
+          "n_clashes": 16,
+          "clash_score": 16.31
         },
         "bond_geometry": {
           "n_bonds_checked": 514,
@@ -109,7 +109,7 @@
       "cached_pdb": "results/.cache/childs_experimental_pdbs/7YH8.pdb",
       "audit": {
         "n_residues": 162,
-        "overall_score": 95.7,
+        "overall_score": 92.9,
         "chirality": {
           "n_correct": 158,
           "n_wrong": 0,
@@ -128,8 +128,8 @@
           "pct_within_6deg": 90.51
         },
         "clashes": {
-          "n_clashes": 2,
-          "clash_score": 1.47
+          "n_clashes": 7,
+          "clash_score": 5.15
         },
         "bond_geometry": {
           "n_bonds_checked": 644,

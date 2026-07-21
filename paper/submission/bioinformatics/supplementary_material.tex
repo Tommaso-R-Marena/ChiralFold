@@ -44,14 +44,15 @@ Automated cross-check of all 16 error structures: \repopath{benchmarks/experimen
 L$\leftrightarrow$D reflection: $(x,y,z)\to(-x,y,z)$. Because reflection is an isometry, all pairwise distances (and therefore MolProbity-style clashscore) are unchanged before vs.\ after mirroring (\repopath{tests/test_clash_preservation.py}). AF3 correction reflects only the violating C$\alpha$ (and HA if present) across the N--C--C$\beta$ plane, preserving CA--N, CA--C, and CA--C$\beta$ bond lengths exactly and driving residual chirality violations to 0\%. Diastereomer enumeration scores $2^k$ L/D patterns. Interface scoring uses BSA, H-bonds, and salt bridges.
 
 \subsection{Clashscore implementation}
-ChiralFold clashscore counts non-bonded heavy-atom pairs with van der Waals overlap $\geq$0.4~\AA\ (Bondi radii; KD-tree neighbour search), reported per 1000 heavy atoms. Implementation details that keep scores in the same ballpark as wwPDB/MolProbity on high-quality deposits:
+ChiralFold clashscore counts non-bonded atom pairs with van der Waals overlap $\geq$0.4~\AA\ (KD-tree neighbour search), reported per 1000 heavy atoms. Radii follow Bondi for heavy atoms and Probe-like $1.17$~\AA\ for hydrogen. Implementation details:
 \begin{itemize}[leftmargin=*]
   \item \textbf{First MODEL only} for multi-model (NMR) files.
-  \item \textbf{Strip deposited hydrogens}, then place backbone amide H (MolProbity Reduce-style; proline skipped; same-chain peptide-continuous neighbours only, including insertion codes).
-  \item \textbf{Exclude covalent 1--2 / 1--3 / 1--4} contacts using standard amino-acid topology (not a brittle distance cutoff), so pairs such as LEU CA--CG are never scored as clashes.
-  \item \textbf{Exclude} disulfide SG--SG bridges and donor--acceptor (H-bond) pairs.
+  \item \textbf{Strip deposited hydrogens}, then place (i)~backbone amide HN (MolProbity Reduce-style; proline skipped; same-chain peptide-continuous neighbours only, including insertion codes) and (ii)~C$\alpha$ hydrogens---HA for residues with C$\beta$, and HA2/HA3 for glycine.
+  \item \textbf{Exclude covalent 1--2 / 1--3 / 1--4} contacts using standard amino-acid topology (not a brittle distance cutoff), so pairs such as LEU CA--CG are never scored as clashes; for pairs involving a model-built hydrogen, also exclude same-residue 1--5 and peptide 1--5 contacts such as O($i$)--HA($i{+}1$).
+  \item \textbf{Exclude} disulfide SG--SG bridges.
+  \item \textbf{H-bond geometry gate:} a polar H$\cdots$acceptor contact suppresses a clash only if H$\cdots$Acc $\leq$2.5~\AA\ and the donor--H--Acc angle is $\geq$120$^\circ$; heavy N$\cdots$O pairs only in the 2.5--3.5~\AA\ window. Carbon-bound HA/HA2/HA3 are never treated as H-bond donors.
 \end{itemize}
-Clashscore feeds the composite 0--100 quality score (15 of 100 points) in the CLI/web UI. It is \emph{not} an input to the PDB-wide D-residue survey (signed volume only; independent numpy verifier) nor to the primary Ramachandran calibration ($n=362$). A secondary 31-structure MolProbity head-to-head panel (\repopath{results/molprobity_comparison.json}) was regenerated after these exclusions: mean ChiralFold clashscore $23.8$ (wwPDB panel mean $18.0$); an earlier distance-gated implementation that scored covalent 1--3 contacts and deposited hydrogens inflated the same panel mean to $\sim$265 and is superseded. Tests: \repopath{tests/test_clash_exclusions.py}, \repopath{tests/test_clash_preservation.py}.
+Clashscore feeds the composite 0--100 quality score (15 of 100 points) in the CLI/web UI. It is \emph{not} an input to the PDB-wide D-residue survey (signed volume only; independent numpy verifier) nor to the primary Ramachandran calibration ($n=362$). A secondary 31-structure MolProbity head-to-head panel (\repopath{results/molprobity_comparison.json}) was regenerated after these rules: mean ChiralFold clashscore~$27.4$ (wwPDB panel mean~$18.0$; median CF~$15.3$). An earlier distance-gated implementation that scored covalent 1--3 contacts and deposited hydrogens inflated the same panel mean to $\sim$265 and is superseded. Tests: \repopath{tests/test_clash_exclusions.py}, \repopath{tests/test_clash_preservation.py}.
 
 \subsection{Structure input formats and remote fetch}
 CLI and Gradio (local / Hugging Face Space) accept:
@@ -80,7 +81,7 @@ The primary survey used legacy PDB files. We subsequently (i)~re-parsed all 16 k
 Synthetic AF3-mimetic Childs-system peptide PDBs with the published 51\% AF3 D-peptide violation rate as external reference. Across DP19, DP9, and DP12 (39 auditable residues; 20 synthetic inverted stereocenters), ChiralFold detected 100\% of inverted stereocenters, corrected 100\% to the expected signed-volume class, and left 0\% residual violations. Full pipeline: 0.0367~s total. Data: \repopath{results/af3_resource_benchmark.json}.
 
 \subsection{Experimental Childs-system deposited structures}
-Deposited experimental coordinates for Childs et al.\ systems (3IWY, 5N8T, 7YH8) were audited as a resource check; this does \emph{not} redistribute AF3 predictions. Clash and composite scores in \repopath{results/af3_experimental_systems.json} were regenerated after the topology-aware clashscore fix.
+Deposited experimental coordinates for Childs et al.\ systems (3IWY, 5N8T, 7YH8) were audited as a resource check; this does \emph{not} redistribute AF3 predictions. Clash and composite scores in \repopath{results/af3_experimental_systems.json} were regenerated after the Probe-style hydrogen and H-bond geometry updates.
 
 \section{Supplementary Notes S1: Lean~4 chirality no-go proofs}
 \label{sec:lean_full}
