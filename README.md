@@ -13,7 +13,7 @@
 
 | Goal | Link |
 |------|------|
-| **Use in a browser** | [Hugging Face Space](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App) |
+| **Use in a browser** | [Hugging Face Space](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App) (in-app **Light / Dark** toggle) |
 | **Reproduce D-residue survey errors (&lt;5 min)** | [Colab](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Reproduce_PDB_D_Residue_Errors_5min.ipynb) · `python benchmarks/reproduce_d_residue_errors.py` |
 | **Full mmCIF survey** (known errors + live mmCIF-only universe) | [Colab](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Reproduce_mmCIF_D_Residue_Survey.ipynb) |
 | **Interactive results dashboard** | [Colab dashboard](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Results_Dashboard.ipynb) |
@@ -73,6 +73,7 @@ Dockerfiles: `Dockerfile` (CLI/library), `Dockerfile.web` (Gradio).
 ### Hugging Face Space
 
 Live UI: [The-Philosopher/ChiralFold-App](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App).  
+Use the in-app **Light / Dark** toggle (or `?__theme=light` / `?__theme=dark`) — both modes are contrast-checked.  
 Source: [`hf_space/`](hf_space/). Local Gradio: `pip install "chiralfold[web]" && chiralfold-web`.
 
 ### Colab

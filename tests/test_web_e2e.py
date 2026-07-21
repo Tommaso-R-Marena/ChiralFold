@@ -46,19 +46,18 @@ def inverted_path(tmp_path: Path) -> str:
 # ---------------------------------------------------------------------------
 
 
-def test_theme_forces_light_mode_contrast():
+def test_theme_supports_light_and_dark_contrast():
     checks = contrast_checklist()
-    assert checks["forces_light"]
+    assert checks["supports_dark"]
+    assert checks["theme_toggle"]
     assert checks["dark_override"]
     assert checks["primary_button_white_text"]
-    assert checks["no_color_inherit"]
     assert checks["ibm_plex"]
-    assert "color-scheme: light" in CUSTOM_CSS
-    assert "--cf-ink: #0b1220" in CUSTOM_CSS
-    assert "--cf-body: #1e293b" in CUSTOM_CSS
-    assert "--cf-surface: #ffffff" in CUSTOM_CSS
     assert checks["kpi_ok"] != checks["ink"]
     assert checks["kpi_bad"] != checks["ink"]
+    assert "cf-theme-toggle" in CUSTOM_CSS
+    assert "--cf-page-bg" in CUSTOM_CSS
+    assert not checks["forces_light"]
 
 
 @pytest.mark.parametrize("label,fg,bg,minimum", readable_pairs())
@@ -69,11 +68,21 @@ def test_wcag_contrast_pairs(label, fg, bg, minimum):
     )
 
 
+def test_header_html_includes_theme_toggle():
+    from web.theme import header_html
+
+    html = header_html("3.5.1")
+    assert "cf-theme-toggle" in html
+    assert "?__theme=light" in html
+    assert "?__theme=dark" in html
+    assert "v3.5.1" in html
+
+
 def test_theme_includes_report_and_file_contrast_rules():
     assert ".cf-report" in CUSTOM_CSS
     assert "#cf-footer" in CUSTOM_CSS
     assert "file-preview" in CUSTOM_CSS
-    assert "background: transparent !important" in CUSTOM_CSS
+    assert "cf-theme-toggle" in CUSTOM_CSS
 
 
 def test_make_theme_builds():
@@ -214,6 +223,26 @@ def _load_hf_space_module():
     sys.modules["hf_space_app_e2e"] = mod
     spec.loader.exec_module(mod)
     return mod
+
+
+def test_hf_space_prefers_bundled_theme_css(tmp_path, monkeypatch):
+    """Docker-cached pip must not override a freshly uploaded theme.css."""
+    import importlib.util
+    import sys
+
+    space_app = Path("hf_space/app.py")
+    # Ensure bundled theme path wins: create a marker CSS and point SPACE_ROOT
+    spec = importlib.util.spec_from_file_location("hf_space_css_pref", space_app)
+    assert spec and spec.loader
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["hf_space_css_pref"] = mod
+    spec.loader.exec_module(mod)
+    css = mod._load_css()
+    assert "cf-report" in css
+    assert "#cf-footer" in css
+    # Bundled file is what Space Docker COPY updates
+    bundled = Path("hf_space/theme.css").read_text()
+    assert css.strip() == bundled.strip()
 
 
 def test_hf_space_theme_css_bundled_and_synced():

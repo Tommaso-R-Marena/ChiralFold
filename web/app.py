@@ -30,7 +30,7 @@ from chiralfold import __version__
 from chiralfold.af3_correct import correct_af3_output, detect_chirality_violations
 from chiralfold.auditor import audit_pdb, format_report
 from chiralfold.pdb_pipeline import mirror_pdb
-from web.theme import CUSTOM_CSS, make_theme
+from web.theme import CUSTOM_CSS, header_html, make_theme
 from web.ui_format import audit_result_markdown, error_markdown, footer_html
 
 # ---------------------------------------------------------------------------
@@ -255,22 +255,7 @@ def build_app() -> gr.Blocks:
         css=CUSTOM_CSS,
         theme=make_theme(),
     ) as demo:
-        gr.HTML(
-            f"""
-            <div id="cf-header">
-              <h1>ChiralFold</h1>
-              <p class="cf-tagline">
-                Upload any PDB — audit stereochemistry, fix chirality errors,
-                or generate an exact mirror-image structure. No command line.
-              </p>
-              <div class="cf-meta">
-                <span class="cf-badge">v{__version__}</span>
-                <span class="cf-badge">0% residual chirality violations</span>
-                <span class="cf-badge">open source</span>
-              </div>
-            </div>
-            """
-        )
+        gr.HTML(header_html(__version__))
 
         with gr.Row(equal_height=False):
             with gr.Column(scale=5, elem_classes=["cf-panel"]):

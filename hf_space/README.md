@@ -22,6 +22,8 @@ short_description: Audit, correct, and mirror PDB stereochemistry
 
 **Live:** https://huggingface.co/spaces/The-Philosopher/ChiralFold-App
 
+Use the in-app **Light / Dark** toggle (or `?__theme=light` / `?__theme=dark`). Both themes keep file names, audit reports, and the footer readable.
+
 Upload any PDB structure to:
 
 1. **Audit** Cα chirality, Ramachandran, planarity, clashes
@@ -35,3 +37,5 @@ Upload any PDB structure to:
 - Local: `pip install "chiralfold[web]" && chiralfold-web`
 
 **Privacy:** files are processed in this Space session and are not retained.
+
+<!-- deploy-stamp: 2026-07-21-theme-toggle-v1 -->

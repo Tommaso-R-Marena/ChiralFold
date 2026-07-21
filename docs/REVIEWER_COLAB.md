@@ -48,6 +48,8 @@ Macrocycles (1XT7, 2RMI), CCD ligands (1OF6), high-resolution density (1HHZ).
 
 **Hugging Face Space:** https://huggingface.co/spaces/The-Philosopher/ChiralFold-App
 
+Use the in-app **Light / Dark** toggle (or append `?__theme=light` / `?__theme=dark`). File names, audit reports, and the footer stay high-contrast in both modes.
+
 Upload PDB → Audit → Correct → Mirror. Same workflows tested in CI (`tests/test_web_e2e.py`).
 
 ## 7. Formal proofs (optional; local)

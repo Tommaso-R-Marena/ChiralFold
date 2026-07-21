@@ -32,15 +32,20 @@ EXAMPLE_INV = SPACE_ROOT / "examples" / "synthetic_l_ala_inverted.pdb"
 
 
 def _load_css() -> str:
-    """Prefer packaged theme (post-install); fall back to bundled theme.css."""
+    """Prefer bundled theme.css so Docker COPY updates always win.
+
+    Loading ``web.theme`` first was wrong for Spaces: ``pip install`` from
+    ``requirements.txt`` is Docker-layer-cached when the pin is unchanged, so
+    an old package CSS would override a freshly uploaded ``theme.css``.
+    """
+    css_path = SPACE_ROOT / "theme.css"
+    if css_path.is_file():
+        return css_path.read_text()
     try:
         from web.theme import CUSTOM_CSS as css  # type: ignore
 
         return css
     except Exception:
-        css_path = SPACE_ROOT / "theme.css"
-        if css_path.is_file():
-            return css_path.read_text()
         return "/* missing theme */"
 
 
@@ -56,6 +61,15 @@ def _make_theme():
             neutral_hue="slate",
             font=["IBM Plex Sans", "Segoe UI", "Helvetica", "Arial", "sans-serif"],
         )
+
+
+def _header_html(version: str) -> str:
+    try:
+        from web.theme import header_html
+
+        return header_html(version)
+    except Exception:
+        return f"<div id='cf-header'><h1>ChiralFold</h1><p>v{version}</p></div>"
 
 
 try:
@@ -77,7 +91,10 @@ except ImportError:
 
     def error_markdown(exc: BaseException) -> str:
         tb = _html.escape(_traceback.format_exc())
-        return f"**Error:** {_html.escape(str(exc))}\n\n<pre class=\"cf-error\">{tb}</pre>"
+        return (
+            f"**Error:** {_html.escape(str(exc))}\n\n"
+            f'<pre class="cf-error">{tb}</pre>'
+        )
 
     def footer_html(version: str, *, include_hf_link: bool = False) -> str:
         return (
@@ -277,22 +294,7 @@ def build_app() -> gr.Blocks:
         css=CUSTOM_CSS,
         theme=_make_theme(),
     ) as demo:
-        gr.HTML(
-            f"""
-            <div id="cf-header">
-              <h1>ChiralFold</h1>
-              <p class="cf-tagline">
-                Upload any PDB — audit stereochemistry, fix chirality errors,
-                or generate an exact mirror-image structure. No command line.
-              </p>
-              <div class="cf-meta">
-                <span class="cf-badge">v{__version__}</span>
-                <span class="cf-badge">0% residual chirality violations</span>
-                <span class="cf-badge">open source</span>
-              </div>
-            </div>
-            """
-        )
+        gr.HTML(_header_html(__version__))
         with gr.Row():
             with gr.Column(scale=5, elem_classes=["cf-panel"]):
                 gr.Markdown("### 1 · Load a structure")
@@ -372,4 +374,9 @@ demo = build_app()
 
 if __name__ == "__main__":
     demo.queue(default_concurrency_limit=4)
-    demo.launch(server_name="0.0.0.0", server_port=7860, show_error=True)
+    # Theme via header toggle or ?__theme=light|dark (Gradio).
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=7860,
+        show_error=True,
+    )
