@@ -103,12 +103,22 @@ Expected: `12,573` checkable residues · `29` errors · `16` structures · rate 
 
 ```python
 from chiralfold import audit_pdb, correct_af3_output, mirror_pdb, ChiralFold
+from chiralfold import fetch_structure, resolve_to_pdb
 
 report = audit_pdb("protein.pdb")          # chirality, Rama, clashes, score
 correct_af3_output("af3.pdb", "fixed.pdb") # fix inverted stereocenters
 mirror_pdb("1YCR.pdb", "1YCR_D.pdb")       # exact L↔D (RMSD 0.0 Å)
 pred = ChiralFold().predict("AFWKELDR")     # D-peptide, 0% violations by construction
+
+# Optional (needs network): RCSB PDB ID or AlphaFold DB / UniProt
+pdb = fetch_structure("1UBQ").path         # RCSB
+af = fetch_structure("P04637").path        # AlphaFold DB
+cif_as_pdb = resolve_to_pdb("model.cif")   # mmCIF → PDB
 ```
+
+CLI (same fetchers): `chiralfold fetch P04637`, `chiralfold audit --id 1UBQ`,
+`chiralfold correct-af3 --id AF-P01308-F1`. Uploads accept **PDB / mmCIF / FASTA**
+(FASTA with a UniProt header → AFDB).
 
 ---
 

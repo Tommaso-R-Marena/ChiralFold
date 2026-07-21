@@ -3,8 +3,9 @@
 ## Unreleased
 
 ### Added
-- Full live **mmCIF-only D-residue universe survey** (`benchmarks/mmcif_d_residue_expansion.py --mode both`): discovers RCSB entries lacking legacy `.pdb`, scans with gemmi; recovers 29/29 known errors and reports **9BC4** (DLE) as a new clear mismatch.
-- `results/mmcif_only_universe_ids.json` discovery artefact.
+- **RCSB + AlphaFold DB fetch** (`chiralfold.fetch`): PDB ID, UniProt accession, or `AF-…-Fn` → local PDB for audit/correct/mirror (CLI, Web, HF Space when online).
+- **mmCIF + FASTA inputs**: core `structure_io` converts mmCIF→PDB (no gemmi); FASTA with a UniProt header resolves via AFDB.
+- CLI: `chiralfold fetch`, `audit --id`, `correct-af3 --id`; structure args accept `.pdb/.cif/.fasta`.
 
 ### Fixed
 - Windows CI `UnicodeDecodeError` when reading Colab notebooks (`tests/test_colab_publication.py` now forces UTF-8).
@@ -13,6 +14,8 @@
 ### Changed
 - README covers all headline results, Lean 4 proofs, and setup avenues (pip, conda, Docker, HF Space, Colab).
 - Removed tracked bulk PDB caches (`results/d_survey/*.pdb`, `results/pdb50/*.pdb`), draft `ChiralFold_3/`, and duplicate root assets.
+- Full live **mmCIF-only D-residue universe survey** (`benchmarks/mmcif_d_residue_expansion.py --mode both`): discovers RCSB entries lacking legacy `.pdb`, scans with gemmi; recovers 29/29 known errors and reports **9BC4** (DLE) as a new clear mismatch.
+- `results/mmcif_only_universe_ids.json` discovery artefact.
 
 
 All notable changes to this project are documented in this file.

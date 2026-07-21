@@ -264,7 +264,7 @@ def mirror_pdb_string(pdb_string, chains=None, axis='x', rename_residues=True):
 
 def fetch_and_mirror(pdb_id, output_path=None, chains=None, axis='x'):
     """
-    Download a PDB structure from RCSB and transform to D-enantiomer.
+    Download a PDB structure from RCSB (or mmCIF fallback) and transform to D.
 
     Args:
         pdb_id: 4-character PDB ID (e.g. '1SHG').
@@ -275,23 +275,23 @@ def fetch_and_mirror(pdb_id, output_path=None, chains=None, axis='x'):
     Returns:
         Same as mirror_pdb().
     """
-    import urllib.request
-    import tempfile
+    from .fetch import fetch_rcsb
 
-    url = f"https://files.rcsb.org/download/{pdb_id.upper()}.pdb"
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.pdb', delete=False) as tmp:
-        tmp_path = tmp.name
-
+    result_fetch = fetch_rcsb(pdb_id)
+    tmp_path = result_fetch.path
     try:
-        urllib.request.urlretrieve(url, tmp_path)
         if output_path is None:
             output_path = f"{pdb_id.upper()}_D_mirror.pdb"
         result = mirror_pdb(tmp_path, output_path, chains, axis)
         result['pdb_id'] = pdb_id.upper()
         return result
     finally:
-        if os.path.exists(tmp_path):
-            os.unlink(tmp_path)
+        # temp dirs from fetch are left for OS cleanup; unlink file if alone
+        if os.path.exists(tmp_path) and 'chiralfold_fetch_' in tmp_path:
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
 
 
 # ═══════════════════════════════════════════════════════════════════════════

@@ -153,7 +153,7 @@ def test_cli_audit_json_text_and_missing_arg(monkeypatch, capsys, tmp_path):
     with pytest.raises(SystemExit) as exc:
         main()
     assert exc.value.code == 1
-    assert "provide a PDB file" in capsys.readouterr().err
+    assert "provide a structure file" in capsys.readouterr().err
 
 
 def test_cli_audit_rcsb_batch_writes_success_and_error_rows(monkeypatch, capsys, tmp_path):
