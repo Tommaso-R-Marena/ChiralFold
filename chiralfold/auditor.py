@@ -240,20 +240,40 @@ class _Atom:
         return "C"
 
 
+def _is_hydrogen_atom(atom: _Atom) -> bool:
+    """True for elemental H/D or PDB hydrogen-style names (HA, HB2, …)."""
+    elem = atom.element_upper
+    if elem in ("H", "D"):
+        return True
+    name = atom.name.strip().upper()
+    return bool(name) and name[0] == "H"
+
+
 def _parse_pdb(pdb_path: str) -> List[_Atom]:
     """
     Parse ATOM and HETATM records from *pdb_path*.
 
     Rules applied:
+    - Only the first MODEL is read (NMR / multi-model depositions).
     - HOH / WAT / DOD water residues are skipped.
     - Only the first alternative location (altloc ≤ 'A' or blank) is kept.
     - Lines shorter than 54 characters are skipped.
     """
     atoms: List[_Atom] = []
     seen_altloc: Dict[Tuple, str] = {}  # (chain, resseq, icode, name) → first altloc
+    saw_model = False
 
     with open(pdb_path) as fh:
         for line in fh:
+            if line.startswith("MODEL"):
+                if saw_model:
+                    break  # ignore subsequent models
+                saw_model = True
+                continue
+            if line.startswith("ENDMDL"):
+                if saw_model:
+                    break
+                continue
             if not line.startswith(("ATOM  ", "HETATM")):
                 continue
             if len(line) < 54:
@@ -985,6 +1005,7 @@ def _clash_excluded_index_pairs(atoms: List[_Atom]) -> Set[Tuple[int, int]]:
             ("N", "H"),
             ("N", "HN"),
             ("O", "C"),
+            ("N", "N"),  # 1-4 via CA–C–N
         ]
         for a_name, b_name in cross_12_13:
             for ia in m0.get(a_name, ()):
@@ -1179,17 +1200,19 @@ def _check_clashes(atoms: List[_Atom]) -> dict:
     Detect steric clashes between non-bonded atoms using a scipy KD-tree.
 
     Two atoms clash when their distance < (rvdw_A + rvdw_B - 0.4) Å.
-    Backbone amide hydrogens are added if not present (MolProbity-compatible).
-    Covalent 1-2 and 1-3 pairs are excluded via residue topology.
+    Deposited hydrogens are stripped and backbone amide H are re-added
+    (MolProbity Reduce-style), so explicit C–H bonds are never scored as clashes.
+    Covalent 1-2 / 1-3 / 1-4 pairs are excluded via residue topology.
 
-    Clash score = clashes per 1000 atoms (MolProbity convention).
+    Clash score = clashes per 1000 heavy atoms.
     """
-    # Add backbone hydrogens if not present (MolProbity does this)
-    all_atoms_for_check = _add_backbone_hydrogens(atoms)
-
-    n_atoms = len(atoms)
+    heavy = [a for a in atoms if not _is_hydrogen_atom(a)]
+    n_atoms = len(heavy)
     if n_atoms < 2:
         return {"n_clashes": 0, "clash_score": 0.0, "worst_clashes": []}
+
+    # Add backbone hydrogens if not present (MolProbity does this)
+    all_atoms_for_check = _add_backbone_hydrogens(heavy)
 
     excluded = _clash_excluded_index_pairs(all_atoms_for_check)
 
