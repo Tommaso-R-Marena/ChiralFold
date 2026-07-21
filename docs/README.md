@@ -9,6 +9,7 @@
 | [../benchmarks/README.md](../benchmarks/README.md) | Benchmark scripts |
 | [../paper/submission/bioinformatics/](../paper/submission/bioinformatics/) | Manuscript package |
 | [REVIEWER_COLAB.md](REVIEWER_COLAB.md) | **Reviewer path:** Colab notebooks + HF Space (ordered) |
+| [BRANCH_PROTECTION.md](BRANCH_PROTECTION.md) | Require **CI success** before merging to master |
 
 ## Colab notebooks (`demos/`)
 
