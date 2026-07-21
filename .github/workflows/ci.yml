@@ -180,3 +180,99 @@ jobs:
       - name: Web module present in web image
         run: |
           docker run --rm --entrypoint python chiralfold-web:ci -c "import web.app; from pathlib import Path; import chiralfold; p=Path(chiralfold.__file__).parent/'data/examples/synthetic_l_ala_inverted.pdb'; assert p.is_file(), p; print('web ok', p)"
+
+  # ------------------------------------------------------------------
+  # Bioinformatics manuscript — catch body text spilling off the page
+  # ------------------------------------------------------------------
+  latex-overflow:
+    name: LaTeX overflow check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install TeX Live (minimal)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-bibtex-extra \
+            texlive-science
+
+      - name: Check Bioinformatics manuscript overflow
+        run: ./paper/submission/bioinformatics/check_latex_overflow.sh
+
+  # ------------------------------------------------------------------
+  # Hugging Face Space — Docker build + runtime smoke (parity with live Space)
+  # ------------------------------------------------------------------
+  hf-space-docker:
+    name: HF Space Docker smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build HF Space Docker image
+        run: docker build -f hf_space/Dockerfile -t chiralfold-hf:ci hf_space
+
+      - name: Import smoke inside container
+        run: |
+          docker run --rm chiralfold-hf:ci python -c "
+          import app
+          from chiralfold.af3_correct import detect_chirality_violations
+          toy = 'examples/toy_ubiquitin_fragment.pdb'
+          inv = 'examples/synthetic_l_ala_inverted.pdb'
+          assert detect_chirality_violations(toy)['n_violations'] == 0
+          assert detect_chirality_violations(inv)['n_violations'] >= 1
+          md, j = app.run_audit(toy)
+          assert 'Stereochemistry audit' in md and j
+          md2, p = app.run_correct(inv)
+          assert detect_chirality_violations(p)['n_violations'] == 0
+          d = app.build_app()
+          assert hasattr(d, 'launch')
+          print('HF Space Docker smoke OK')
+          "
+
+  # ------------------------------------------------------------------
+  # Single required gate — all jobs above must pass before merge
+  # (set branch protection required check to: CI success)
+  # ------------------------------------------------------------------
+  ci-success:
+    name: CI success
+    if: always()
+    needs:
+      - test-linux
+      - test-macos
+      - test-windows
+      - web-smoke
+      - docker-web
+      - latex-overflow
+      - hf-space-docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all CI jobs succeeded
+        run: |
+          echo "Job results:"
+          echo "  test-linux: ${{ needs.test-linux.result }}"
+          echo "  test-macos: ${{ needs.test-macos.result }}"
+          echo "  test-windows: ${{ needs.test-windows.result }}"
+          echo "  web-smoke: ${{ needs.web-smoke.result }}"
+          echo "  docker-web: ${{ needs.docker-web.result }}"
+          echo "  latex-overflow: ${{ needs.latex-overflow.result }}"
+          echo "  hf-space-docker: ${{ needs.hf-space-docker.result }}"
+          for r in \
+            "${{ needs.test-linux.result }}" \
+            "${{ needs.test-macos.result }}" \
+            "${{ needs.test-windows.result }}" \
+            "${{ needs.web-smoke.result }}" \
+            "${{ needs.docker-web.result }}" \
+            "${{ needs.latex-overflow.result }}" \
+            "${{ needs.hf-space-docker.result }}"
+          do
+            if [ "$r" != "success" ]; then
+              echo "CI gate failed: at least one job result is '$r' (need success)."
+              exit 1
+            fi
+          done
+          echo "All CI jobs passed."

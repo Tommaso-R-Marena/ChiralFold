@@ -21,11 +21,14 @@
 | `HIGHLIGHTS.md` | Key points for submission form |
 | `build_submission.sh` | Compile PDFs and create upload zip |
 
+**Reviewer reproduction path:** [`docs/REVIEWER_COLAB.md`](../../../docs/REVIEWER_COLAB.md) — ordered Colab notebooks + HF Space.
+
 ## Build locally
 
 ```bash
 cd paper/submission/bioinformatics
 ./build_submission.sh
+./check_latex_overflow.sh   # optional: fail if body text spills off page
 ```
 
 ## Overleaf (upload whole directory)

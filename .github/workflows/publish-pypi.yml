@@ -1,4 +1,8 @@
-# Publish to PyPI (Trusted Publishing / OIDC, with API-token fallback)
+name: Publish to PyPI
+
+# Publish to PyPI (Trusted Publishing / OIDC, with API-token fallback).
+# Runs only on the canonical upstream repo — forks lack the PyPI Trusted
+# Publisher + GitHub Environment configuration and must not fail here.
 
 on:
   release:
@@ -17,6 +21,8 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # Trusted Publisher OIDC is registered for Tommaso-R-Marena/ChiralFold only.
+    if: github.repository == 'Tommaso-R-Marena/ChiralFold'
     # Must match the Environment name configured on the PyPI Trusted Publisher.
     environment:
       name: pypi
@@ -70,3 +76,14 @@ jobs:
           verbose: true
           # Attestations need extra setup; keep off until Trusted Publisher works.
           attestations: false
+
+  publish-skipped-fork:
+    runs-on: ubuntu-latest
+    if: github.repository != 'Tommaso-R-Marena/ChiralFold'
+    steps:
+      - name: Skip PyPI publish on fork
+        run: |
+          echo "Skipping PyPI publish: this workflow is restricted to the upstream"
+          echo "repository Tommaso-R-Marena/ChiralFold (Trusted Publisher / OIDC)."
+          echo "Current repository: ${GITHUB_REPOSITORY}"
+          echo "Forks and reviewer copies should not publish to PyPI."

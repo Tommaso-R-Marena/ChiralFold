@@ -161,13 +161,13 @@ def figure1_error_rate_per_ccd(rows: List[Dict]) -> str:
     ax.set_xlabel("D-amino acid CCD code")
     ax.set_ylabel("Error rate (%)")
     ymax = max(r + hi for r, hi in zip(rates, yerr_hi))
-    ax.set_ylim(0, max(ymax * 1.18, mean_rate * 1.5, 0.5))
-
+    # Headroom so labels sit above CIs, not on bars; clean (0-error) codes unlabeled.
+    ax.set_ylim(0, max(ymax * 1.32, mean_rate * 2.0, 0.9))
     for idx, (bar, r) in enumerate(zip(bars, rows_sorted)):
+        if r["n_errors"] <= 0:
+            continue
         label = f'{r["n_errors"]}/{r["residues_checked"]}'
-        y_text = bar.get_height() + yerr_hi[idx] + 0.04
-        if y_text > ax.get_ylim()[1] * 0.92:
-            y_text = bar.get_height() + yerr_hi[idx] + 0.02
+        y_text = bar.get_height() + yerr_hi[idx] + 0.12
         ax.text(
             bar.get_x() + bar.get_width() / 2,
             y_text,
@@ -177,6 +177,13 @@ def figure1_error_rate_per_ccd(rows: List[Dict]) -> str:
             fontsize=7,
             color=PAL["navy"],
             clip_on=False,
+            zorder=5,
+            bbox={
+                "boxstyle": "round,pad=0.18",
+                "facecolor": "white",
+                "edgecolor": "none",
+                "alpha": 0.95,
+            },
         )
 
     _style_axes(ax)
@@ -238,83 +245,74 @@ def figure2_deposition_year(rows: List[Dict]) -> str:
         etype = _dominant_error_type(rows, pdb)
         point_colors.append(_ERROR_TYPE_COLORS.get(etype, PAL["muted"]))
 
-    fig, ax = plt.subplots(figsize=(8.5, 4.5))
-    sizes = [70 + 35 * n for n in ys]
+    fig, ax = plt.subplots(figsize=(8.8, 4.8))
+    sizes = [55 + 28 * n for n in ys]
     ax.scatter(
-        xs,
-        ys,
-        s=sizes,
-        c=point_colors,
-        alpha=0.85,
-        edgecolor=PAL["navy"],
-        linewidth=0.8,
-        zorder=3,
+        xs, ys, s=sizes, c=point_colors, alpha=0.88,
+        edgecolor=PAL["navy"], linewidth=0.8, zorder=3,
     )
 
-    texts = []
-    if _HAS_ADJUST_TEXT:
-        for x, y, lbl in zip(xs, ys, labels):
-            texts.append(
-                ax.annotate(
-                    lbl,
-                    (x, y),
-                    fontsize=7,
-                    color=PAL["navy"],
-                    ha="center",
-                    va="center",
-                )
-            )
-        adjust_text(
-            texts,
-            x=xs,
-            y=ys,
-            ax=ax,
-            arrowprops={"arrowstyle": "-", "color": PAL["muted"], "lw": 0.5},
+    # Label ONLY multiplicity outliers (n>1), with long leaders clear of markers.
+    highlight = [(x, y, lbl) for x, y, lbl in zip(xs, ys, labels) if y > 1]
+    # Offset in data coordinates so labels stay far from large bubbles.
+    manual_xy = {
+        "1OF6": (1999.0, 9.35),   # far left-up, clear of the n=8 bubble
+        "2ATS": (2001.2, 5.55),   # left of n=3
+        "3RIT": (2013.2, 6.85),   # right-up of n=5
+    }
+    for x, y, lbl in highlight:
+        tx, ty = manual_xy.get(lbl, (x + 1.2, y + 1.5))
+        ax.annotate(
+            lbl,
+            (x, y),
+            xytext=(tx, ty),
+            textcoords="data",
+            fontsize=8,
+            fontweight="bold",
+            color=PAL["navy"],
+            ha="center",
+            va="center",
+            arrowprops={
+                "arrowstyle": "-|>",
+                "color": PAL["navy"],
+                "lw": 0.75,
+                "shrinkA": 3,
+                "shrinkB": 14,
+                "connectionstyle": "arc3,rad=0.12",
+            },
+            bbox={
+                "boxstyle": "round,pad=0.28",
+                "facecolor": "white",
+                "edgecolor": PAL["muted"],
+                "linewidth": 0.6,
+                "alpha": 0.97,
+            },
+            zorder=5,
         )
-    else:
-        offsets = _manual_label_offsets(len(labels))
-        for (x, y, lbl), (dx, dy) in zip(zip(xs, ys, labels), offsets):
-            ax.annotate(
-                lbl,
-                (x, y),
-                xytext=(dx, dy),
-                textcoords="offset points",
-                fontsize=7,
-                color=PAL["navy"],
-                ha="left" if dx >= 0 else "right",
-                va="bottom" if dy >= 0 else "top",
-                arrowprops={"arrowstyle": "-", "color": PAL["muted"], "lw": 0.4},
-                zorder=4,
-            )
 
     ax.axvspan(2006, 2008, color=PAL["muted"], alpha=0.12, zorder=0)
     ax.axvline(2006, linestyle="--", color=PAL["muted"], linewidth=0.7, zorder=1)
     ax.axvline(2008, linestyle="--", color=PAL["muted"], linewidth=0.7, zorder=1)
     ymax = max(ys) if ys else 1
     ax.text(
-        2007,
-        ymax + 0.35,
-        "wwPDB remediation",
-        ha="center",
-        va="bottom",
-        fontsize=8,
-        color=PAL["muted"],
-        zorder=5,
+        2007, 9.55, "wwPDB remediation",
+        ha="center", va="bottom", fontsize=8, color=PAL["muted"], zorder=5,
     )
 
     ax.set_xlabel("Deposition year")
     ax.set_ylabel("Mismatches per structure")
-    ax.set_xlim(min(xs) - 1, max(xs) + 1)
-    ax.set_ylim(0, max(ys) + 1.5)
+    ax.set_xlim(min(xs) - 1.5, max(xs) + 2.2)
+    ax.set_ylim(0, max(ymax + 2.6, 10.2))
     _style_axes(ax)
 
     from matplotlib.lines import Line2D
-
     legend_handles = [
-        Line2D([0], [0], marker="o", color="w", markerfacecolor=c, markersize=7, label=t)
+        Line2D([0], [0], marker="o", color="w", markerfacecolor=c,
+               markersize=7, label=t)
         for t, c in _ERROR_TYPE_COLORS.items()
     ]
-    ax.legend(handles=legend_handles, loc="upper left", fontsize=7, frameon=False)
+    ax.legend(handles=legend_handles, loc="lower right", fontsize=7, frameon=False,
+              title="Error class (unlabeled = 1 mismatch)", title_fontsize=7)
 
     fig.tight_layout()
     out = os.path.join(HERE, "fig2_deposition_year_vs_errors.png")

@@ -1,4 +1,3 @@
-
 /* ---- Design tokens (WCAG-friendly on light surfaces) ---- */
 :root {
   --cf-ink: #0b1220;
@@ -186,10 +185,155 @@ html, body {
 
 /* File download / status blocks */
 .gradio-container .file-preview,
+.gradio-container .file-preview-holder,
+.gradio-container .upload-container,
+.gradio-container .uploaded-files,
+.gradio-container .file-name,
+.gradio-container .file-size,
 .gradio-container .wrap,
 .dark .gradio-container .file-preview,
+.dark .gradio-container .file-preview-holder,
+.dark .gradio-container .upload-container,
+.dark .gradio-container .uploaded-files,
 .dark .gradio-container .wrap {
+  background: var(--cf-surface-2) !important;
+  color: var(--cf-ink) !important;
+  border-color: var(--cf-border) !important;
+}
+
+/* Uploaded filename row — force readable text on light bar (Gradio 4/5) */
+.gradio-container .file-preview *,
+.gradio-container .upload-container *,
+.gradio-container .uploaded-files *,
+.gradio-container .file-preview-holder *,
+.dark .gradio-container .file-preview *,
+.dark .gradio-container .upload-container *,
+.dark .gradio-container .uploaded-files *,
+.dark .gradio-container .file-preview-holder * {
+  color: var(--cf-ink) !important;
+}
+
+.gradio-container .file-preview span,
+.gradio-container .file-preview a,
+.gradio-container .file-name,
+.gradio-container .file-size,
+.dark .gradio-container .file-preview span,
+.dark .gradio-container .file-preview a,
+.dark .gradio-container .file-name,
+.dark .gradio-container .file-size {
+  background: transparent !important;
+  font-weight: 600 !important;
+}
+
+/* File upload + download widgets */
+.gradio-container .block.file,
+.gradio-container [data-testid="file-upload"],
+.dark .gradio-container .block.file,
+.dark .gradio-container [data-testid="file-upload"] {
+  background: var(--cf-surface) !important;
+  border-color: var(--cf-border) !important;
+}
+
+/* Audit / error reports — no syntax-highlight line backgrounds */
+.cf-report,
+.cf-error,
+.gradio-container pre.cf-report,
+.gradio-container pre.cf-error,
+.dark .gradio-container pre.cf-report,
+.dark .gradio-container pre.cf-error {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0.75rem 0 1rem;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: "IBM Plex Mono", "Source Code Pro", ui-monospace, monospace !important;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--cf-ink) !important;
+  background: var(--cf-surface-2) !important;
+  border: 1px solid var(--cf-border) !important;
+  border-radius: 12px;
+}
+
+.gradio-container pre.cf-report span,
+.gradio-container pre.cf-error span,
+.gradio-container .markdown pre span,
+.gradio-container .prose pre span,
+.dark .gradio-container pre.cf-report span,
+.dark .gradio-container pre.cf-error span,
+.dark .gradio-container .markdown pre span,
+.dark .gradio-container .prose pre span {
+  background: transparent !important;
+  color: var(--cf-ink) !important;
+}
+
+/* Neutralize Gradio/highlight.js code fences in markdown results */
+.gradio-container .markdown pre,
+.gradio-container .prose pre,
+.gradio-container .markdown pre code,
+.gradio-container .prose pre code,
+.dark .gradio-container .markdown pre,
+.dark .gradio-container .prose pre,
+.dark .gradio-container .markdown pre code,
+.dark .gradio-container .prose pre code {
+  background: var(--cf-surface-2) !important;
+  color: var(--cf-ink) !important;
+  border: 1px solid var(--cf-border) !important;
+  border-radius: 12px;
+}
+
+.gradio-container .markdown code:not(pre code),
+.gradio-container .prose code:not(pre code),
+.dark .gradio-container .markdown code:not(pre code),
+.dark .gradio-container .prose code:not(pre code) {
+  background: var(--cf-surface-2) !important;
+  color: var(--cf-ink) !important;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+}
+
+/* Footer — full-width, no clipped install command */
+#cf-footer {
+  margin: 1.5rem 0 0.5rem;
+  padding: 1rem 0 0.25rem;
+  border-top: 1px solid var(--cf-border);
+  text-align: center;
+}
+#cf-footer .cf-footer-line {
+  margin: 0 0 0.35rem;
   color: var(--cf-body) !important;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+#cf-footer .cf-footer-note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--cf-muted) !important;
+}
+#cf-footer a {
+  color: var(--cf-teal) !important;
+  font-weight: 650;
+  text-decoration: none;
+}
+#cf-footer a:hover {
+  text-decoration: underline;
+}
+#cf-footer .cf-install-cmd,
+#cf-footer code {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  background: var(--cf-surface-2) !important;
+  color: var(--cf-ink) !important;
+  border: 1px solid var(--cf-border);
+  border-radius: 6px;
+  padding: 0.15rem 0.55rem;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.85rem;
+  white-space: nowrap;
 }
 
 footer { visibility: hidden; }

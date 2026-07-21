@@ -72,6 +72,13 @@ def test_dashboard_notebook_has_fixed_af3_key():
     assert "s['after']['n_violations']" not in src
     assert "chiralfold==3.5.1" in src or "chiralfold==3.5.1" in src.replace(" ", "")
     assert "Formal verification in progress" not in src
+    # Cell 4 must use d_survey (not undefined alias d)
+    assert "d_survey['checkable_residues']" in src
+    assert "d['checkable_residues']" not in src
+    assert "colab_integrated_manifest.json" in src
+    assert "mmcif_d_residue_expansion_summary.json" in src
+    assert "experimental_validation_report.json" in src
+    assert "af3_resource_benchmark.json" in src
 
 
 def test_mmcif_colab_notebook_exists():
