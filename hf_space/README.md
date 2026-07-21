@@ -20,9 +20,9 @@ short_description: Audit, correct, and mirror PDB stereochemistry
 
 # ChiralFold — Stereochemistry Web App
 
-**Live (light UI):** https://huggingface.co/spaces/The-Philosopher/ChiralFold-App?__theme=light
+**Live:** https://huggingface.co/spaces/The-Philosopher/ChiralFold-App
 
-> Always open with `?__theme=light`. Gradio otherwise follows OS dark mode and can hide filenames / report text.
+Use the in-app **Light / Dark** toggle (or `?__theme=light` / `?__theme=dark`). Both themes keep file names, audit reports, and the footer readable.
 
 Upload any PDB structure to:
 
@@ -38,4 +38,4 @@ Upload any PDB structure to:
 
 **Privacy:** files are processed in this Space session and are not retained.
 
-<!-- deploy-stamp: 2026-07-21-visibility-v2 -->
+<!-- deploy-stamp: 2026-07-21-theme-toggle-v1 -->

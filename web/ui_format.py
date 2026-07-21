@@ -29,7 +29,7 @@ def error_markdown(exc: BaseException) -> str:
 
 def footer_html(version: str, *, include_hf_link: bool = False) -> str:
     hf = (
-        ' · <a href="https://huggingface.co/spaces/The-Philosopher/ChiralFold-App?__theme=light">'
+        ' · <a href="https://huggingface.co/spaces/The-Philosopher/ChiralFold-App">'
         "Hugging Face Space</a>"
         if include_hf_link
         else ""

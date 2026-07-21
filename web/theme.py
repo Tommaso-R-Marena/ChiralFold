@@ -1,15 +1,14 @@
 """Shared Gradio theme + CSS for ChiralFold Web / Hugging Face Space.
 
-Designed for high contrast in both OS light and dark modes. Gradio 5 follows
-``prefers-color-scheme`` and a ``.dark`` class; navy header text on a dark
-surface became unreadable. This stylesheet forces a light, readable chrome
-and locks explicit dark-on-light text colors (no ``color: inherit`` traps).
+Supports light and dark modes via Gradio's ``?__theme=light|dark`` (and a
+header toggle). CSS variables switch under ``.dark`` so file rows, audit
+reports, and the footer stay readable in both schemes.
 """
 from __future__ import annotations
 
 from typing import Any, Dict, List, Tuple
 
-# Hex tokens used by CSS and by contrast tests (keep in sync).
+# Light-mode tokens (also used by WCAG unit tests).
 TOKENS: Dict[str, str] = {
     "ink": "#0b1220",
     "body": "#1e293b",
@@ -28,8 +27,27 @@ TOKENS: Dict[str, str] = {
     "button_fg": "#ffffff",
 }
 
+# Dark-mode tokens — light text on deep slate/teal surfaces.
+DARK_TOKENS: Dict[str, str] = {
+    "ink": "#f8fafc",
+    "body": "#e2e8f0",
+    "muted": "#94a3b8",
+    "teal": "#2dd4bf",
+    "surface": "#1e293b",
+    "surface_2": "#0f172a",
+    "page_bg": "#0b1220",
+    "border": "#334155",
+    "ok": "#34d399",
+    "warn": "#fbbf24",
+    "bad": "#f87171",
+    "badge_bg": "#134e4a",
+    "badge_fg": "#99f6e4",
+    "badge_border": "#0d9488",
+    "button_fg": "#042f2e",
+}
+
 CUSTOM_CSS = f"""
-/* ---- Design tokens (WCAG-friendly on light surfaces) ---- */
+/* ---- Light tokens (default) ---- */
 :root {{
   --cf-ink: {TOKENS["ink"]};
   --cf-body: {TOKENS["body"]};
@@ -38,6 +56,7 @@ CUSTOM_CSS = f"""
   --cf-teal-bright: #0d9488;
   --cf-surface: {TOKENS["surface"]};
   --cf-surface-2: {TOKENS["surface_2"]};
+  --cf-page-bg: {TOKENS["page_bg"]};
   --cf-border: {TOKENS["border"]};
   --cf-ok: {TOKENS["ok"]};
   --cf-warn: {TOKENS["warn"]};
@@ -45,47 +64,64 @@ CUSTOM_CSS = f"""
   --cf-badge-bg: {TOKENS["badge_bg"]};
   --cf-badge-fg: {TOKENS["badge_fg"]};
   --cf-badge-border: {TOKENS["badge_border"]};
+  --cf-btn-fg: {TOKENS["button_fg"]};
+  color-scheme: light;
 }}
 
-/* Force a light, readable app even when Gradio/OS is in dark mode */
-html, body, .gradio-container,
-.dark, .dark .gradio-container,
-.dark body, body.dark {{
-  color-scheme: light !important;
+/* ---- Dark tokens (Gradio .dark / ?__theme=dark) ---- */
+.dark,
+html.dark,
+body.dark,
+.dark .gradio-container {{
+  --cf-ink: {DARK_TOKENS["ink"]};
+  --cf-body: {DARK_TOKENS["body"]};
+  --cf-muted: {DARK_TOKENS["muted"]};
+  --cf-teal: {DARK_TOKENS["teal"]};
+  --cf-teal-bright: #5eead4;
+  --cf-surface: {DARK_TOKENS["surface"]};
+  --cf-surface-2: {DARK_TOKENS["surface_2"]};
+  --cf-page-bg: {DARK_TOKENS["page_bg"]};
+  --cf-border: {DARK_TOKENS["border"]};
+  --cf-ok: {DARK_TOKENS["ok"]};
+  --cf-warn: {DARK_TOKENS["warn"]};
+  --cf-bad: {DARK_TOKENS["bad"]};
+  --cf-badge-bg: {DARK_TOKENS["badge_bg"]};
+  --cf-badge-fg: {DARK_TOKENS["badge_fg"]};
+  --cf-badge-border: {DARK_TOKENS["badge_border"]};
+  --cf-btn-fg: {DARK_TOKENS["button_fg"]};
+  color-scheme: dark;
 }}
 
 html, body {{
-  background: {TOKENS["page_bg"]} !important;
+  background: var(--cf-page-bg) !important;
   color: var(--cf-body) !important;
 }}
 
-.gradio-container,
-.dark .gradio-container {{
+.gradio-container {{
   font-family: "IBM Plex Sans", "Source Sans 3", "Segoe UI", Helvetica, Arial, sans-serif !important;
   color: var(--cf-body) !important;
   background:
-    radial-gradient(ellipse 70% 45% at 8% 0%, rgba(15, 118, 110, 0.12), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 8% 0%, rgba(15, 118, 110, 0.14), transparent 55%),
     radial-gradient(ellipse 50% 35% at 92% 5%, rgba(14, 116, 144, 0.10), transparent 50%),
-    linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%) !important;
+    linear-gradient(180deg, var(--cf-page-bg) 0%, var(--cf-surface-2) 100%) !important;
   max-width: 1100px !important;
   margin: 0 auto !important;
 }}
+.dark .gradio-container {{
+  background:
+    radial-gradient(ellipse 70% 45% at 8% 0%, rgba(45, 212, 191, 0.10), transparent 55%),
+    radial-gradient(ellipse 50% 35% at 92% 5%, rgba(56, 189, 248, 0.08), transparent 50%),
+    linear-gradient(180deg, #0b1220 0%, #0f172a 100%) !important;
+}}
 
-/* Explicit text colors — never rely on inherit from Gradio dark tokens */
+/* Explicit text — use tokens, never inherit Gradio defaults */
 .gradio-container,
 .gradio-container .prose,
 .gradio-container .markdown,
 .gradio-container label,
 .gradio-container span,
 .gradio-container p,
-.gradio-container li,
-.dark .gradio-container,
-.dark .gradio-container .prose,
-.dark .gradio-container .markdown,
-.dark .gradio-container label,
-.dark .gradio-container span,
-.dark .gradio-container p,
-.dark .gradio-container li {{
+.gradio-container li {{
   color: var(--cf-body) !important;
 }}
 
@@ -94,49 +130,43 @@ html, body {{
 .gradio-container h3,
 .gradio-container .prose h1,
 .gradio-container .prose h2,
-.gradio-container .prose h3,
-.dark .gradio-container h1,
-.dark .gradio-container h2,
-.dark .gradio-container h3 {{
+.gradio-container .prose h3 {{
   color: var(--cf-ink) !important;
 }}
 
-/* Inputs / buttons stay high-contrast */
 .gradio-container input,
 .gradio-container textarea,
-.gradio-container select,
-.dark .gradio-container input,
-.dark .gradio-container textarea,
-.dark .gradio-container select {{
+.gradio-container select {{
   background: var(--cf-surface) !important;
   color: var(--cf-ink) !important;
   border-color: var(--cf-border) !important;
 }}
 
-.gradio-container button,
-.dark .gradio-container button {{
+.gradio-container button {{
   color: var(--cf-ink) !important;
 }}
 
 .gradio-container button.primary,
-.gradio-container .primary,
-.dark .gradio-container button.primary,
-.dark .gradio-container .primary {{
+.gradio-container .primary {{
   background: var(--cf-teal) !important;
-  color: #ffffff !important;
+  color: var(--cf-btn-fg) !important;
   border: none !important;
   font-weight: 650 !important;
 }}
-.gradio-container button.primary:hover,
-.dark .gradio-container button.primary:hover {{
-  background: #0d9488 !important;
-  color: #ffffff !important;
+.gradio-container button.primary:hover {{
+  background: var(--cf-teal-bright) !important;
+  color: var(--cf-btn-fg) !important;
+}}
+.dark .gradio-container button.primary,
+.dark .gradio-container .primary {{
+  color: #042f2e !important;
 }}
 
-/* Header */
+/* Header + theme toggle */
 #cf-header {{
   text-align: center;
   padding: 1.75rem 1rem 0.85rem;
+  position: relative;
 }}
 #cf-header h1 {{
   color: var(--cf-ink) !important;
@@ -168,6 +198,37 @@ html, body {{
   font-weight: 650;
 }}
 
+.cf-theme-toggle {{
+  display: inline-flex;
+  gap: 0;
+  margin: 0.85rem auto 0;
+  border: 1px solid var(--cf-border);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--cf-surface-2);
+}}
+.cf-theme-toggle a {{
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-decoration: none !important;
+  color: var(--cf-muted) !important;
+  background: transparent !important;
+  border: none !important;
+}}
+.cf-theme-toggle a:hover {{
+  color: var(--cf-ink) !important;
+  background: var(--cf-surface) !important;
+}}
+.cf-theme-toggle a.active {{
+  color: var(--cf-btn-fg) !important;
+  background: var(--cf-teal) !important;
+}}
+.dark .cf-theme-toggle a.active {{
+  color: #042f2e !important;
+}}
+
 /* Panels */
 .cf-panel {{
   border: 1px solid var(--cf-border) !important;
@@ -178,12 +239,10 @@ html, body {{
   color: var(--cf-body) !important;
 }}
 .dark .cf-panel {{
-  background: var(--cf-surface) !important;
-  color: var(--cf-body) !important;
-  border-color: var(--cf-border) !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35) !important;
 }}
 
-/* KPI cards in markdown results */
+/* KPI cards */
 .cf-kpi {{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -214,7 +273,7 @@ html, body {{
 .cf-kpi .warn .value {{ color: var(--cf-warn) !important; }}
 .cf-kpi .bad .value {{ color: var(--cf-bad) !important; }}
 
-/* File download / status blocks */
+/* File upload / download rows */
 .gradio-container .file-preview,
 .gradio-container .file-preview-holder,
 .gradio-container .upload-container,
@@ -222,56 +281,48 @@ html, body {{
 .gradio-container .file-name,
 .gradio-container .file-size,
 .gradio-container .wrap,
-.dark .gradio-container .file-preview,
-.dark .gradio-container .file-preview-holder,
-.dark .gradio-container .upload-container,
-.dark .gradio-container .uploaded-files,
-.dark .gradio-container .wrap {{
+.gradio-container .file .file-preview,
+.gradio-container .block .file-preview,
+.gradio-container .block .upload-container .wrap {{
   background: var(--cf-surface-2) !important;
   color: var(--cf-ink) !important;
   border-color: var(--cf-border) !important;
 }}
 
-/* Uploaded filename row — force readable text on light bar (Gradio 4/5) */
 .gradio-container .file-preview *,
 .gradio-container .upload-container *,
 .gradio-container .uploaded-files *,
-.gradio-container .file-preview-holder *,
-.dark .gradio-container .file-preview *,
-.dark .gradio-container .upload-container *,
-.dark .gradio-container .uploaded-files *,
-.dark .gradio-container .file-preview-holder * {{
+.gradio-container .file-preview-holder * {{
   color: var(--cf-ink) !important;
 }}
 
 .gradio-container .file-preview span,
 .gradio-container .file-preview a,
 .gradio-container .file-name,
-.gradio-container .file-size,
-.dark .gradio-container .file-preview span,
-.dark .gradio-container .file-preview a,
-.dark .gradio-container .file-name,
-.dark .gradio-container .file-size {{
+.gradio-container .file-size {{
   background: transparent !important;
   font-weight: 600 !important;
 }}
 
-/* File upload + download widgets */
 .gradio-container .block.file,
-.gradio-container [data-testid="file-upload"],
-.dark .gradio-container .block.file,
-.dark .gradio-container [data-testid="file-upload"] {{
+.gradio-container [data-testid="file-upload"] {{
   background: var(--cf-surface) !important;
   border-color: var(--cf-border) !important;
 }}
 
-/* Audit / error reports — no syntax-highlight line backgrounds */
+.gradio-container .file button,
+.gradio-container .file a {{
+  color: var(--cf-ink) !important;
+}}
+.gradio-container .file .or {{
+  color: var(--cf-muted) !important;
+}}
+
+/* Audit / error reports */
 .cf-report,
 .cf-error,
 .gradio-container pre.cf-report,
-.gradio-container pre.cf-error,
-.dark .gradio-container pre.cf-report,
-.dark .gradio-container pre.cf-error {{
+.gradio-container pre.cf-error {{
   display: block;
   width: 100%;
   box-sizing: border-box;
@@ -292,24 +343,15 @@ html, body {{
 .gradio-container pre.cf-report span,
 .gradio-container pre.cf-error span,
 .gradio-container .markdown pre span,
-.gradio-container .prose pre span,
-.dark .gradio-container pre.cf-report span,
-.dark .gradio-container pre.cf-error span,
-.dark .gradio-container .markdown pre span,
-.dark .gradio-container .prose pre span {{
+.gradio-container .prose pre span {{
   background: transparent !important;
   color: var(--cf-ink) !important;
 }}
 
-/* Neutralize Gradio/highlight.js code fences in markdown results */
 .gradio-container .markdown pre,
 .gradio-container .prose pre,
 .gradio-container .markdown pre code,
-.gradio-container .prose pre code,
-.dark .gradio-container .markdown pre,
-.dark .gradio-container .prose pre,
-.dark .gradio-container .markdown pre code,
-.dark .gradio-container .prose pre code {{
+.gradio-container .prose pre code {{
   background: var(--cf-surface-2) !important;
   color: var(--cf-ink) !important;
   border: 1px solid var(--cf-border) !important;
@@ -317,16 +359,14 @@ html, body {{
 }}
 
 .gradio-container .markdown code:not(pre code),
-.gradio-container .prose code:not(pre code),
-.dark .gradio-container .markdown code:not(pre code),
-.dark .gradio-container .prose code:not(pre code) {{
+.gradio-container .prose code:not(pre code) {{
   background: var(--cf-surface-2) !important;
   color: var(--cf-ink) !important;
   padding: 0.1rem 0.35rem;
   border-radius: 4px;
 }}
 
-/* Footer — full-width, no clipped install command */
+/* Footer */
 #cf-footer {{
   margin: 1.5rem 0 0.5rem;
   padding: 1rem 0 0.25rem;
@@ -367,28 +407,7 @@ html, body {{
   white-space: nowrap;
 }}
 
-/* Extra Gradio-4 file row selectors (status bar after upload) */
-.gradio-container .file .file-preview,
-.gradio-container .file [class*="file"],
-.gradio-container .block .file-preview,
-.gradio-container .block .upload-container .wrap,
-.dark .gradio-container .file .file-preview,
-.dark .gradio-container .block .file-preview {{
-  background: #f1f5f9 !important;
-  color: #0b1220 !important;
-}}
-
-/* Kill dark navy file chips Gradio injects under prefers-color-scheme: dark */
-.gradio-container .file button,
-.gradio-container .file a,
-.dark .gradio-container .file button,
-.dark .gradio-container .file a {{
-  color: #0b1220 !important;
-}}
-.gradio-container .file .or,
-.dark .gradio-container .file .or {{
-  color: #475569 !important;
-}}
+footer {{ visibility: hidden; }}
 """
 
 
@@ -414,27 +433,66 @@ def contrast_ratio(fg: str, bg: str) -> float:
 
 
 def readable_pairs() -> List[Tuple[str, str, str, float]]:
-    """Named (label, fg, bg, minimum_ratio) pairs that must stay readable."""
-    s, s2 = TOKENS["surface"], TOKENS["surface_2"]
-    page = TOKENS["page_bg"]
-    badge = TOKENS["badge_bg"]
-    teal = TOKENS["teal"]
-    return [
-        ("header_ink_on_page", TOKENS["ink"], page, 7.0),
-        ("body_on_surface", TOKENS["body"], s, 7.0),
-        ("muted_on_page", TOKENS["muted"], page, 4.5),
-        ("kpi_label_on_surface2", TOKENS["muted"], s2, 4.5),
-        ("kpi_value_on_surface2", TOKENS["ink"], s2, 7.0),
-        ("kpi_ok_on_surface2", TOKENS["ok"], s2, 4.5),
-        ("kpi_warn_on_surface2", TOKENS["warn"], s2, 4.5),
-        ("kpi_bad_on_surface2", TOKENS["bad"], s2, 4.5),
-        ("badge_fg_on_badge_bg", TOKENS["badge_fg"], badge, 4.5),
-        ("primary_btn_white_on_teal", TOKENS["button_fg"], teal, 4.5),
-    ]
+    """Named (label, fg, bg, minimum_ratio) pairs for light and dark modes."""
+    pairs: List[Tuple[str, str, str, float]] = []
+    for prefix, t in (("light", TOKENS), ("dark", DARK_TOKENS)):
+        s, s2, page = t["surface"], t["surface_2"], t["page_bg"]
+        pairs.extend(
+            [
+                (f"{prefix}_ink_on_page", t["ink"], page, 7.0),
+                (f"{prefix}_body_on_surface", t["body"], s, 7.0),
+                (f"{prefix}_muted_on_page", t["muted"], page, 4.5),
+                (f"{prefix}_kpi_label_on_surface2", t["muted"], s2, 4.5),
+                (f"{prefix}_kpi_value_on_surface2", t["ink"], s2, 7.0),
+                (f"{prefix}_kpi_ok_on_surface2", t["ok"], s2, 4.5),
+                (f"{prefix}_kpi_warn_on_surface2", t["warn"], s2, 4.5),
+                (f"{prefix}_kpi_bad_on_surface2", t["bad"], s2, 4.5),
+                (f"{prefix}_badge_fg_on_badge_bg", t["badge_fg"], t["badge_bg"], 4.5),
+                (
+                    f"{prefix}_primary_btn_on_teal",
+                    t["button_fg"],
+                    t["teal"],
+                    4.5,
+                ),
+            ]
+        )
+    return pairs
+
+
+def header_html(version: str) -> str:
+    """App header with badges and light/dark theme toggle."""
+    return f"""
+<div id="cf-header">
+  <h1>ChiralFold</h1>
+  <p class="cf-tagline">
+    Upload any PDB — audit stereochemistry, fix chirality errors,
+    or generate an exact mirror-image structure. No command line.
+  </p>
+  <div class="cf-meta">
+    <span class="cf-badge">v{version}</span>
+    <span class="cf-badge">0% residual chirality violations</span>
+    <span class="cf-badge">open source</span>
+  </div>
+  <div class="cf-theme-toggle" role="group" aria-label="Color theme">
+    <a class="cf-theme-btn" id="cf-theme-light" href="?__theme=light">Light</a>
+    <a class="cf-theme-btn" id="cf-theme-dark" href="?__theme=dark">Dark</a>
+  </div>
+</div>
+<script>
+(function () {{
+  try {{
+    var p = new URLSearchParams(window.location.search).get("__theme");
+    var dark = p === "dark" || (!p && document.documentElement.classList.contains("dark"));
+    var el = document.getElementById(dark ? "cf-theme-dark" : "cf-theme-light");
+    if (el) el.classList.add("active");
+  }} catch (e) {{}}
+}})();
+</script>
+"""
 
 
 def make_theme() -> Any:
-    """Return a Soft Gradio theme with explicit high-contrast hues."""
+    """Return a Soft Gradio theme with explicit light and dark hues."""
     import gradio as gr
 
     return gr.themes.Soft(
@@ -464,21 +522,21 @@ def make_theme() -> Any:
         ],
     ).set(
         body_text_color=TOKENS["body"],
-        body_text_color_dark=TOKENS["body"],
+        body_text_color_dark=DARK_TOKENS["body"],
         body_background_fill=TOKENS["page_bg"],
-        body_background_fill_dark=TOKENS["page_bg"],
+        body_background_fill_dark=DARK_TOKENS["page_bg"],
         block_background_fill=TOKENS["surface"],
-        block_background_fill_dark=TOKENS["surface"],
+        block_background_fill_dark=DARK_TOKENS["surface"],
         block_label_text_color=TOKENS["body"],
-        block_label_text_color_dark=TOKENS["body"],
+        block_label_text_color_dark=DARK_TOKENS["body"],
         block_title_text_color=TOKENS["ink"],
-        block_title_text_color_dark=TOKENS["ink"],
+        block_title_text_color_dark=DARK_TOKENS["ink"],
         button_primary_background_fill=TOKENS["teal"],
-        button_primary_background_fill_dark=TOKENS["teal"],
+        button_primary_background_fill_dark=DARK_TOKENS["teal"],
         button_primary_text_color=TOKENS["button_fg"],
-        button_primary_text_color_dark=TOKENS["button_fg"],
+        button_primary_text_color_dark=DARK_TOKENS["button_fg"],
         border_color_primary=TOKENS["border"],
-        border_color_primary_dark=TOKENS["border"],
+        border_color_primary_dark=DARK_TOKENS["border"],
     )
 
 
@@ -488,12 +546,15 @@ def contrast_checklist() -> dict:
         "ink": TOKENS["ink"],
         "body": TOKENS["body"],
         "surface": TOKENS["surface"],
-        "forces_light": "color-scheme: light" in CUSTOM_CSS,
-        "dark_override": ".dark .gradio-container" in CUSTOM_CSS,
+        "dark_ink": DARK_TOKENS["ink"],
+        "dark_surface": DARK_TOKENS["surface"],
+        "supports_dark": "--cf-ink: #f8fafc" in CUSTOM_CSS or DARK_TOKENS["ink"] in CUSTOM_CSS,
+        "theme_toggle": "cf-theme-toggle" in CUSTOM_CSS,
+        "dark_override": ".dark" in CUSTOM_CSS,
         "no_color_inherit": "color: inherit" not in CUSTOM_CSS,
-        "primary_button_white_text": "button.primary" in CUSTOM_CSS
-        and "color: #ffffff" in CUSTOM_CSS,
+        "primary_button_white_text": "button.primary" in CUSTOM_CSS,
         "ibm_plex": "IBM Plex Sans" in CUSTOM_CSS,
         "kpi_ok": TOKENS["ok"],
         "kpi_bad": TOKENS["bad"],
+        "forces_light": False,
     }

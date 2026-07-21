@@ -53,7 +53,7 @@ def main() -> int:
         commit_message="Deploy ChiralFold web Space",
         ignore_patterns=["__pycache__", "*.pyc", ".git*"],
     )
-    print(f"Live at https://huggingface.co/spaces/{REPO_ID}?__theme=light")
+    print(f"Live at https://huggingface.co/spaces/{REPO_ID}")
     return 0
 
 

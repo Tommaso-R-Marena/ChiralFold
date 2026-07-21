@@ -33,7 +33,7 @@
 \abstract{%
 \textbf{Motivation:} D-amino acids are essential in therapeutics and natural products, yet standard validators do not audit D-residue stereochemistry in deposited structures, and diffusion predictors violate D-chirality at high rates.\\
 \textbf{Results:} We audited 12{,}573 D-residues in 4{,}623 PDB files and found 29 D-label/L-coordinate mismatches (0.23\%) in 16 structures not covered by MolProbity's L-residue C$\alpha$ check. ChiralFold, calibrated on 362 structures (Ramachandran Spearman $\rho=0.52$ vs wwPDB), detects errors via signed C$\alpha$ volume. Machine-checked Lean~4 proofs (Supplementary Notes~S1) show that chirality sign cannot factor through pairwise distances alone.\\
-\textbf{Availability:} \url{https://github.com/Tommaso-R-Marena/ChiralFold}; \texttt{pip install chiralfold} (v3.5.1); Python~3.9+; Linux/macOS/Windows; web UI at \url{https://huggingface.co/spaces/The-Philosopher/ChiralFold-App?\_\_theme=light}.\\
+\textbf{Availability:} \url{https://github.com/Tommaso-R-Marena/ChiralFold}; \texttt{pip install chiralfold} (v3.5.1); Python~3.9+; Linux/macOS/Windows; web UI at \url{https://huggingface.co/spaces/The-Philosopher/ChiralFold-App}.\\
 \textbf{Contact:} \href{marena@cua.edu}{marena@cua.edu}\\
 \textbf{Supplementary information:} Supplementary data, Lean~4 proofs with derivations, and extended analyses are available at Bioinformatics online and at \url{https://github.com/Tommaso-R-Marena/ChiralFold}.}
 
@@ -182,7 +182,7 @@ ChiralFold combines a PDB stereochemistry auditor calibrated against wwPDB/MolPr
 
 \section*{Data availability}
 
-Verification data: \url{https://github.com/Tommaso-R-Marena/ChiralFold} (\repopath{results/d_residue_verification.csv}). Experimental validation: \repopath{results/experimental_validation_report.json}. mmCIF survey outputs: \repopath{results/mmcif_d_residue_expansion_*}. Lean proofs: \repopath{formal/chirality_nogo/}. Ramachandran benchmark: \repopath{results/ramachandran_279struct_chainfix_*}. Software: PyPI \texttt{chiralfold} (v3.5.1); Docker image \texttt{chiralfold:3.5.1} on GHCR; GitHub release v3.5.1; Hugging Face Space \url{https://huggingface.co/spaces/The-Philosopher/ChiralFold-App?\_\_theme=light}.
+Verification data: \url{https://github.com/Tommaso-R-Marena/ChiralFold} (\repopath{results/d_residue_verification.csv}). Experimental validation: \repopath{results/experimental_validation_report.json}. mmCIF survey outputs: \repopath{results/mmcif_d_residue_expansion_*}. Lean proofs: \repopath{formal/chirality_nogo/}. Ramachandran benchmark: \repopath{results/ramachandran_279struct_chainfix_*}. Software: PyPI \texttt{chiralfold} (v3.5.1); Docker image \texttt{chiralfold:3.5.1} on GHCR; GitHub release v3.5.1; Hugging Face Space \url{https://huggingface.co/spaces/The-Philosopher/ChiralFold-App}.
 
 \section*{Funding}
 None declared.
