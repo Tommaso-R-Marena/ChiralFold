@@ -69,6 +69,13 @@ def test_wcag_contrast_pairs(label, fg, bg, minimum):
     )
 
 
+def test_theme_includes_report_and_file_contrast_rules():
+    assert ".cf-report" in CUSTOM_CSS
+    assert "#cf-footer" in CUSTOM_CSS
+    assert "file-preview" in CUSTOM_CSS
+    assert "background: transparent !important" in CUSTOM_CSS
+
+
 def test_make_theme_builds():
     theme = make_theme()
     assert theme is not None
@@ -112,6 +119,8 @@ def test_e2e_all_web_functions(toy_path: str, inverted_path: str):
     audit_md, audit_json = web_app.run_audit(toy)
     assert "Stereochemistry audit" in audit_md
     assert "cf-kpi" in audit_md
+    assert "cf-report" in audit_md
+    assert "```" not in audit_md.split("Download the full JSON")[0]
     assert audit_json and audit_json.endswith("_audit.json")
     report = json.loads(Path(audit_json).read_text())
     assert "overall_score" in report

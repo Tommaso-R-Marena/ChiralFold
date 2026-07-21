@@ -19,7 +19,6 @@ import json
 import os
 import shutil
 import tempfile
-import traceback
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -32,6 +31,7 @@ from chiralfold.af3_correct import correct_af3_output, detect_chirality_violatio
 from chiralfold.auditor import audit_pdb, format_report
 from chiralfold.pdb_pipeline import mirror_pdb
 from web.theme import CUSTOM_CSS, make_theme
+from web.ui_format import audit_result_markdown, error_markdown, footer_html
 
 # ---------------------------------------------------------------------------
 # Limits & paths
@@ -158,12 +158,7 @@ def run_audit(uploaded) -> Tuple[str, Optional[str]]:
             ]
         )
         summary = format_report(report)
-        md = (
-            f"## Stereochemistry audit\n\n{kpis}\n\n"
-            f"**File:** `{Path(src).name}`  \n\n"
-            f"```\n{summary}\n```\n\n"
-            "Download the full JSON report below."
-        )
+        md = audit_result_markdown(kpis, Path(src).name, summary)
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".json", delete=False, prefix="chiralfold_audit_"
         ) as fp:
@@ -174,7 +169,7 @@ def run_audit(uploaded) -> Tuple[str, Optional[str]]:
     except gr.Error:
         raise
     except Exception as exc:  # noqa: BLE001
-        return f"**Error:** {exc}\n\n```\n{traceback.format_exc()}\n```", None
+        return error_markdown(exc), None
 
 
 def run_correct(uploaded) -> Tuple[str, Optional[str]]:
@@ -212,7 +207,7 @@ def run_correct(uploaded) -> Tuple[str, Optional[str]]:
     except gr.Error:
         raise
     except Exception as exc:  # noqa: BLE001
-        return f"**Error:** {exc}\n\n```\n{traceback.format_exc()}\n```", None
+        return error_markdown(exc), None
 
 
 def run_mirror(uploaded, axis: str, rename: bool) -> Tuple[str, Optional[str]]:
@@ -246,7 +241,7 @@ def run_mirror(uploaded, axis: str, rename: bool) -> Tuple[str, Optional[str]]:
     except gr.Error:
         raise
     except Exception as exc:  # noqa: BLE001
-        return f"**Error:** {exc}\n\n```\n{traceback.format_exc()}\n```", None
+        return error_markdown(exc), None
 
 
 # ---------------------------------------------------------------------------
@@ -353,14 +348,7 @@ def build_app() -> gr.Blocks:
             run_mirror, inputs=[pdb_in, axis, rename], outputs=[report_out, download_out]
         )
 
-        gr.Markdown(
-            "---\n"
-            f"**ChiralFold v{__version__}** · "
-            "[GitHub](https://github.com/Tommaso-R-Marena/ChiralFold) · "
-            "[Hugging Face Space](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App) · "
-            "`pip install chiralfold` · "
-            "Results stay on your session; nothing is stored permanently."
-        )
+        gr.HTML(footer_html(__version__, include_hf_link=True))
 
     return demo
 

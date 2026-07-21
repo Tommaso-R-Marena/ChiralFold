@@ -12,7 +12,6 @@ import json
 import os
 import shutil
 import tempfile
-import traceback
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -56,6 +55,37 @@ def _make_theme():
             secondary_hue="slate",
             neutral_hue="slate",
             font=["IBM Plex Sans", "Segoe UI", "Helvetica", "Arial", "sans-serif"],
+        )
+
+
+try:
+    from web.ui_format import audit_result_markdown, error_markdown, footer_html
+except ImportError:
+    import html as _html
+    import traceback as _traceback
+
+    def report_pre_html(text: str) -> str:
+        return f'<pre class="cf-report">{_html.escape(text)}</pre>'
+
+    def audit_result_markdown(kpis_html: str, filename: str, summary: str) -> str:
+        return (
+            f"## Stereochemistry audit\n\n{kpis_html}\n\n"
+            f"**File:** `{filename}`\n\n"
+            f"{report_pre_html(summary)}\n\n"
+            "Download the full JSON report below."
+        )
+
+    def error_markdown(exc: BaseException) -> str:
+        tb = _html.escape(_traceback.format_exc())
+        return f"**Error:** {_html.escape(str(exc))}\n\n<pre class=\"cf-error\">{tb}</pre>"
+
+    def footer_html(version: str, *, include_hf_link: bool = False) -> str:
+        return (
+            f'<div id="cf-footer"><p class="cf-footer-line">'
+            f"<strong>ChiralFold v{_html.escape(version)}</strong> · "
+            f'<a href="https://github.com/Tommaso-R-Marena/ChiralFold">GitHub</a> · '
+            f'<code class="cf-install-cmd">pip install chiralfold</code></p>'
+            f'<p class="cf-footer-note">Processed in-session; nothing stored permanently.</p></div>'
         )
 
 
@@ -161,11 +191,7 @@ def run_audit(uploaded) -> Tuple[str, Optional[str]]:
             ]
         )
         summary = format_report(report)
-        md = (
-            f"## Stereochemistry audit\n\n{kpis}\n\n"
-            f"**File:** `{Path(src).name}`\n\n```\n{summary}\n```\n\n"
-            "Download the full JSON report below."
-        )
+        md = audit_result_markdown(kpis, Path(src).name, summary)
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".json", delete=False, prefix="chiralfold_audit_"
         ) as fp:
@@ -175,7 +201,7 @@ def run_audit(uploaded) -> Tuple[str, Optional[str]]:
     except gr.Error:
         raise
     except Exception as exc:  # noqa: BLE001
-        return f"**Error:** {exc}\n\n```\n{traceback.format_exc()}\n```", None
+        return error_markdown(exc), None
 
 
 def run_correct(uploaded) -> Tuple[str, Optional[str]]:
@@ -212,7 +238,7 @@ def run_correct(uploaded) -> Tuple[str, Optional[str]]:
     except gr.Error:
         raise
     except Exception as exc:  # noqa: BLE001
-        return f"**Error:** {exc}\n\n```\n{traceback.format_exc()}\n```", None
+        return error_markdown(exc), None
 
 
 def run_mirror(uploaded, axis: str, rename: bool) -> Tuple[str, Optional[str]]:
@@ -242,7 +268,7 @@ def run_mirror(uploaded, axis: str, rename: bool) -> Tuple[str, Optional[str]]:
     except gr.Error:
         raise
     except Exception as exc:  # noqa: BLE001
-        return f"**Error:** {exc}\n\n```\n{traceback.format_exc()}\n```", None
+        return error_markdown(exc), None
 
 
 def build_app() -> gr.Blocks:
@@ -338,13 +364,7 @@ def build_app() -> gr.Blocks:
             outputs=[report_out, download_out],
         )
 
-        gr.Markdown(
-            "---\n"
-            f"**ChiralFold v{__version__}** · "
-            "[GitHub](https://github.com/Tommaso-R-Marena/ChiralFold) · "
-            "`pip install chiralfold` · "
-            "Processed in-session; nothing stored permanently."
-        )
+        gr.HTML(footer_html(__version__))
     return demo
 
 
