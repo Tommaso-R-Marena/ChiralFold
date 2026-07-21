@@ -7,10 +7,14 @@
 \usepackage{multirow}
 \usepackage{xurl}
 \usepackage{seqsplit}
+\usepackage{array}
+\usepackage{ragged2e}
 \graphicspath{{figures/}}
 % Breakable repo paths / long identifiers in two-column layout
 \newcommand{\repopath}[1]{\path{#1}}
 \newcommand{\leanthm}[1]{\path{#1}}
+% Allow modest line-stretch in tight two-column paragraphs
+\emergencystretch=2em
 
 \begin{document}
 
@@ -131,7 +135,7 @@ The Lean formalization proves several layers of obstruction (Table~\ref{tab:form
 \label{tab:formal_nogo}
 \scriptsize
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.42\linewidth}>{\raggedright\arraybackslash}p{0.52\linewidth}@{}}
+\begin{tabular}{@{}>{\RaggedRight\arraybackslash}p{0.44\linewidth}>{\RaggedRight\arraybackslash}p{0.50\linewidth}@{}}
 \toprule
 Theorem (short name) & Geometric / biological consequence \\
 \midrule
@@ -171,7 +175,7 @@ ChiralFold combines a PDB stereochemistry auditor calibrated against wwPDB/MolPr
 
 \section*{Data availability}
 
-Verification data: \url{https://github.com/Tommaso-R-Marena/ChiralFold} (\repopath{results/d_residue_verification.csv}). Experimental validation: \repopath{results/experimental_validation_report.json}. mmCIF survey: \repopath{results/mmcif_d_residue_expansion_*}. Lean proofs: \repopath{formal/chirality_nogo/}. Benchmark outputs: \repopath{results/ramachandran_279struct_chainfix_*}. Software: PyPI \texttt{chiralfold} (v3.5.1); Docker image \texttt{chiralfold:3.5.1} on GHCR; GitHub release v3.5.1; Hugging Face Space \url{https://huggingface.co/spaces/The-Philosopher/ChiralFold-App}.
+Verification data: \url{https://github.com/Tommaso-R-Marena/ChiralFold} (\repopath{results/d_residue_verification.csv}). Experimental validation: \repopath{results/experimental_validation_report.json}. mmCIF survey outputs: \repopath{results/mmcif_d_residue_expansion_*}. Lean proofs: \repopath{formal/chirality_nogo/}. Ramachandran benchmark: \repopath{results/ramachandran_279struct_chainfix_*}. Software: PyPI \texttt{chiralfold} (v3.5.1); Docker image \texttt{chiralfold:3.5.1} on GHCR; GitHub release v3.5.1; Hugging Face Space \url{https://huggingface.co/spaces/The-Philosopher/ChiralFold-App}.
 
 \section*{Funding}
 None declared.

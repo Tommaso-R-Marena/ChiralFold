@@ -2,8 +2,18 @@
 \usepackage{amsmath,amssymb,amsthm,graphicx,hyperref,booktabs,longtable,enumitem}
 \usepackage[margin=1in]{geometry}
 \usepackage{natbib}
+\usepackage{xurl}
+\usepackage{seqsplit}
+\usepackage{array}
+\usepackage{ragged2e}
 
 \graphicspath{{figures/}}
+% Breakable repo paths and Lean identifiers
+\newcommand{\repopath}[1]{\path{#1}}
+\newcommand{\leanthm}[1]{\path{#1}}
+\newcommand{\leanfile}[1]{\path{#1}}
+% Safe in \paragraph / PDF bookmarks (TOC-safe headings)
+\newcommand{\leanhdr}[1]{\texorpdfstring{\leanthm{#1}}{#1}}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
@@ -25,16 +35,16 @@
 \section{Supplementary Methods}
 
 \subsection{Ramachandran benchmark protocol}
-Era-representative stratified sampling across X-ray ultra ($\leq$1.20~\AA), high, medium, low, NMR, and cryo-EM bins (seed 20260612). mmCIF$\to$PDB conversion uses chain-ID remapping (A--Z, 0--9). Structures with $>$36 chains skipped. Script: \texttt{benchmarks/expand\_ramachandran\_benchmark.py}.
+Era-representative stratified sampling across X-ray ultra ($\leq$1.20~\AA), high, medium, low, NMR, and cryo-EM bins (seed 20260612). mmCIF$\to$PDB conversion uses chain-ID remapping (A--Z, 0--9). Structures with $>$36 distinct chains skipped. Script: \repopath{benchmarks/expand_ramachandran_benchmark.py}.
 
 \subsection{Experimental validation protocol}
-Automated cross-check of all 16 error structures: \texttt{benchmarks/experimental\_structure\_validation.py} queries RCSB entry metadata (method, resolution) and wwPDB CCD InChI stereochemistry; results in \texttt{results/experimental\_validation\_report.json}. Reproduce in Colab: \texttt{demos/D\_Residue\_Experimental\_Validation.ipynb}. PDB 5M2K exclusion documented in \texttt{results/5m2k\_benchmark\_exclusion.json}.
+Automated cross-check of all 16 error structures: \repopath{benchmarks/experimental_structure_validation.py} queries RCSB entry metadata (method, resolution) and wwPDB CCD InChI stereochemistry; results in \repopath{results/experimental_validation_report.json}. Reproduce in Colab: \repopath{demos/D_Residue_Experimental_Validation.ipynb}. PDB 5M2K exclusion: \repopath{results/5m2k_benchmark_exclusion.json}.
 
 \subsection{Mirror-image, AF3 correction, and enumeration}
-L$\leftrightarrow$D reflection: $(x,y,z)\to(-x,y,z)$. Because reflection is an isometry, all pairwise distances (and therefore MolProbity-style clashscore) are unchanged before vs.\ after mirroring (\texttt{tests/test\_clash\_preservation.py}). AF3 correction reflects only the violating C$\alpha$ (and HA if present) across the N--C--C$\beta$ plane, preserving CA--N, CA--C, and CA--C$\beta$ bond lengths exactly and driving residual chirality violations to 0\%. Diastereomer enumeration scores $2^k$ L/D patterns. Interface scoring uses BSA, H-bonds, and salt bridges.
+L$\leftrightarrow$D reflection: $(x,y,z)\to(-x,y,z)$. Because reflection is an isometry, all pairwise distances (and therefore MolProbity-style clashscore) are unchanged before vs.\ after mirroring (\repopath{tests/test_clash_preservation.py}). AF3 correction reflects only the violating C$\alpha$ (and HA if present) across the N--C--C$\beta$ plane, preserving CA--N, CA--C, and CA--C$\beta$ bond lengths exactly and driving residual chirality violations to 0\%. Diastereomer enumeration scores $2^k$ L/D patterns. Interface scoring uses BSA, H-bonds, and salt bridges.
 
 \subsection{Unusual cases: macrocycles, non-standard ligands, and density}
-The signed-volume C$\alpha$ classifier does not require standard protein geometry. Representative edge cases (\texttt{demos/Demo\_Unusual\_Cases\_Clash\_Safety.ipynb}):
+The signed-volume C$\alpha$ classifier does not require standard protein geometry. Representative edge cases (\repopath{demos/Demo_Unusual_Cases_Clash_Safety.ipynb}):
 \begin{itemize}[leftmargin=*]
   \item \textbf{Cyclic / strained peptides:} PDB 1XT7 (daptomycin) and 2RMI (astressin).
   \item \textbf{Non-standard CCD ligands:} PDB 1OF6 (eight DTY$\leftarrow$L-Tyr); 1BG0/1P52 (DAR$\leftarrow$L-Arg).
@@ -43,13 +53,13 @@ The signed-volume C$\alpha$ classifier does not require standard protein geometr
 \end{itemize}
 
 \subsection{Five-minute offline reproduction}
-\texttt{python benchmarks/reproduce\_d\_residue\_errors.py} (numpy only; Colab: \texttt{demos/Reproduce\_PDB\_D\_Residue\_Errors\_5min.ipynb}).
+\repopath{python benchmarks/reproduce_d_residue_errors.py} (numpy only; Colab: \repopath{demos/Reproduce_PDB_D_Residue_Errors_5min.ipynb}).
 
 \subsection{mmCIF known-error re-verification and universe survey}
-The primary survey used legacy PDB files. We subsequently (i)~re-parsed all 16 known-error structures from native RCSB mmCIF and (ii)~enumerated the live mmCIF-only universe of entries containing any of the 18 standard D-amino acid CCD codes (RCSB polymer+ligand search, then HEAD filter for missing legacy \texttt{.pdb}). The historically cited ``$\sim$245'' figure counted failed legacy downloads against a broad DPN/DAS/DAL enumeration; the checkable live mmCIF-only set is smaller ($n=79$ at freeze). Script: \texttt{benchmarks/mmcif\_d\_residue\_expansion.py} (\texttt{--mode both}); Colab: \texttt{demos/Reproduce\_mmCIF\_D\_Residue\_Survey.ipynb}. Known-error cohort recovers 29/29 mismatches; the universe cohort reports one additional clear mismatch (9BC4 DLE, $V=+2.82$~\AA$^3$).
+The primary survey used legacy PDB files. We subsequently (i)~re-parsed all 16 known-error structures from native RCSB mmCIF and (ii)~enumerated the live mmCIF-only universe of entries containing any of the 18 standard D-amino acid CCD codes (RCSB polymer+ligand search, then HEAD filter for missing legacy \texttt{.pdb}). The historically cited ``$\sim$245'' figure counted failed legacy downloads against a broad DPN/DAS/DAL enumeration; the checkable live mmCIF-only set is smaller ($n=79$ at freeze). Script: \repopath{benchmarks/mmcif_d_residue_expansion.py} (\texttt{--mode both}); Colab: \repopath{demos/Reproduce_mmCIF_D_Residue_Survey.ipynb}. Known-error cohort recovers 29/29 mismatches; the universe cohort reports one additional clear mismatch (9BC4 DLE, $V=+2.82$~\AA$^3$).
 
 \subsection{AF3-mimetic correction resource benchmark}
-Synthetic AF3-mimetic Childs-system peptide PDBs with the published 51\% AF3 D-peptide violation rate as external reference. Across DP19, DP9, and DP12 (39 auditable residues; 20 synthetic inverted stereocenters), ChiralFold detected 100\% of inverted stereocenters, corrected 100\% to the expected signed-volume class, and left 0\% residual violations. Full pipeline: 0.0367~s total. Data: \texttt{results/af3\_resource\_benchmark.json}.
+Synthetic AF3-mimetic Childs-system peptide PDBs with the published 51\% AF3 D-peptide violation rate as external reference. Across DP19, DP9, and DP12 (39 auditable residues; 20 synthetic inverted stereocenters), ChiralFold detected 100\% of inverted stereocenters, corrected 100\% to the expected signed-volume class, and left 0\% residual violations. Full pipeline: 0.0367~s total. Data: \repopath{results/af3_resource_benchmark.json}.
 
 \section{Supplementary Notes S1: Lean~4 chirality no-go proofs}
 \label{sec:lean_full}
@@ -63,11 +73,11 @@ V=(\mathbf{N}-\mathbf{C}_\alpha)\cdot\bigl[(\mathbf{C}-\mathbf{C}_\alpha)\times(
 \end{equation}
 Empirically this detects D-label/L-coordinate mismatches. Formally, we ask: \emph{could the same information be recovered from pairwise distances alone?} If not, then distance-only validators and distance-factoring geometric models are structurally blind to enantiomeric sign---motivating an explicit signed-volume check.
 
-We machine-check this obstruction in Lean~4 (v4.28.0) with Mathlib. Production sources contain no \texttt{sorry} or \texttt{admit}. Build from \texttt{formal/chirality\_nogo/}:
+We machine-check this obstruction in Lean~4 (v4.28.0) with Mathlib. Production sources contain no \texttt{sorry} or \texttt{admit}. Build from \repopath{formal/chirality_nogo/}:
 \begin{verbatim}
 lake build
 \end{verbatim}
-Sources: \texttt{ChiralityNoGo.lean}, \texttt{OrthogonalChirality.lean}, \texttt{ModelAbstraction.lean}, \texttt{DistancesOrientVolume.lean}, \texttt{Examples.lean}.
+Sources: \leanfile{ChiralityNoGo.lean}, \leanfile{OrthogonalChirality.lean}, \leanfile{ModelAbstraction.lean}, \leanfile{DistancesOrientVolume.lean}, \leanfile{Examples.lean}.
 
 \paragraph{What is proved.}
 For four points in $\mathbb{R}^3$, the six pairwise squared distances determine the \emph{square} (hence magnitude) of the oriented tetrahedral volume, but not its \emph{sign}. Any model or classifier whose entire geometric input factors through that distance matrix is invariant on an enantiomeric pair and cannot recover signed chirality on all configurations. Specializing to atom order $(\mathrm{N},\mathrm{C}_\alpha,\mathrm{C},\mathrm{C}_\beta)$ yields the protein-facing statement.
@@ -111,7 +121,7 @@ Let $R_z$ denote reflection through the $xy$-plane, $(x,y,z)\mapsto(x,y,-z)$. Fo
 \]
 (The first holds because $R_z$ is an isometry; the second because $\det(R_z)=-1$.)
 
-\paragraph{Step 2 --- Distance-factoring maps are reflection-invariant.}
+\paragraph{Step 2 --- Reflection invariance.}
 If $M(P)=F(\mathrm{distMatrix4}(P))$, then
 \[
 M(R_z\cdot P)=F(\mathrm{distMatrix4}(R_z\cdot P))=F(\mathrm{distMatrix4}(P))=M(P).
@@ -138,40 +148,41 @@ Instantiating the four points as $(\mathrm{N},\mathrm{C}_\alpha,\mathrm{C},\math
 
 Table~\ref{tab:lean_full} lists the principal declarations and their consequences. Existing names used in earlier drafts are preserved.
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \caption{Lean~4 declarations (sorry-free) and biological / geometric interpretation.}
 \label{tab:lean_full}
-\small
-\begin{tabular}{@{}p{0.48\linewidth}p{0.46\linewidth}@{}}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}>{\RaggedRight\arraybackslash}p{0.50\linewidth}>{\RaggedRight\arraybackslash}p{0.44\linewidth}@{}}
 \toprule
 Lean theorem (file) & Consequence \\
 \midrule
-\texttt{same\_distances\_opposite\_orientations\_standardTet} (\texttt{ChiralityNoGo}) &
+\leanthm{same_distances_opposite_orientations_standardTet} (\leanfile{ChiralityNoGo}) &
 Standard tetrahedron and its mirror: equal distances, opposite orientation. \\
-\texttt{no\_distance\_only\_classifier\_separates\_standardTet} (\texttt{ChiralityNoGo}) &
+\leanthm{no_distance_only_classifier_separates_standardTet} (\leanfile{ChiralityNoGo}) &
 No Boolean function of distances separates that enantiomeric pair. \\
-\texttt{improper\_orthogonal\_distance\_chirality\_obstruction} (\texttt{OrthogonalChirality}) &
+\leanthm{improper_orthogonal_distance_chirality_obstruction} (\leanfile{OrthogonalChirality}) &
 Every improper orthogonal map preserves distances and flips orientation. \\
-\texttt{factorsThroughDistMatrix\_orthogonal\_invariant} (\texttt{ModelAbstraction}) &
+\leanthm{factorsThroughDistMatrix_orthogonal_invariant} (\leanfile{ModelAbstraction}) &
 Every distance-factoring output is $\mathrm{O}(3)$-invariant. \\
-\texttt{orient4\_not\_distance\_factorable\_via\_improper\_orthogonal} (\texttt{ModelAbstraction}) &
+\leanthm{orient4_not_distance_factorable_via_improper_orthogonal} (\leanfile{ModelAbstraction}) &
 Oriented volume cannot factor through distances (improper-orthogonal witness). \\
-\texttt{orientTarget\_not\_factorsThroughDistMatrix} (\texttt{ModelAbstraction}) &
+\leanthm{orientTarget_not_factorsThroughDistMatrix} (\leanfile{ModelAbstraction}) &
 Abstraction: oriented-volume target is not distance-factorable. \\
-\texttt{chiralitySignBool\_not\_distance\_factorable} (\texttt{ModelAbstraction}) &
+\leanthm{chiralitySignBool_not_distance_factorable} (\leanfile{ModelAbstraction}) &
 Boolean chirality sign is not distance-factorable. \\
-\texttt{no\_continuous\_distance\_representation\_classifier} (\texttt{ModelAbstraction}) &
+\leanthm{no_continuous_distance_representation_classifier} (\leanfile{ModelAbstraction}) &
 Continuity does not rescue a still distance-factoring representation. \\
-\texttt{proteinCaOrient\_not\_function\_of\_six\_pairwise\_distances} (\texttt{ModelAbstraction}) &
+\leanthm{proteinCaOrient_not_function_of_six_pairwise_distances} (\leanfile{ModelAbstraction}) &
 $(\mathrm{N},\mathrm{C}_\alpha,\mathrm{C},\mathrm{C}_\beta)$ signed volume needs more than six distances. \\
-\texttt{det\_gram3\_eq\_orient\_sq} (\texttt{DistancesOrientVolume}) &
+\leanthm{det_gram3_eq_orient_sq} (\leanfile{DistancesOrientVolume}) &
 Gram determinant equals squared oriented volume. \\
-\texttt{orient\_sq\_determined\_by\_pairwise\_distances} (\texttt{DistancesOrientVolume}) &
+\leanthm{orient_sq_determined_by_pairwise_distances} (\leanfile{DistancesOrientVolume}) &
 Distances fix $|\mathrm{orient4}|^2$. \\
-\texttt{distance\_data\_determines\_magnitude\_not\_chirality\_sign} (\texttt{DistancesOrientVolume}) &
+\leanthm{distance_data_determines_magnitude_not_chirality_sign} (\leanfile{DistancesOrientVolume}) &
 Equal distances $\Rightarrow$ equal magnitude, not equal sign. \\
-\texttt{standardTetExample\_same\_distances\_different\_orientations} (\texttt{Examples}) &
+\leanthm{standardTetExample_same_distances_different_orientations} (\leanfile{Examples}) &
 Concrete normalized example of the ambiguity. \\
 \bottomrule
 \end{tabular}
@@ -195,19 +206,19 @@ This is the elementary geometric content behind Table~\ref{tab:lean_full}.
 
 \subsection{Proof sketches for headline theorems}
 
-\paragraph{\texttt{same\_distances\_opposite\_orientations\_standardTet}.}
-Compute $\mathrm{distMatrix4}$ and $\mathrm{orient4}$ on $\texttt{standardTet}$ and its $z$-reflection by unfolding definitions and \texttt{norm\_num}; conclude equality of matrices and inequality of orientations.
+\paragraph{\leanhdr{same_distances_opposite_orientations_standardTet}.}
+Compute $\mathrm{distMatrix4}$ and $\mathrm{orient4}$ on \leanthm{standardTet} and its $z$-reflection by unfolding definitions and \texttt{norm\_num}; conclude equality of matrices and inequality of orientations.
 
-\paragraph{\texttt{det\_gram3\_eq\_orient\_sq}.}
+\paragraph{\leanhdr{det_gram3_eq_orient_sq}.}
 Expand $\det(G)$ for $G_{ij}=\langle v_i,v_j\rangle$ with $v_1=b-a$, $v_2=c-a$, $v_3=d-a$; identify with $\det[v_1|v_2|v_3]^2=\mathrm{orient4}^2$ via the classical identity $\det(A^\top A)=\det(A)^2$.
 
-\paragraph{\texttt{improper\_orthogonal\_distance\_chirality\_obstruction}.}
+\paragraph{\leanhdr{improper_orthogonal_distance_chirality_obstruction}.}
 For $Q\in\mathrm{O}(3)$ with $\det(Q)=-1$, isometry gives distance preservation; multilinearity of the determinant gives the sign flip of $\mathrm{orient4}$.
 
-\paragraph{\texttt{chiralitySignBool\_not\_distance\_factorable}.}
+\paragraph{\leanhdr{chiralitySignBool_not_distance_factorable}.}
 Assume toward contradiction a factorization through $\mathrm{distMatrix4}$. Apply reflection invariance (Step~2) at the standard-tetrahedron witness (Step~3) to obtain equal Boolean signs despite opposite orientations---contradiction.
 
-\paragraph{\texttt{proteinCaOrient\_not\_function\_of\_six\_pairwise\_distances}.}
+\paragraph{\leanhdr{proteinCaOrient_not_function_of_six_pairwise_distances}.}
 Instantiate the four-point abstraction at atom labels $(\mathrm{N},\mathrm{C}_\alpha,\mathrm{C},\mathrm{C}_\beta)$ and invoke the general non-factorability of $\mathrm{orient4}$.
 
 \subsection{Implications for ChiralFold and AF3}
@@ -222,7 +233,7 @@ Instantiate the four-point abstraction at atom labels $(\mathrm{N},\mathrm{C}_\a
 \section{Supplementary Tables}
 
 \subsection{Table S1: All 29 D-label/L-coordinate mismatches}
-Full machine-readable dataset: \texttt{results/d\_residue\_verification.csv} (filter \texttt{signed\_volume}$>0$). Structure-level classification: \texttt{results/error\_table\_verified.csv} and \texttt{results/error\_classification.json}. Summary: 6 Stereochem, 18 CCD-Code, 3 Mislabel, 2 Borderline across 16 PDB entries.
+Full machine-readable dataset: \repopath{results/d_residue_verification.csv} (filter \texttt{signed\_volume}$>0$). Structure-level classification: \repopath{results/error_table_verified.csv} and \repopath{results/error_classification.json}. Summary: 6 Stereochem, 18 CCD-Code, 3 Mislabel, 2 Borderline across 16 PDB entries.
 
 \subsection{Table S2: Formal no-go theorems (compact)}
 See Table~\ref{tab:lean_full} above (Notes~S1) for the full catalog. The main text Table~1 highlights five biology-facing theorems.
@@ -254,7 +265,7 @@ See Table~\ref{tab:lean_full} above (Notes~S1) for the full catalog. The main te
 \end{figure}
 
 \section{Extended statistics}
-Ramachandran $n=362$ (post-5M2K exclusion): \texttt{results/ramachandran\_279struct\_chainfix\_summary.json} --- Spearman $\rho=0.52$; Pearson $r=0.85$ (0.33 if 5M2K retained). Pilot $n=31$ Bland--Altman and bootstrap CIs: \texttt{paper/stats\_extended.json} via \texttt{paper/stats\_analysis.py} (seed 42). Deposition-year logistic OR$=1.60$/year; CCD clustering $\chi^2=113.78$ ($p=2.33\times10^{-16}$).
+Ramachandran $n=362$ (post-5M2K exclusion): \repopath{results/ramachandran_279struct_chainfix_summary.json} --- Spearman $\rho=0.52$; Pearson $r=0.85$ (0.33 if 5M2K retained). Pilot $n=31$ Bland--Altman and bootstrap CIs: \repopath{paper/stats_extended.json} via \repopath{paper/stats_analysis.py} (seed 42). Deposition-year logistic OR$=1.60$/year; CCD clustering $\chi^2=113.78$ ($p=2.33\times10^{-16}$).
 
 \section*{Acknowledgments (formal proofs)}
 Formal verification was assisted by Aristotle (Harmonic). Lean sources and this Notes~S1 narrative are part of the ChiralFold v3.5.1 release.

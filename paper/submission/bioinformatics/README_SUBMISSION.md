@@ -26,6 +26,7 @@
 ```bash
 cd paper/submission/bioinformatics
 ./build_submission.sh
+./check_latex_overflow.sh   # optional: fail if body text spills off page
 ```
 
 ## Overleaf (upload whole directory)
