@@ -4,7 +4,7 @@
 
 ![Tests](https://github.com/Tommaso-R-Marena/ChiralFold/actions/workflows/ci.yml/badge.svg?branch=master)
 [![PyPI](https://img.shields.io/pypi/v/chiralfold.svg)](https://pypi.org/project/chiralfold/)
-[![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-Launch%20Web%20UI-0D9488?style=for-the-badge)](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App)
+[![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-Launch%20Web%20UI-0D9488?style=for-the-badge)](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App?__theme=light)
 [![Reproduce D-residue errors (5 min)](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Reproduce_PDB_D_Residue_Errors_5min.ipynb)
 
 ---
@@ -13,12 +13,12 @@
 
 | Goal | Link |
 |------|------|
-| **Use in a browser** | [Hugging Face Space](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App) |
+| **Use in a browser** | [Hugging Face Space (light UI)](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App?__theme=light) |
 | **Reproduce D-residue survey errors (&lt;5 min)** | [Colab](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Reproduce_PDB_D_Residue_Errors_5min.ipynb) · `python benchmarks/reproduce_d_residue_errors.py` |
 | **Full mmCIF survey** (known errors + live mmCIF-only universe) | [Colab](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Reproduce_mmCIF_D_Residue_Survey.ipynb) |
 | **Interactive results dashboard** | [Colab dashboard](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Results_Dashboard.ipynb) |
 | **Unusual cases + clash-safety** | [Colab](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Demo_Unusual_Cases_Clash_Safety.ipynb) |
-| **Web UI (audit / correct / mirror)** | [Hugging Face Space](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App) |
+| **Web UI (audit / correct / mirror)** | [Hugging Face Space (light UI)](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App?__theme=light) |
 
 Full reviewer path: [`docs/REVIEWER_COLAB.md`](docs/REVIEWER_COLAB.md).
 | **Lean 4 chirality no-go proofs** | [`formal/chirality_nogo/`](formal/chirality_nogo/) |
@@ -72,7 +72,8 @@ Dockerfiles: `Dockerfile` (CLI/library), `Dockerfile.web` (Gradio).
 
 ### Hugging Face Space
 
-Live UI: [The-Philosopher/ChiralFold-App](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App).  
+Live UI (forced light theme): [The-Philosopher/ChiralFold-App](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App?__theme=light).  
+Always use the `?__theme=light` link — Gradio otherwise follows OS dark mode and can make file names / reports unreadable.  
 Source: [`hf_space/`](hf_space/). Local Gradio: `pip install "chiralfold[web]" && chiralfold-web`.
 
 ### Colab

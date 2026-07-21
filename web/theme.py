@@ -367,7 +367,28 @@ html, body {{
   white-space: nowrap;
 }}
 
-footer {{ visibility: hidden; }}
+/* Extra Gradio-4 file row selectors (status bar after upload) */
+.gradio-container .file .file-preview,
+.gradio-container .file [class*="file"],
+.gradio-container .block .file-preview,
+.gradio-container .block .upload-container .wrap,
+.dark .gradio-container .file .file-preview,
+.dark .gradio-container .block .file-preview {{
+  background: #f1f5f9 !important;
+  color: #0b1220 !important;
+}}
+
+/* Kill dark navy file chips Gradio injects under prefers-color-scheme: dark */
+.gradio-container .file button,
+.gradio-container .file a,
+.dark .gradio-container .file button,
+.dark .gradio-container .file a {{
+  color: #0b1220 !important;
+}}
+.gradio-container .file .or,
+.dark .gradio-container .file .or {{
+  color: #475569 !important;
+}}
 """
 
 

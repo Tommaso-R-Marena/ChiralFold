@@ -257,6 +257,16 @@ def build_app() -> gr.Blocks:
     ) as demo:
         gr.HTML(
             f"""
+            <meta name="color-scheme" content="light only" />
+            <script>
+              (function () {{
+                try {{
+                  document.documentElement.classList.remove("dark");
+                  document.body && document.body.classList.remove("dark");
+                  document.documentElement.style.colorScheme = "light";
+                }} catch (e) {{}}
+              }})();
+            </script>
             <div id="cf-header">
               <h1>ChiralFold</h1>
               <p class="cf-tagline">

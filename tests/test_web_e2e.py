@@ -216,6 +216,26 @@ def _load_hf_space_module():
     return mod
 
 
+def test_hf_space_prefers_bundled_theme_css(tmp_path, monkeypatch):
+    """Docker-cached pip must not override a freshly uploaded theme.css."""
+    import importlib.util
+    import sys
+
+    space_app = Path("hf_space/app.py")
+    # Ensure bundled theme path wins: create a marker CSS and point SPACE_ROOT
+    spec = importlib.util.spec_from_file_location("hf_space_css_pref", space_app)
+    assert spec and spec.loader
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["hf_space_css_pref"] = mod
+    spec.loader.exec_module(mod)
+    css = mod._load_css()
+    assert "cf-report" in css
+    assert "#cf-footer" in css
+    # Bundled file is what Space Docker COPY updates
+    bundled = Path("hf_space/theme.css").read_text()
+    assert css.strip() == bundled.strip()
+
+
 def test_hf_space_theme_css_bundled_and_synced():
     css_path = Path("hf_space/theme.css")
     assert css_path.is_file()

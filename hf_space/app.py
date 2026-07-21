@@ -32,15 +32,20 @@ EXAMPLE_INV = SPACE_ROOT / "examples" / "synthetic_l_ala_inverted.pdb"
 
 
 def _load_css() -> str:
-    """Prefer packaged theme (post-install); fall back to bundled theme.css."""
+    """Prefer bundled theme.css so Docker COPY updates always win.
+
+    Loading ``web.theme`` first was wrong for Spaces: ``pip install`` from
+    ``requirements.txt`` is Docker-layer-cached when the pin is unchanged, so
+    an old package CSS would override a freshly uploaded ``theme.css``.
+    """
+    css_path = SPACE_ROOT / "theme.css"
+    if css_path.is_file():
+        return css_path.read_text()
     try:
         from web.theme import CUSTOM_CSS as css  # type: ignore
 
         return css
     except Exception:
-        css_path = SPACE_ROOT / "theme.css"
-        if css_path.is_file():
-            return css_path.read_text()
         return "/* missing theme */"
 
 
@@ -279,6 +284,16 @@ def build_app() -> gr.Blocks:
     ) as demo:
         gr.HTML(
             f"""
+            <meta name="color-scheme" content="light only" />
+            <script>
+              (function () {{
+                try {{
+                  document.documentElement.classList.remove("dark");
+                  document.body && document.body.classList.remove("dark");
+                  document.documentElement.style.colorScheme = "light";
+                }} catch (e) {{}}
+              }})();
+            </script>
             <div id="cf-header">
               <h1>ChiralFold</h1>
               <p class="cf-tagline">
@@ -372,4 +387,9 @@ demo = build_app()
 
 if __name__ == "__main__":
     demo.queue(default_concurrency_limit=4)
-    demo.launch(server_name="0.0.0.0", server_port=7860, show_error=True)
+    # Force Gradio light chrome (also use ?__theme=light in Space URLs).
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=7860,
+        show_error=True,
+    )

@@ -1,5 +1,7 @@
 # ChiralFold Hugging Face Space dependencies
 # Installs the published GitHub package + Gradio UI stack.
+# Cache-bust: bump this comment when theme/app visibility fixes need a rebuild.
+# rebuild: 2026-07-21-visibility-v2
 gradio>=4.44,<6
 numpy>=1.21,<3.0
 scipy>=1.9,<2.0

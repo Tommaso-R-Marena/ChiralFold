@@ -111,7 +111,7 @@ jobs:
               commit_message="Deploy ChiralFold web Space from CI",
               ignore_patterns=["__pycache__", "*.pyc", ".git*"],
           )
-          print(f"Deployed https://huggingface.co/spaces/{repo_id}")
+          print(f"Deployed https://huggingface.co/spaces/{repo_id}?__theme=light")
           PY
 
   deploy-skipped-fork:

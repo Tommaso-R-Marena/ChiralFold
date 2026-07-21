@@ -46,7 +46,9 @@ Macrocycles (1XT7, 2RMI), CCD ligands (1OF6), high-resolution density (1HHZ).
 
 ## 6. Web UI (no install)
 
-**Hugging Face Space:** https://huggingface.co/spaces/The-Philosopher/ChiralFold-App
+**Hugging Face Space (light UI):** https://huggingface.co/spaces/The-Philosopher/ChiralFold-App?__theme=light
+
+Use the `?__theme=light` URL so Gradio does not follow OS dark mode (that was causing unreadable file names and audit reports).
 
 Upload PDB → Audit → Correct → Mirror. Same workflows tested in CI (`tests/test_web_e2e.py`).
 
