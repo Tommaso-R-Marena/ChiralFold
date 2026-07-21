@@ -13,9 +13,15 @@
 ### Fixed
 - **Clash score false positives:** exclude covalent 1-2/1-3/1-4 via amino-acid topology (not a brittle 2.6 Å cutoff), skip proline amide H, ignore disulfides and donor–acceptor H-bonds, and fix amide-H placement. AFDB/PDB audits no longer report hundreds of fake clashes (e.g. LEU CA–CG).
 - Clashscore: strip deposited hydrogens (re-add backbone HN only) and read **first MODEL only** — NMR/high-res files with explicit H no longer score every C–H bond as a clash.
+- Amide-H builder is chain- and continuity-aware (no cross-chain H from another chain's carbonyl; insertion codes in residue keys); peptide 1–4 list includes C(i)–CB(i+1).
 - Regenerated `results/molprobity_comparison.json`, paper data copy, and `results/af3_experimental_systems.json` after the clashscore fix (mean `cf_clash` ~265 → ~24; panel wwPDB mean ~18).
 - Windows CI `UnicodeDecodeError` when reading Colab notebooks (`tests/test_colab_publication.py` now forces UTF-8).
 - `conda-recipe/meta.yaml` version bumped **3.4.0 → 3.5.1** to match PyPI.
+
+### Added
+- `audit_pdb(..., chain=)` and CLI `chiralfold audit --chain`; `audit_pdb` accepts mmCIF via `ensure_pdb_path`.
+- Batch RCSB audit uses `fetch_rcsb` (PDB + mmCIF fallback) instead of raw `.pdb` urllib.
+- Web / HF Space audit KPIs show Clashscore alongside chirality / Rama.
 
 ### Changed
 - README covers all headline results, Lean 4 proofs, and setup avenues (pip, conda, Docker, HF Space, Colab).

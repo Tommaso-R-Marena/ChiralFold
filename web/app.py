@@ -151,12 +151,15 @@ def run_audit(uploaded) -> Tuple[str, Optional[str]]:
         score = report["overall_score"]
         score_cls = "ok" if score >= 80 else ("warn" if score >= 60 else "bad")
         chir_cls = "ok" if n_wrong == 0 else "bad"
+        clash = report["clashes"]["clash_score"]
+        clash_cls = "ok" if clash < 30 else ("warn" if clash < 60 else "bad")
         kpis = _kpi_html(
             [
                 ("Overall score", f"{score:.1f}", score_cls),
                 ("Cα correct %", f"{chir['pct_correct']:.1f}", chir_cls),
                 ("Chirality violations", str(n_wrong), chir_cls),
                 ("Ramachandran favored %", f"{rama['pct_favored']:.1f}", "ok"),
+                ("Clashscore", f"{clash:.1f}", clash_cls),
             ]
         )
         summary = format_report(report)

@@ -17,11 +17,13 @@ Checks performed
 2. **Bond Geometry**     — Backbone bond lengths and angles vs ideal values.
 3. **Ramachandran**      — φ/ψ region classification (favored/allowed/outlier).
 4. **Peptide Planarity** — ω dihedral deviation from ±180°.
-5. **Clash Detection**   — Non-bonded atom pairs closer than vdW sum − 0.4 Å.
+5. **Clash Detection**   — Non-bonded pairs closer than vdW sum − 0.4 Å, with
+   topology-aware 1–2/1–3/1–4 exclusions (MolProbity-inspired).
 6. **Summary Score**     — Composite 0–100 quality score.
 
 All parsing is done directly from PDB ATOM/HETATM records with no external
-dependencies beyond NumPy.  RDKit is *not* required for audit_pdb().
+dependencies beyond NumPy/SciPy.  RDKit is *not* required for audit_pdb().
+mmCIF inputs are accepted via automatic conversion (see ``audit_pdb``).
 """
 
 from __future__ import annotations
@@ -901,7 +903,7 @@ def _intra_residue_bond_pairs(resname: str) -> List[Tuple[str, str]]:
     pairs = list(_BACKBONE_BOND_PAIRS)
     pairs.extend(_SIDECHAIN_BOND_PAIRS.get(tmpl, ()))
     # Unknown residues: still connect CA–CB when present via backbone only;
-    # distance fallback in _clash_excluded_pairs covers remaining 1-3.
+    # distance fallback in _clash_excluded_index_pairs covers remaining 1-3.
     if tmpl not in _SIDECHAIN_BOND_PAIRS and tmpl not in ("GLY",):
         pairs.append(("CA", "CB"))
     return pairs
@@ -1006,6 +1008,7 @@ def _clash_excluded_index_pairs(atoms: List[_Atom]) -> Set[Tuple[int, int]]:
             ("N", "HN"),
             ("O", "C"),
             ("N", "N"),  # 1-4 via CA–C–N
+            ("C", "CB"),  # 1-4 via N–CA of next residue
         ]
         for a_name, b_name in cross_12_13:
             for ia in m0.get(a_name, ()):
@@ -1132,13 +1135,16 @@ def _add_backbone_hydrogens(atoms: List[_Atom]) -> List[_Atom]:
     """
     Estimate backbone amide H positions for clash detection.
 
-    Places H atoms along the N-C(prev) direction at 1.02 Å from N.
-    This matches MolProbity's approach of adding H before clash scoring.
+    Places H in the peptide plane of C(prev)–N–CA (MolProbity Reduce-style).
+    Residue keys include insertion codes. Amide H is only built when the
+    previous residue is on the *same chain* and peptide-continuous (resseq
+    gap ≤ 2 and CA–CA ≤ 4.5 Å), so multi-chain / concatenated files do not
+    invent a cross-chain amide H from another chain's carbonyl.
     """
-    # Build residue lookup
-    residues: Dict[Tuple[str, int], Dict[str, _Atom]] = {}
+    # (chain, resseq, icode) → atom-name map
+    residues: Dict[Tuple[str, int, str], Dict[str, _Atom]] = {}
     for a in atoms:
-        key = (a.chain, a.resseq)
+        key = (a.chain, a.resseq, a.icode)
         if key not in residues:
             residues[key] = {}
         residues[key][a.name.strip()] = a
@@ -1160,13 +1166,23 @@ def _add_backbone_hydrogens(atoms: List[_Atom]) -> List[_Atom]:
         # Skip if H already present
         if 'H' in res or 'HN' in res:
             continue
-        # Skip first residue (no preceding C)
+        # Need a preceding peptide neighbour on the same chain
         if idx == 0:
             continue
         prev_key = sorted_keys[idx - 1]
-        prev_c = residues.get(prev_key, {}).get('C')
+        if prev_key[0] != key[0]:
+            continue
+        if abs(key[1] - prev_key[1]) > 2:
+            continue
+        prev_res = residues.get(prev_key, {})
+        prev_c = prev_res.get('C')
         if prev_c is None:
             continue
+        prev_ca = prev_res.get('CA')
+        if prev_ca is not None:
+            ca_dist = float(np.linalg.norm(prev_ca.xyz - ca_atom.xyz))
+            if ca_dist > 4.5:
+                continue
 
         # Place H in the peptide plane of C(prev)–N–CA, opposite the angle
         # bisector at N (MolProbity Reduce-style). Vectors must originate at N.
@@ -1252,8 +1268,8 @@ def _check_clashes(atoms: List[_Atom]) -> dict:
             continue
         seen.add(pair_key)
         clashes.append({
-            "atom1": f"{ai.chain}:{ai.resname}{ai.resseq}.{ai.name}",
-            "atom2": f"{aj.chain}:{aj.resname}{aj.resseq}.{aj.name}",
+            "atom1": f"{ai.chain}:{ai.resname}{ai.resseq}.{ai.name.strip()}",
+            "atom2": f"{aj.chain}:{aj.resname}{aj.resseq}.{aj.name.strip()}",
             "distance": round(dist, 3),
             "overlap": round(overlap, 3),
             "vdw_sum": round(float(radii[i] + radii[j]), 3),
@@ -1325,16 +1341,19 @@ def _compute_overall_score(
 # Main public function
 # ─────────────────────────────────────────────────────────────────────────────
 
-def audit_pdb(pdb_path: str) -> dict:
+def audit_pdb(pdb_path: str, chain: Optional[str] = None) -> dict:
     """
-    Run a comprehensive quality audit on a PDB structure file.
+    Run a comprehensive quality audit on a PDB (or mmCIF) structure file.
 
     Validates Cα chirality, backbone bond geometry, Ramachandran
     angles, peptide planarity, and steric clashes.  Works for pure
     L-proteins, pure D-peptides, and mixed L/D structures.
 
     Args:
-        pdb_path: Path to a PDB file (ATOM and/or HETATM records).
+        pdb_path: Path to a PDB or mmCIF file (ATOM and/or HETATM records).
+            mmCIF is converted in-core to a temporary PDB. FASTA is rejected
+            (use ``chiralfold.fetch.resolve_to_pdb`` / CLI ``--id`` for AFDB).
+        chain: Optional single chain ID to restrict the audit (e.g. ``"A"``).
 
     Returns:
         A dict with the following top-level keys:
@@ -1363,7 +1382,7 @@ def audit_pdb(pdb_path: str) -> dict:
             ``pct_within_6deg``, ``mean_deviation``, ``outliers`` list.
 
         ``clashes`` (dict)
-            ``n_clashes``, ``clash_score`` (per 1000 atoms),
+            ``n_clashes``, ``clash_score`` (per 1000 heavy atoms),
             ``worst_clashes`` list.
 
         ``overall_score`` (float)
@@ -1371,7 +1390,8 @@ def audit_pdb(pdb_path: str) -> dict:
 
     Raises:
         FileNotFoundError: If *pdb_path* does not exist.
-        ValueError: If the file contains no parseable atom records.
+        ValueError: If the file contains no parseable atom records,
+            or no atoms remain after *chain* filtering.
 
     Examples
     --------
@@ -1385,9 +1405,24 @@ def audit_pdb(pdb_path: str) -> dict:
     if not os.path.isfile(pdb_path):
         raise FileNotFoundError(f"PDB file not found: {pdb_path}")
 
+    # Accept mmCIF transparently; FASTA must go through fetch/AFDB.
+    from .structure_io import ensure_pdb_path
+
+    try:
+        pdb_path = ensure_pdb_path(pdb_path)
+    except ValueError as exc:
+        raise ValueError(str(exc)) from exc
+
     atoms = _parse_pdb(pdb_path)
     if not atoms:
         raise ValueError(f"No parseable ATOM/HETATM records found in: {pdb_path}")
+
+    if chain is not None:
+        atoms = [a for a in atoms if a.chain == chain]
+        if not atoms:
+            raise ValueError(
+                f"No ATOM/HETATM records found for chain {chain!r} in: {pdb_path}"
+            )
 
     residue_groups = _group_by_residue(atoms)
     ordered_keys   = list(residue_groups.keys())
@@ -1471,7 +1506,7 @@ def format_report(report: dict) -> str:
         "",
         "── Clash Detection ───────────────────────────────",
         (f"  Clashes  : {report['clashes']['n_clashes']}"
-         f"  Score : {report['clashes']['clash_score']:.1f} / 1000 atoms"),
+         f"  Score : {report['clashes']['clash_score']:.1f} / 1000 heavy atoms"),
         "═" * 60,
     ]
     return "\n".join(lines)

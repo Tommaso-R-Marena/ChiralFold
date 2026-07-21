@@ -158,17 +158,26 @@ def test_cli_audit_json_text_and_missing_arg(monkeypatch, capsys, tmp_path):
 
 def test_cli_audit_rcsb_batch_writes_success_and_error_rows(monkeypatch, capsys, tmp_path):
     import chiralfold.auditor as auditor
+    import chiralfold.fetch as fetch_mod
 
     batch = tmp_path / "ids.txt"
     output = tmp_path / "audit.csv"
     batch.write_text("1ABC\nBADID\n2XYZ\n")
 
-    def fake_urlretrieve(url, filename):
-        if "2XYZ" in url:
-            raise OSError("network unavailable")
-        Path(filename).write_text(_tiny_ala_pdb())
+    def fake_fetch_rcsb(pdb_id, **kwargs):
+        if pdb_id == "2XYZ":
+            raise fetch_mod.FetchError("network unavailable")
+        path = tmp_path / f"{pdb_id}.pdb"
+        path.write_text(_tiny_ala_pdb())
+        return fetch_mod.FetchResult(
+            path=str(path),
+            source="rcsb",
+            query=pdb_id,
+            label=pdb_id,
+            bytes_downloaded=10,
+        )
 
-    def fake_audit_pdb(path):
+    def fake_audit_pdb(path, chain=None):
         return {
             "chirality": {"pct_correct": 100.0},
             "ramachandran": {"pct_favored": 0.0, "pct_outlier": 0.0},
@@ -177,7 +186,7 @@ def test_cli_audit_rcsb_batch_writes_success_and_error_rows(monkeypatch, capsys,
             "overall_score": 42.0,
         }
 
-    monkeypatch.setattr("urllib.request.urlretrieve", fake_urlretrieve)
+    monkeypatch.setattr(fetch_mod, "fetch_rcsb", fake_fetch_rcsb)
     monkeypatch.setattr(auditor, "audit_pdb", fake_audit_pdb)
 
     cli._audit_rcsb_batch(str(batch), str(output))
@@ -187,6 +196,29 @@ def test_cli_audit_rcsb_batch_writes_success_and_error_rows(monkeypatch, capsys,
     assert "1ABC,100.0" in csv_text
     assert "2XYZ,ERROR" in csv_text
     assert "BADID" not in csv_text
+
+
+def test_cli_audit_chain_flag(monkeypatch, capsys, tmp_path):
+    pdb = tmp_path / "ab.pdb"
+    pdb.write_text(
+        "ATOM      1  N   ALA A   1       0.000   0.000   0.000  1.00  0.00           N\n"
+        "ATOM      2  CA  ALA A   1       1.458   0.000   0.000  1.00  0.00           C\n"
+        "ATOM      3  C   ALA A   1       2.009   1.420   0.000  1.00  0.00           C\n"
+        "ATOM      4  O   ALA A   1       1.251   2.390   0.000  1.00  0.00           O\n"
+        "ATOM      5  CB  ALA A   1       2.009  -0.771   1.200  1.00  0.00           C\n"
+        "ATOM      6  N   ALA B   1      10.000  10.000  10.000  1.00  0.00           N\n"
+        "ATOM      7  CA  ALA B   1      11.458  10.000  10.000  1.00  0.00           C\n"
+        "ATOM      8  C   ALA B   1      12.009  11.420  10.000  1.00  0.00           C\n"
+        "ATOM      9  O   ALA B   1      11.251  12.390  10.000  1.00  0.00           O\n"
+        "ATOM     10  CB  ALA B   1      12.009   9.229  11.200  1.00  0.00           C\n"
+        "END\n"
+    )
+    captured = _run_cli(
+        monkeypatch, capsys, ["audit", str(pdb), "--chain", "A", "--json"]
+    )
+    payload = json.loads(captured.out)
+    assert payload["chains"] == ["A"]
+    assert payload["n_residues"] == 1
 
 
 def test_cli_correct_af3_mirror_and_mirror_id(monkeypatch, capsys, tmp_path):

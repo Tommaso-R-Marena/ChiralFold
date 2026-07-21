@@ -95,7 +95,11 @@ def main():
         default=None,
         help='Fetch by PDB ID, UniProt accession, or AFDB id (needs network)',
     )
-    p.add_argument('--chain', default=None)
+    p.add_argument(
+        '--chain',
+        default=None,
+        help='Restrict audit to a single chain ID (e.g. A)',
+    )
     p.add_argument('--json', action='store_true')
     p.add_argument('--rcsb-batch', dest='rcsb_batch', default=None,
                    help='File with PDB IDs (one per line) for batch RCSB audit')
@@ -233,7 +237,7 @@ def _cmd_audit(args):
         sys.exit(1)
 
     pdb_path = _resolve_structure(args.pdb_file, args.structure_id)
-    report = audit_pdb(pdb_path)
+    report = audit_pdb(pdb_path, chain=args.chain)
     if args.json:
         safe = {k: v for k, v in report.items() if k not in ('_atoms',)}
         print(json.dumps(safe, indent=2, default=str))
@@ -243,9 +247,8 @@ def _cmd_audit(args):
 
 def _audit_rcsb_batch(batch_file, output_csv):
     """Batch audit PDB IDs from a file, output CSV."""
-    import urllib.request
-    import tempfile
     from .auditor import audit_pdb
+    from .fetch import FetchError, fetch_rcsb
 
     with open(batch_file) as f:
         pdb_ids = [line.strip().upper() for line in f
@@ -258,12 +261,8 @@ def _audit_rcsb_batch(batch_file, output_csv):
         if len(pdb_id) != 4:
             continue
         try:
-            url = f"https://files.rcsb.org/download/{pdb_id}.pdb"
-            with tempfile.NamedTemporaryFile(suffix='.pdb', delete=False) as tmp:
-                urllib.request.urlretrieve(url, tmp.name)
-                tmp_path = tmp.name
-
-            report = audit_pdb(tmp_path)
+            fetched = fetch_rcsb(pdb_id)
+            report = audit_pdb(fetched.path)
             rows.append({
                 'pdb_id': pdb_id,
                 'chirality_pct': report['chirality']['pct_correct'],
@@ -273,12 +272,18 @@ def _audit_rcsb_batch(batch_file, output_csv):
                 'clash_score': report['clashes']['clash_score'],
                 'overall_score': report['overall_score'],
             })
-            os.unlink(tmp_path)
 
             if (i + 1) % 5 == 0:
                 print(f"  {i+1}/{len(pdb_ids)} done...")
 
-        except Exception as e:
+        except (FetchError, OSError, ValueError, FileNotFoundError) as e:
+            rows.append({
+                'pdb_id': pdb_id, 'chirality_pct': 'ERROR',
+                'rama_favored_pct': '', 'rama_outlier_pct': '',
+                'planarity_pct': '', 'clash_score': '',
+                'overall_score': str(e)[:40],
+            })
+        except Exception as e:  # noqa: BLE001 — keep batch resilient
             rows.append({
                 'pdb_id': pdb_id, 'chirality_pct': 'ERROR',
                 'rama_favored_pct': '', 'rama_outlier_pct': '',
