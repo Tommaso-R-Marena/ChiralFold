@@ -8,12 +8,12 @@
     "wwpdb_clash": 1.15,
     "cf_rama_outlier": 0.0,
     "cf_rama_favored": 88.64,
-    "cf_clash": 0.0,
+    "cf_clash": 3.06,
     "cf_planarity": 75.56,
     "cf_chirality": 100.0,
-    "cf_score": 90.1,
+    "cf_score": 87.8,
     "cf_bl_rmsd": 0.01093,
-    "time": 0.014828920364379883
+    "time": 0.017029523849487305
   },
   {
     "pdb_id": "2VB1",
@@ -24,12 +24,12 @@
     "wwpdb_clash": 6.17,
     "cf_rama_outlier": 0.0,
     "cf_rama_favored": 93.7,
-    "cf_clash": 7.6,
+    "cf_clash": 9.5,
     "cf_planarity": 69.53,
     "cf_chirality": 100.0,
-    "cf_score": 83.7,
+    "cf_score": 82.3,
     "cf_bl_rmsd": 0.01571,
-    "time": 0.03990507125854492
+    "time": 0.046675920486450195
   },
   {
     "pdb_id": "1US0",
@@ -40,12 +40,12 @@
     "wwpdb_clash": 12.02,
     "cf_rama_outlier": 0.32,
     "cf_rama_favored": 95.51,
-    "cf_clash": 7.72,
+    "cf_clash": 11.58,
     "cf_planarity": 75.0,
     "cf_chirality": 100.0,
-    "cf_score": 86.1,
+    "cf_score": 83.2,
     "cf_bl_rmsd": 0.01172,
-    "time": 0.08992648124694824
+    "time": 0.10789775848388672
   },
   {
     "pdb_id": "2OL9",
@@ -61,7 +61,7 @@
     "cf_chirality": 100.0,
     "cf_score": 86.5,
     "cf_bl_rmsd": 0.00761,
-    "time": 0.0015971660614013672
+    "time": 0.001825571060180664
   },
   {
     "pdb_id": "3NIR",
@@ -72,12 +72,12 @@
     "wwpdb_clash": 25.32,
     "cf_rama_outlier": 0.0,
     "cf_rama_favored": 86.36,
-    "cf_clash": 14.75,
+    "cf_clash": 17.7,
     "cf_planarity": 77.78,
     "cf_chirality": 100.0,
-    "cf_score": 78.4,
+    "cf_score": 76.2,
     "cf_bl_rmsd": 0.01265,
-    "time": 0.012578964233398438
+    "time": 0.015280723571777344
   },
   {
     "pdb_id": "1CRN",
@@ -88,12 +88,12 @@
     "wwpdb_clash": 0.0,
     "cf_rama_outlier": 0.0,
     "cf_rama_favored": 88.64,
-    "cf_clash": 0.0,
+    "cf_clash": 6.12,
     "cf_planarity": 91.11,
     "cf_chirality": 100.0,
-    "cf_score": 91.1,
+    "cf_score": 86.5,
     "cf_bl_rmsd": 0.02129,
-    "time": 0.010695219039916992
+    "time": 0.013499021530151367
   },
   {
     "pdb_id": "2LZM",
@@ -104,12 +104,12 @@
     "wwpdb_clash": 11.35,
     "cf_rama_outlier": 0.0,
     "cf_rama_favored": 98.15,
-    "cf_clash": 17.57,
+    "cf_clash": 15.28,
     "cf_planarity": 88.34,
     "cf_chirality": 100.0,
-    "cf_score": 80.8,
+    "cf_score": 82.5,
     "cf_bl_rmsd": 0.01869,
-    "time": 0.04149508476257324
+    "time": 0.051535844802856445
   },
   {
     "pdb_id": "3WBM",
@@ -120,12 +120,12 @@
     "wwpdb_clash": 4.16,
     "cf_rama_outlier": 0.0,
     "cf_rama_favored": 94.86,
-    "cf_clash": 74.58,
+    "cf_clash": 76.2,
     "cf_planarity": 84.02,
     "cf_chirality": 100.0,
     "cf_score": 79.9,
     "cf_bl_rmsd": 0.00448,
-    "time": 0.13527965545654297
+    "time": 0.15993285179138184
   },
   {
     "pdb_id": "4LZT",
@@ -136,12 +136,12 @@
     "wwpdb_clash": 2.46,
     "cf_rama_outlier": 0.0,
     "cf_rama_favored": 94.49,
-    "cf_clash": 10.73,
+    "cf_clash": 8.78,
     "cf_planarity": 73.44,
     "cf_chirality": 100.0,
-    "cf_score": 82.5,
+    "cf_score": 84.0,
     "cf_bl_rmsd": 0.0153,
-    "time": 0.03274846076965332
+    "time": 0.04101252555847168
   },
   {
     "pdb_id": "2QMT",
@@ -152,12 +152,12 @@
     "wwpdb_clash": 14.3,
     "cf_rama_outlier": 0.0,
     "cf_rama_favored": 96.3,
-    "cf_clash": 15.25,
+    "cf_clash": 19.61,
     "cf_planarity": 67.27,
     "cf_chirality": 100.0,
-    "cf_score": 77.9,
+    "cf_score": 74.7,
     "cf_bl_rmsd": 0.01782,
-    "time": 0.013984203338623047
+    "time": 0.017739534378051758
   },
   {
     "pdb_id": "1A6M",
@@ -173,7 +173,7 @@
     "cf_chirality": 100.0,
     "cf_score": 85.8,
     "cf_bl_rmsd": 0.01529,
-    "time": 0.04132390022277832
+    "time": 0.05127143859863281
   },
   {
     "pdb_id": "4CI0",
@@ -184,12 +184,12 @@
     "wwpdb_clash": 118.28,
     "cf_rama_outlier": 0.23,
     "cf_rama_favored": 96.62,
-    "cf_clash": 129.67,
+    "cf_clash": 143.62,
     "cf_planarity": 69.78,
     "cf_chirality": 100.0,
     "cf_score": 75.8,
     "cf_bl_rmsd": 0.01351,
-    "time": 0.25548648834228516
+    "time": 0.3099961280822754
   },
   {
     "pdb_id": "5B3L",
@@ -200,12 +200,12 @@
     "wwpdb_clash": 6.75,
     "cf_rama_outlier": 0.0,
     "cf_rama_favored": 94.59,
-    "cf_clash": 12.47,
+    "cf_clash": 13.36,
     "cf_planarity": 77.18,
     "cf_chirality": 100.0,
-    "cf_score": 81.8,
+    "cf_score": 81.2,
     "cf_bl_rmsd": 0.01598,
-    "time": 0.035872459411621094
+    "time": 0.04635000228881836
   },
   {
     "pdb_id": "1UBQ",
@@ -216,12 +216,12 @@
     "wwpdb_clash": 10.56,
     "cf_rama_outlier": 0.0,
     "cf_rama_favored": 97.3,
-    "cf_clash": 9.97,
+    "cf_clash": 14.95,
     "cf_planarity": 96.0,
     "cf_chirality": 100.0,
-    "cf_score": 87.5,
+    "cf_score": 83.8,
     "cf_bl_rmsd": 0.01996,
-    "time": 0.01805424690246582
+    "time": 0.02263331413269043
   },
   {
     "pdb_id": "1SHG",
@@ -232,12 +232,12 @@
     "wwpdb_clash": 11.55,
     "cf_rama_outlier": 1.82,
     "cf_rama_favored": 92.73,
-    "cf_clash": 19.07,
+    "cf_clash": 31.78,
     "cf_planarity": 66.07,
     "cf_chirality": 100.0,
-    "cf_score": 73.4,
+    "cf_score": 72.7,
     "cf_bl_rmsd": 0.01933,
-    "time": 0.014005184173583984
+    "time": 0.017499208450317383
   },
   {
     "pdb_id": "3IWY",
@@ -248,12 +248,12 @@
     "wwpdb_clash": 9.56,
     "cf_rama_outlier": 0.0,
     "cf_rama_favored": 95.58,
-    "cf_clash": 8.81,
+    "cf_clash": 13.22,
     "cf_planarity": 67.57,
     "cf_chirality": 100.0,
-    "cf_score": 82.9,
+    "cf_score": 79.6,
     "cf_bl_rmsd": 0.01611,
-    "time": 0.04776263236999512
+    "time": 0.05944395065307617
   },
   {
     "pdb_id": "1YCR",
@@ -264,12 +264,12 @@
     "wwpdb_clash": 14.43,
     "cf_rama_outlier": 2.13,
     "cf_rama_favored": 96.81,
-    "cf_clash": 23.23,
+    "cf_clash": 25.67,
     "cf_planarity": 98.96,
     "cf_chirality": 100.0,
     "cf_score": 82.7,
     "cf_bl_rmsd": 0.00871,
-    "time": 0.024680137634277344
+    "time": 0.031004905700683594
   },
   {
     "pdb_id": "4HHB",
@@ -280,12 +280,12 @@
     "wwpdb_clash": 141.11,
     "cf_rama_outlier": 0.71,
     "cf_rama_favored": 94.17,
-    "cf_clash": 21.94,
+    "cf_clash": 22.6,
     "cf_planarity": 54.56,
     "cf_chirality": 100.0,
     "cf_score": 64.7,
     "cf_bl_rmsd": 0.12022,
-    "time": 0.15570616722106934
+    "time": 0.2101750373840332
   },
   {
     "pdb_id": "5HHD",
@@ -296,12 +296,12 @@
     "wwpdb_clash": 6.03,
     "cf_rama_outlier": 0.8,
     "cf_rama_favored": 93.28,
-    "cf_clash": 12.11,
+    "cf_clash": 17.0,
     "cf_planarity": 75.51,
     "cf_chirality": 100.0,
-    "cf_score": 83.4,
+    "cf_score": 79.7,
     "cf_bl_rmsd": 0.00611,
-    "time": 0.17177557945251465
+    "time": 0.2144451141357422
   },
   {
     "pdb_id": "2AKE",
@@ -312,12 +312,12 @@
     "wwpdb_clash": 24.95,
     "cf_rama_outlier": 0.54,
     "cf_rama_favored": 94.07,
-    "cf_clash": 112.33,
+    "cf_clash": 116.91,
     "cf_planarity": 100.0,
     "cf_chirality": 100.0,
     "cf_score": 82.4,
     "cf_bl_rmsd": 0.0068,
-    "time": 0.14807915687561035
+    "time": 0.17351222038269043
   },
   {
     "pdb_id": "3BLM",
@@ -328,12 +328,12 @@
     "wwpdb_clash": 10.86,
     "cf_rama_outlier": 0.4,
     "cf_rama_favored": 95.65,
-    "cf_clash": 17.25,
+    "cf_clash": 23.16,
     "cf_planarity": 86.27,
     "cf_chirality": 100.0,
-    "cf_score": 78.6,
+    "cf_score": 76.5,
     "cf_bl_rmsd": 0.0251,
-    "time": 0.07838582992553711
+    "time": 0.07963252067565918
   },
   {
     "pdb_id": "2HHB",
@@ -344,12 +344,12 @@
     "wwpdb_clash": 3.31,
     "cf_rama_outlier": 0.53,
     "cf_rama_favored": 93.99,
-    "cf_clash": 11.41,
+    "cf_clash": 10.31,
     "cf_planarity": 80.53,
     "cf_chirality": 100.0,
-    "cf_score": 82.9,
+    "cf_score": 83.7,
     "cf_bl_rmsd": 0.01716,
-    "time": 0.15248465538024902
+    "time": 0.20813655853271484
   },
   {
     "pdb_id": "3PQR",
@@ -360,12 +360,12 @@
     "wwpdb_clash": 11.29,
     "cf_rama_outlier": 1.5,
     "cf_rama_favored": 90.99,
-    "cf_clash": 31.49,
+    "cf_clash": 34.99,
     "cf_planarity": 80.9,
     "cf_chirality": 100.0,
     "cf_score": 77.6,
     "cf_bl_rmsd": 0.00724,
-    "time": 0.10470962524414062
+    "time": 0.11205673217773438
   },
   {
     "pdb_id": "1DKG",
@@ -376,12 +376,12 @@
     "wwpdb_clash": 50.8,
     "cf_rama_outlier": 2.09,
     "cf_rama_favored": 91.8,
-    "cf_clash": 63.23,
+    "cf_clash": 74.09,
     "cf_planarity": 100.0,
     "cf_chirality": 100.0,
     "cf_score": 81.3,
     "cf_bl_rmsd": 0.00909,
-    "time": 0.16925311088562012
+    "time": 0.22916913032531738
   },
   {
     "pdb_id": "5PO5",
@@ -392,12 +392,12 @@
     "wwpdb_clash": 3.84,
     "cf_rama_outlier": 0.0,
     "cf_rama_favored": 97.93,
-    "cf_clash": 7.04,
+    "cf_clash": 8.04,
     "cf_planarity": 87.7,
     "cf_chirality": 100.0,
-    "cf_score": 91.1,
+    "cf_score": 90.4,
     "cf_bl_rmsd": 0.00554,
-    "time": 0.0625300407409668
+    "time": 0.07847452163696289
   },
   {
     "pdb_id": "2JXR",
@@ -408,12 +408,12 @@
     "wwpdb_clash": 25.58,
     "cf_rama_outlier": 0.61,
     "cf_rama_favored": 93.27,
-    "cf_clash": 47.19,
+    "cf_clash": 55.49,
     "cf_planarity": 83.23,
     "cf_chirality": 98.98,
     "cf_score": 73.6,
     "cf_bl_rmsd": 0.03154,
-    "time": 0.09929203987121582
+    "time": 0.10374903678894043
   },
   {
     "pdb_id": "1J8B",
@@ -424,12 +424,12 @@
     "wwpdb_clash": 14.02,
     "cf_rama_outlier": 0.0,
     "cf_rama_favored": 95.56,
-    "cf_clash": 17.09,
+    "cf_clash": 24.22,
     "cf_planarity": 97.8,
     "cf_chirality": 100.0,
-    "cf_score": 83.0,
+    "cf_score": 80.8,
     "cf_bl_rmsd": 0.01484,
-    "time": 0.022536277770996094
+    "time": 0.02869558334350586
   },
   {
     "pdb_id": "2RVD",
@@ -445,7 +445,7 @@
     "cf_chirality": 100.0,
     "cf_score": 84.2,
     "cf_bl_rmsd": 0.00302,
-    "time": 0.002749204635620117
+    "time": 0.0033445358276367188
   },
   {
     "pdb_id": "7A4M",
@@ -461,7 +461,7 @@
     "cf_chirality": 100.0,
     "cf_score": 88.3,
     "cf_bl_rmsd": 0.0078,
-    "time": 0.04993176460266113
+    "time": 0.07859516143798828
   },
   {
     "pdb_id": "6W41",
@@ -472,12 +472,12 @@
     "wwpdb_clash": 5.36,
     "cf_rama_outlier": 0.32,
     "cf_rama_favored": 95.73,
-    "cf_clash": 16.0,
+    "cf_clash": 21.88,
     "cf_planarity": 81.42,
     "cf_chirality": 100.0,
-    "cf_score": 82.7,
+    "cf_score": 79.7,
     "cf_bl_rmsd": 0.00427,
-    "time": 0.15241670608520508
+    "time": 0.1905193328857422
   },
   {
     "pdb_id": "5VOS",
@@ -493,6 +493,6 @@
     "cf_chirality": 100.0,
     "cf_score": 86.4,
     "cf_bl_rmsd": 0.01783,
-    "time": 0.0023500919342041016
+    "time": 0.0028955936431884766
   }
 ]

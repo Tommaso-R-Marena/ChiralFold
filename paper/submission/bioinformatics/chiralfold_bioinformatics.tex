@@ -173,7 +173,7 @@ Therapeutically, correct D-stereochemistry matters for proteolysis resistance an
 ChiralFold does \textbf{not} claim to model the complete thermodynamic landscape of structural ensembles, sample Boltzmann-weighted conformers, or replace molecular-mechanics force fields.
 Its operations fix an explicit \emph{algebraic data-representation constraint} during coordinate mapping: signed C$\alpha$ tetrahedron volume for auditing, exact improper reflection for L$\leftrightarrow$D mirroring and AF3 correction, and deterministic diastereomer enumeration.
 Evaluating the tool as an energy-minimization or ensemble-dynamics simulator would misstate its design.
-Additional limitations include chi1-only rotamer scoring, two borderline cases with $|V|<1.0$~\AA$^3$, no experimental binding validation of mirror-designed peptides, a MolProbity-inspired (not Probe-identical) clashscore (Supplementary Methods), and the primary survey's use of legacy PDB format (closed via mmCIF re-verification of known errors and the live mmCIF-only universe survey; Supplementary Methods).
+Additional limitations include chi1-only rotamer scoring, two borderline cases with $|V|<1.0$~\AA$^3$, no experimental binding validation of mirror-designed peptides, a MolProbity-inspired clashscore that places Reduce-style HN/HA hydrogens and applies geometry-gated H-bond suppression but is not bit-identical to Probe (Supplementary Methods), and the primary survey's use of legacy PDB format (closed via mmCIF re-verification of known errors and the live mmCIF-only universe survey; Supplementary Methods).
 Formal theorems characterize distance-only representations and do not claim impossibility for general SE(3)-equivariant predictors.
 
 \section{Conclusion}

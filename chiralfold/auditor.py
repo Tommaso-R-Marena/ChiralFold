@@ -17,11 +17,14 @@ Checks performed
 2. **Bond Geometry**     — Backbone bond lengths and angles vs ideal values.
 3. **Ramachandran**      — φ/ψ region classification (favored/allowed/outlier).
 4. **Peptide Planarity** — ω dihedral deviation from ±180°.
-5. **Clash Detection**   — Non-bonded atom pairs closer than vdW sum − 0.4 Å.
+5. **Clash Detection**   — Non-bonded pairs closer than vdW sum − 0.4 Å, with
+   topology-aware 1–2/1–3/1–4 exclusions, Probe-style HN/HA hydrogens, and
+   geometry-gated H-bond suppression (MolProbity-inspired).
 6. **Summary Score**     — Composite 0–100 quality score.
 
 All parsing is done directly from PDB ATOM/HETATM records with no external
-dependencies beyond NumPy.  RDKit is *not* required for audit_pdb().
+dependencies beyond NumPy/SciPy.  RDKit is *not* required for audit_pdb().
+mmCIF inputs are accepted via automatic conversion (see ``audit_pdb``).
 """
 
 from __future__ import annotations
@@ -65,7 +68,8 @@ VDW_RADII: Dict[str, float] = {
     "N": 1.55,
     "O": 1.52,
     "S": 1.80,
-    "H": 1.20,
+    # Probe uses ~1.17 Å for H (slightly tighter than Bondi 1.20)
+    "H": 1.17,
     "P": 1.80,
     "F": 1.47,
     "CL": 1.75,
@@ -86,7 +90,31 @@ _BACKBONE_BOND_PAIRS: Tuple[Tuple[str, str], ...] = (
     ("N", "H2"),
     ("N", "H3"),
     ("N", "HN"),
+    # Cα hydrogens (Reduce / Probe style)
+    ("CA", "HA"),
+    ("CA", "HA2"),
+    ("CA", "HA3"),
 )
+
+# Ideal bond lengths for placed hydrogens (Å)
+_BOND_LEN_NH = 1.02
+_BOND_LEN_CH = 1.09
+
+# Polar (H-bond-capable) hydrogen names. HA/HA2/HA3 are carbon-bound and excluded.
+_POLAR_H_NAMES: Set[str] = {
+    "H", "HN", "H1", "H2", "H3",
+    "HG", "HG1",
+    "HD1", "HD2",
+    "HE", "HE1", "HE2",
+    "HH", "HH11", "HH12", "HH21", "HH22",
+    "HZ", "HZ1", "HZ2", "HZ3",
+}
+
+# Probe-inspired H-bond geometry gates (suppress clash only if satisfied)
+_HBOND_H_ACC_MAX = 2.50   # Å  H···acceptor
+_HBOND_ANGLE_MIN = 120.0  # °   donor–H–acceptor
+_HBOND_NO_MIN = 2.50      # Å  N···O heavy-atom window
+_HBOND_NO_MAX = 3.50
 
 _SIDECHAIN_BOND_PAIRS: Dict[str, Tuple[Tuple[str, str], ...]] = {
     "ALA": (("CA", "CB"),),
@@ -901,7 +929,7 @@ def _intra_residue_bond_pairs(resname: str) -> List[Tuple[str, str]]:
     pairs = list(_BACKBONE_BOND_PAIRS)
     pairs.extend(_SIDECHAIN_BOND_PAIRS.get(tmpl, ()))
     # Unknown residues: still connect CA–CB when present via backbone only;
-    # distance fallback in _clash_excluded_pairs covers remaining 1-3.
+    # distance fallback in _clash_excluded_index_pairs covers remaining 1-3.
     if tmpl not in _SIDECHAIN_BOND_PAIRS and tmpl not in ("GLY",):
         pairs.append(("CA", "CB"))
     return pairs
@@ -946,6 +974,8 @@ def _clash_excluded_index_pairs(atoms: List[_Atom]) -> Set[Tuple[int, int]]:
         residue_adj[rkey] = adj
 
         # Exclude 1-2, 1-3, and 1-4 within the residue (MolProbity Probe -4).
+        # For pairs involving a hydrogen, also exclude 1-5: model-built H
+        # positions make same-residue HA···CD1-style contacts noisy otherwise.
         nodes = list(adj.keys())
         for name_idxs in name_map.values():
             for i in name_idxs:
@@ -953,10 +983,11 @@ def _clash_excluded_index_pairs(atoms: List[_Atom]) -> Set[Tuple[int, int]]:
                     adj[i] = set()
                     nodes.append(i)
         for start in nodes:
-            # BFS up to depth 3
+            start_is_h = _is_hydrogen_atom(atoms[start])
+            max_depth = 4 if start_is_h else 3
             frontier = {start}
             visited = {start}
-            for _depth in range(3):
+            for _depth in range(max_depth):
                 nxt: Set[int] = set()
                 for node in frontier:
                     for nb in adj[node]:
@@ -964,6 +995,11 @@ def _clash_excluded_index_pairs(atoms: List[_Atom]) -> Set[Tuple[int, int]]:
                             continue
                         visited.add(nb)
                         nxt.add(nb)
+                        # Depth-4 exclusion only when a hydrogen is involved
+                        if _depth == 3 and not (
+                            start_is_h or _is_hydrogen_atom(atoms[nb])
+                        ):
+                            continue
                         a, b = (start, nb) if start < nb else (nb, start)
                         excluded.add((a, b))
                 frontier = nxt
@@ -1006,6 +1042,25 @@ def _clash_excluded_index_pairs(atoms: List[_Atom]) -> Set[Tuple[int, int]]:
             ("N", "HN"),
             ("O", "C"),
             ("N", "N"),  # 1-4 via CA–C–N
+            ("C", "CB"),  # 1-4 via N–CA of next residue
+            # Cα hydrogens on residue i+1 (C–N–CA–HA* = 1-4)
+            ("C", "HA"),
+            ("C", "HA2"),
+            ("C", "HA3"),
+            # Peptide 1-5 involving model-built HA (O/CA/N ··· HA*)
+            ("O", "HA"),
+            ("O", "HA2"),
+            ("O", "HA3"),
+            ("CA", "HA"),
+            ("CA", "HA2"),
+            ("CA", "HA3"),
+            ("N", "HA"),
+            ("N", "HA2"),
+            ("N", "HA3"),
+            # X–Pro: HA(i) ··· CD(i+1) is 1-5 via C–N
+            ("HA", "CD"),
+            ("HA2", "CD"),
+            ("HA3", "CD"),
         ]
         for a_name, b_name in cross_12_13:
             for ia in m0.get(a_name, ()):
@@ -1061,30 +1116,94 @@ def _clash_excluded_index_pairs(atoms: List[_Atom]) -> Set[Tuple[int, int]]:
     return excluded
 
 
-def _is_hbond_donor_acceptor_pair(a: _Atom, b: _Atom) -> bool:
-    """True if (a,b) is a plausible H-bond donor/acceptor pair (not a clash)."""
-    def _role(atom: _Atom) -> str:
-        name = atom.name.strip().upper()
-        elem = atom.element_upper
-        if elem == "H" or name in ("H", "HN", "H1", "H2", "H3"):
-            return "donor_h"
-        if elem == "O" or name in (
-            "O", "OD1", "OD2", "OE1", "OE2", "OG", "OG1", "OH", "OXT"
-        ):
-            return "acceptor"
-        if name in (
-            "N", "ND1", "ND2", "NE", "NE1", "NE2", "NH1", "NH2", "NZ"
-        ):
-            return "donor_n"
-        return ""
+def _angle_degrees(a: np.ndarray, b: np.ndarray, c: np.ndarray) -> float:
+    """Angle ABC in degrees (vertex at *b*)."""
+    ba = np.asarray(a, dtype=float) - np.asarray(b, dtype=float)
+    bc = np.asarray(c, dtype=float) - np.asarray(b, dtype=float)
+    na = float(np.linalg.norm(ba)) + 1e-12
+    nc = float(np.linalg.norm(bc)) + 1e-12
+    cosang = float(np.dot(ba, bc) / (na * nc))
+    cosang = max(-1.0, min(1.0, cosang))
+    return float(math.degrees(math.acos(cosang)))
 
-    ra, rb = _role(a), _role(b)
-    roles = {ra, rb}
-    if roles == {"donor_h", "acceptor"}:
+
+def _is_acceptor_atom(atom: _Atom) -> bool:
+    name = atom.name.strip().upper()
+    elem = atom.element_upper
+    if elem == "O" or name in (
+        "O", "OD1", "OD2", "OE1", "OE2", "OG", "OG1", "OH", "OXT"
+    ):
         return True
-    # Heavy-atom H-bond geometry (N···O ≈ 2.5–3.5 Å) — not a steric clash.
-    if roles == {"donor_n", "acceptor"}:
-        return _bond_length(a.xyz, b.xyz) < 3.5
+    # Occasional N acceptors (HIS NE2/ND1) — treat named N as acceptor only when
+    # not acting as the donor in the pair (handled by caller roles).
+    return False
+
+
+def _is_donor_n_atom(atom: _Atom) -> bool:
+    name = atom.name.strip().upper()
+    return name in (
+        "N", "ND1", "ND2", "NE", "NE1", "NE2", "NH1", "NH2", "NZ"
+    )
+
+
+def _is_polar_h_atom(atom: _Atom) -> bool:
+    """True for H-bond-capable hydrogens (not Cα HA/HA2/HA3)."""
+    if not _is_hydrogen_atom(atom):
+        return False
+    return atom.name.strip().upper() in _POLAR_H_NAMES
+
+
+def _is_hbond_donor_acceptor_pair(
+    a: _Atom,
+    b: _Atom,
+    parent_n_by_h_index: Optional[Dict[int, _Atom]] = None,
+    atom_index: Optional[Dict[int, int]] = None,
+) -> bool:
+    """
+    Probe-inspired H-bond filter: suppress a clash only when geometry is good.
+
+    - Carbon-bound HA/HA2/HA3 never count as H-bond donors.
+    - Polar H···acceptor: H-bond if H···Acc ≤ 2.5 Å and donor–H–Acc ≥ 120°.
+    - Heavy N···O: H-bond only in the 2.5–3.5 Å window (side-chain NH without H).
+    """
+    parent_n_by_h_index = parent_n_by_h_index or {}
+
+    def _idx(atom: _Atom) -> Optional[int]:
+        if atom_index is None:
+            return None
+        return atom_index.get(id(atom))
+
+    # Polar H ··· acceptor
+    h_atom: Optional[_Atom] = None
+    acc: Optional[_Atom] = None
+    if _is_polar_h_atom(a) and _is_acceptor_atom(b):
+        h_atom, acc = a, b
+    elif _is_polar_h_atom(b) and _is_acceptor_atom(a):
+        h_atom, acc = b, a
+
+    if h_atom is not None and acc is not None:
+        dist = float(np.linalg.norm(h_atom.xyz - acc.xyz))
+        if dist > _HBOND_H_ACC_MAX:
+            return False
+        h_i = _idx(h_atom)
+        parent = parent_n_by_h_index.get(h_i) if h_i is not None else None
+        if parent is None:
+            # No parent → require only distance (still stricter than blanket skip)
+            return True
+        ang = _angle_degrees(parent.xyz, h_atom.xyz, acc.xyz)
+        return ang >= _HBOND_ANGLE_MIN
+
+    # Heavy-atom N···O (no polar H involved in this pair)
+    n_atom: Optional[_Atom] = None
+    o_atom: Optional[_Atom] = None
+    if _is_donor_n_atom(a) and _is_acceptor_atom(b):
+        n_atom, o_atom = a, b
+    elif _is_donor_n_atom(b) and _is_acceptor_atom(a):
+        n_atom, o_atom = b, a
+    if n_atom is not None and o_atom is not None:
+        dist = float(np.linalg.norm(n_atom.xyz - o_atom.xyz))
+        return _HBOND_NO_MIN <= dist <= _HBOND_NO_MAX
+
     return False
 
 
@@ -1128,69 +1247,185 @@ def _are_bonded_or_angled(a: _Atom, b: _Atom) -> bool:
 _are_bonded = _are_bonded_or_angled
 
 
+def _place_tetrahedral_h(
+    center: np.ndarray,
+    neighbor_positions: List[np.ndarray],
+    bond_length: float,
+) -> np.ndarray:
+    """Place H opposite the sum of unit vectors from *center* to neighbours."""
+    c = np.asarray(center, dtype=float)
+    acc = np.zeros(3, dtype=float)
+    for npos in neighbor_positions:
+        v = np.asarray(npos, dtype=float) - c
+        acc = acc + v / (float(np.linalg.norm(v)) + 1e-12)
+    direction = -acc / (float(np.linalg.norm(acc)) + 1e-12)
+    return c + direction * bond_length
+
+
+def _place_gly_ha2_ha3(
+    n_pos: np.ndarray,
+    ca_pos: np.ndarray,
+    c_pos: np.ndarray,
+    bond_length: float = _BOND_LEN_CH,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Place Gly HA2/HA3 in a tetrahedral arrangement about CA.
+
+    Uses the N–CA–C bisector and the peptide-plane normal (Reduce-style).
+    """
+    ca = np.asarray(ca_pos, dtype=float)
+    v_n = np.asarray(n_pos, dtype=float) - ca
+    v_c = np.asarray(c_pos, dtype=float) - ca
+    v_n = v_n / (float(np.linalg.norm(v_n)) + 1e-12)
+    v_c = v_c / (float(np.linalg.norm(v_c)) + 1e-12)
+    bisector = v_n + v_c
+    bisector = bisector / (float(np.linalg.norm(bisector)) + 1e-12)
+    normal = np.cross(v_n, v_c)
+    nrm = float(np.linalg.norm(normal))
+    if nrm < 1e-8:
+        # Degenerate N–CA–C: pick an axis not parallel to the bisector
+        normal = np.array([0.0, 0.0, 1.0])
+        if abs(float(np.dot(bisector, normal))) > 0.9:
+            normal = np.array([0.0, 1.0, 0.0])
+        normal = normal - bisector * float(np.dot(normal, bisector))
+        nrm = float(np.linalg.norm(normal))
+    normal = normal / (nrm + 1e-12)
+    # ± half of tetrahedral angle from the direction opposite N/C
+    half = math.radians(54.75)
+    ref = -bisector
+    ha2_dir = ref * math.cos(half) + normal * math.sin(half)
+    ha3_dir = ref * math.cos(half) - normal * math.sin(half)
+    ha2_dir = ha2_dir / (float(np.linalg.norm(ha2_dir)) + 1e-12)
+    ha3_dir = ha3_dir / (float(np.linalg.norm(ha3_dir)) + 1e-12)
+    return ca + ha2_dir * bond_length, ca + ha3_dir * bond_length
+
+
+def _make_h_atom(
+    serial: int,
+    name: str,
+    template: _Atom,
+    pos: np.ndarray,
+) -> _Atom:
+    # PDB atom name: right-align in 4 columns when length ≤ 3 (standard H style)
+    nm = name.strip().upper()
+    if len(nm) == 1:
+        pdb_name = f" {nm}  "
+    elif len(nm) == 2:
+        pdb_name = f" {nm} "
+    elif len(nm) == 3:
+        pdb_name = f" {nm}"
+    else:
+        pdb_name = nm[:4]
+    return _Atom(
+        record="ATOM",
+        serial=serial,
+        name=pdb_name,
+        altloc=" ",
+        resname=template.resname,
+        chain=template.chain,
+        resseq=template.resseq,
+        icode=template.icode,
+        x=float(pos[0]),
+        y=float(pos[1]),
+        z=float(pos[2]),
+        element="H",
+    )
+
+
 def _add_backbone_hydrogens(atoms: List[_Atom]) -> List[_Atom]:
     """
-    Estimate backbone amide H positions for clash detection.
+    Place hydrogens for MolProbity/Probe-style clash detection.
 
-    Places H atoms along the N-C(prev) direction at 1.02 Å from N.
-    This matches MolProbity's approach of adding H before clash scoring.
+    1. Backbone amide HN (not proline), only for same-chain peptide-continuous
+       neighbours (resseq gap ≤ 2, CA–CA ≤ 4.5 Å; insertion codes included).
+    2. Cα HA for residues with CB (tetrahedral from N/C/CB).
+    3. Glycine HA2/HA3 (tetrahedral from N/C and the peptide-plane normal).
     """
-    # Build residue lookup
-    residues: Dict[Tuple[str, int], Dict[str, _Atom]] = {}
+    residues: Dict[Tuple[str, int, str], Dict[str, _Atom]] = {}
     for a in atoms:
-        key = (a.chain, a.resseq)
+        key = (a.chain, a.resseq, a.icode)
         if key not in residues:
             residues[key] = {}
         residues[key][a.name.strip()] = a
 
-    new_h_atoms = []
+    new_h_atoms: List[_Atom] = []
     max_serial = max((a.serial for a in atoms), default=0)
     h_serial = max_serial + 1
 
     sorted_keys = sorted(residues.keys())
     for idx, key in enumerate(sorted_keys):
         res = residues[key]
-        n_atom = res.get('N')
-        ca_atom = res.get('CA')
-        if n_atom is None or ca_atom is None:
-            continue
-        # Proline (and D-Pro) has no amide hydrogen — do not invent one.
-        if n_atom.resname.upper().strip() in PROLINE_RESNAMES:
-            continue
-        # Skip if H already present
-        if 'H' in res or 'HN' in res:
-            continue
-        # Skip first residue (no preceding C)
-        if idx == 0:
-            continue
-        prev_key = sorted_keys[idx - 1]
-        prev_c = residues.get(prev_key, {}).get('C')
-        if prev_c is None:
+        n_atom = res.get("N")
+        ca_atom = res.get("CA")
+        c_atom = res.get("C")
+        if ca_atom is None:
             continue
 
-        # Place H in the peptide plane of C(prev)–N–CA, opposite the angle
-        # bisector at N (MolProbity Reduce-style). Vectors must originate at N.
-        n_pos = np.array([n_atom.x, n_atom.y, n_atom.z])
-        c_pos = np.array([prev_c.x, prev_c.y, prev_c.z])
-        ca_pos = np.array([ca_atom.x, ca_atom.y, ca_atom.z])
-
-        v_nc = c_pos - n_pos
-        v_nca = ca_pos - n_pos
-        n_nc = np.linalg.norm(v_nc) + 1e-12
-        n_nca = np.linalg.norm(v_nca) + 1e-12
-        h_dir = -(v_nc / n_nc + v_nca / n_nca)
-        h_dir = h_dir / (np.linalg.norm(h_dir) + 1e-12)
-        h_pos = n_pos + h_dir * 1.02
-
-        h_atom = _Atom(
-            record='ATOM', serial=h_serial, name=' H  ', altloc=' ',
-            resname=n_atom.resname, chain=n_atom.chain,
-            resseq=n_atom.resseq, icode=n_atom.icode,
-            x=float(h_pos[0]), y=float(h_pos[1]), z=float(h_pos[2]),
-            element='H',
+        resname_u = (
+            (n_atom or ca_atom).resname.upper().strip()
         )
-        new_h_atoms.append(h_atom)
-        h_serial += 1
+        tmpl = _bond_template_resname(resname_u)
+
+        # ── Amide HN ──────────────────────────────────────────────────
+        if (
+            n_atom is not None
+            and ca_atom is not None
+            and resname_u not in PROLINE_RESNAMES
+            and "H" not in res
+            and "HN" not in res
+            and idx > 0
+        ):
+            prev_key = sorted_keys[idx - 1]
+            if (
+                prev_key[0] == key[0]
+                and abs(key[1] - prev_key[1]) <= 2
+            ):
+                prev_res = residues.get(prev_key, {})
+                prev_c = prev_res.get("C")
+                prev_ca = prev_res.get("CA")
+                ok = prev_c is not None
+                if ok and prev_ca is not None:
+                    if float(np.linalg.norm(prev_ca.xyz - ca_atom.xyz)) > 4.5:
+                        ok = False
+                if ok and prev_c is not None:
+                    n_pos = n_atom.xyz
+                    c_pos = prev_c.xyz
+                    ca_pos = ca_atom.xyz
+                    v_nc = c_pos - n_pos
+                    v_nca = ca_pos - n_pos
+                    n_nc = float(np.linalg.norm(v_nc)) + 1e-12
+                    n_nca = float(np.linalg.norm(v_nca)) + 1e-12
+                    h_dir = -(v_nc / n_nc + v_nca / n_nca)
+                    h_dir = h_dir / (float(np.linalg.norm(h_dir)) + 1e-12)
+                    h_pos = n_pos + h_dir * _BOND_LEN_NH
+                    new_h_atoms.append(
+                        _make_h_atom(h_serial, "H", n_atom, h_pos)
+                    )
+                    h_serial += 1
+
+        # ── Cα hydrogens ──────────────────────────────────────────────
+        if n_atom is None or c_atom is None:
+            continue
+
+        if tmpl == "GLY" or resname_u in GLYCINE_RESNAMES:
+            if "HA2" in res or "HA3" in res or "HA" in res:
+                continue
+            ha2, ha3 = _place_gly_ha2_ha3(n_atom.xyz, ca_atom.xyz, c_atom.xyz)
+            new_h_atoms.append(_make_h_atom(h_serial, "HA2", ca_atom, ha2))
+            h_serial += 1
+            new_h_atoms.append(_make_h_atom(h_serial, "HA3", ca_atom, ha3))
+            h_serial += 1
+        else:
+            cb_atom = res.get("CB")
+            if cb_atom is None or "HA" in res:
+                continue
+            ha = _place_tetrahedral_h(
+                ca_atom.xyz,
+                [n_atom.xyz, c_atom.xyz, cb_atom.xyz],
+                _BOND_LEN_CH,
+            )
+            new_h_atoms.append(_make_h_atom(h_serial, "HA", ca_atom, ha))
+            h_serial += 1
 
     return atoms + new_h_atoms
 
@@ -1200,9 +1435,10 @@ def _check_clashes(atoms: List[_Atom]) -> dict:
     Detect steric clashes between non-bonded atoms using a scipy KD-tree.
 
     Two atoms clash when their distance < (rvdw_A + rvdw_B - 0.4) Å.
-    Deposited hydrogens are stripped and backbone amide H are re-added
-    (MolProbity Reduce-style), so explicit C–H bonds are never scored as clashes.
-    Covalent 1-2 / 1-3 / 1-4 pairs are excluded via residue topology.
+    Deposited hydrogens are stripped; amide HN and Cα HA/HA2/HA3 are
+    re-added (MolProbity Reduce-style). Covalent 1-2 / 1-3 / 1-4 pairs are
+    excluded via residue topology. H-bonds suppress clashes only when
+    Probe-like distance/angle geometry is satisfied.
 
     Clash score = clashes per 1000 heavy atoms.
     """
@@ -1211,10 +1447,22 @@ def _check_clashes(atoms: List[_Atom]) -> dict:
     if n_atoms < 2:
         return {"n_clashes": 0, "clash_score": 0.0, "worst_clashes": []}
 
-    # Add backbone hydrogens if not present (MolProbity does this)
     all_atoms_for_check = _add_backbone_hydrogens(heavy)
 
     excluded = _clash_excluded_index_pairs(all_atoms_for_check)
+
+    # Parent N for each polar H (for H-bond angle)
+    by_res_n: Dict[Tuple[str, int, str], _Atom] = {}
+    for a in all_atoms_for_check:
+        if a.name.strip() == "N":
+            by_res_n[_residue_key(a)] = a
+    parent_n_by_h_index: Dict[int, _Atom] = {}
+    atom_index: Dict[int, int] = {id(a): i for i, a in enumerate(all_atoms_for_check)}
+    for i, a in enumerate(all_atoms_for_check):
+        if _is_polar_h_atom(a):
+            parent = by_res_n.get(_residue_key(a))
+            if parent is not None:
+                parent_n_by_h_index[i] = parent
 
     coords = np.asarray(
         [[a.x, a.y, a.z] for a in all_atoms_for_check], dtype=float
@@ -1237,8 +1485,11 @@ def _check_clashes(atoms: List[_Atom]) -> dict:
             continue
         ai = all_atoms_for_check[i_i]
         aj = all_atoms_for_check[j_i]
-        # MolProbity: donor–acceptor contacts are H-bonds, not clashes.
-        if _is_hbond_donor_acceptor_pair(ai, aj):
+        if _is_hbond_donor_acceptor_pair(
+            ai, aj,
+            parent_n_by_h_index=parent_n_by_h_index,
+            atom_index=atom_index,
+        ):
             continue
         dist = float(np.linalg.norm(coords[i] - coords[j]))
         clash_limit = radii[i] + radii[j] - 0.4
@@ -1252,8 +1503,8 @@ def _check_clashes(atoms: List[_Atom]) -> dict:
             continue
         seen.add(pair_key)
         clashes.append({
-            "atom1": f"{ai.chain}:{ai.resname}{ai.resseq}.{ai.name}",
-            "atom2": f"{aj.chain}:{aj.resname}{aj.resseq}.{aj.name}",
+            "atom1": f"{ai.chain}:{ai.resname}{ai.resseq}.{ai.name.strip()}",
+            "atom2": f"{aj.chain}:{aj.resname}{aj.resseq}.{aj.name.strip()}",
             "distance": round(dist, 3),
             "overlap": round(overlap, 3),
             "vdw_sum": round(float(radii[i] + radii[j]), 3),
@@ -1325,16 +1576,19 @@ def _compute_overall_score(
 # Main public function
 # ─────────────────────────────────────────────────────────────────────────────
 
-def audit_pdb(pdb_path: str) -> dict:
+def audit_pdb(pdb_path: str, chain: Optional[str] = None) -> dict:
     """
-    Run a comprehensive quality audit on a PDB structure file.
+    Run a comprehensive quality audit on a PDB (or mmCIF) structure file.
 
     Validates Cα chirality, backbone bond geometry, Ramachandran
     angles, peptide planarity, and steric clashes.  Works for pure
     L-proteins, pure D-peptides, and mixed L/D structures.
 
     Args:
-        pdb_path: Path to a PDB file (ATOM and/or HETATM records).
+        pdb_path: Path to a PDB or mmCIF file (ATOM and/or HETATM records).
+            mmCIF is converted in-core to a temporary PDB. FASTA is rejected
+            (use ``chiralfold.fetch.resolve_to_pdb`` / CLI ``--id`` for AFDB).
+        chain: Optional single chain ID to restrict the audit (e.g. ``"A"``).
 
     Returns:
         A dict with the following top-level keys:
@@ -1363,7 +1617,7 @@ def audit_pdb(pdb_path: str) -> dict:
             ``pct_within_6deg``, ``mean_deviation``, ``outliers`` list.
 
         ``clashes`` (dict)
-            ``n_clashes``, ``clash_score`` (per 1000 atoms),
+            ``n_clashes``, ``clash_score`` (per 1000 heavy atoms),
             ``worst_clashes`` list.
 
         ``overall_score`` (float)
@@ -1371,7 +1625,8 @@ def audit_pdb(pdb_path: str) -> dict:
 
     Raises:
         FileNotFoundError: If *pdb_path* does not exist.
-        ValueError: If the file contains no parseable atom records.
+        ValueError: If the file contains no parseable atom records,
+            or no atoms remain after *chain* filtering.
 
     Examples
     --------
@@ -1385,9 +1640,24 @@ def audit_pdb(pdb_path: str) -> dict:
     if not os.path.isfile(pdb_path):
         raise FileNotFoundError(f"PDB file not found: {pdb_path}")
 
+    # Accept mmCIF transparently; FASTA must go through fetch/AFDB.
+    from .structure_io import ensure_pdb_path
+
+    try:
+        pdb_path = ensure_pdb_path(pdb_path)
+    except ValueError as exc:
+        raise ValueError(str(exc)) from exc
+
     atoms = _parse_pdb(pdb_path)
     if not atoms:
         raise ValueError(f"No parseable ATOM/HETATM records found in: {pdb_path}")
+
+    if chain is not None:
+        atoms = [a for a in atoms if a.chain == chain]
+        if not atoms:
+            raise ValueError(
+                f"No ATOM/HETATM records found for chain {chain!r} in: {pdb_path}"
+            )
 
     residue_groups = _group_by_residue(atoms)
     ordered_keys   = list(residue_groups.keys())
@@ -1471,7 +1741,7 @@ def format_report(report: dict) -> str:
         "",
         "── Clash Detection ───────────────────────────────",
         (f"  Clashes  : {report['clashes']['n_clashes']}"
-         f"  Score : {report['clashes']['clash_score']:.1f} / 1000 atoms"),
+         f"  Score : {report['clashes']['clash_score']:.1f} / 1000 heavy atoms"),
         "═" * 60,
     ]
     return "\n".join(lines)
