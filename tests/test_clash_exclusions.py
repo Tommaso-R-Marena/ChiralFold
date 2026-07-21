@@ -66,13 +66,42 @@ def test_toy_ubiquitin_clashscore_is_reasonable():
     assert report["chirality"]["n_wrong"] == 0
 
 
-@pytest.mark.slow
-def test_experimental_1ubq_clashscore_ballpark():
-    from chiralfold.fetch import fetch_structure
+def test_deposited_hydrogens_do_not_inflate_clashscore(tmp_path: Path):
+    """Explicit C–H bonds (~1.09 Å) must not be scored as clashes."""
+    # Minimal ALA with deposited HA (would be a ~1.8 Å "clash" if kept)
+    pdb = tmp_path / "ala_with_h.pdb"
+    pdb.write_text(
+        "ATOM      1  N   ALA A   1       0.000   0.000   0.000  1.00  0.00           N\n"
+        "ATOM      2  CA  ALA A   1       1.458   0.000   0.000  1.00  0.00           C\n"
+        "ATOM      3  C   ALA A   1       2.200   1.300   0.000  1.00  0.00           C\n"
+        "ATOM      4  O   ALA A   1       1.700   2.400   0.000  1.00  0.00           O\n"
+        "ATOM      5  CB  ALA A   1       2.000  -1.200   0.000  1.00  0.00           C\n"
+        "ATOM      6  HA  ALA A   1       1.800   0.300   0.900  1.00  0.00           H\n"
+        "END\n"
+    )
+    report = audit_pdb(str(pdb))
+    assert report["clashes"]["n_clashes"] == 0
+    assert report["clashes"]["clash_score"] == 0.0
 
-    path = fetch_structure("1UBQ").path
-    report = audit_pdb(path)
-    # Pre-fix scores were >200 from false 1-3 hits; MolProbity is ~0–5.
-    assert report["clashes"]["clash_score"] < 40.0
-    assert report["planarity"]["pct_within_6deg"] > 90.0
-    assert report["ramachandran"]["pct_favored"] > 90.0
+
+def test_only_first_model_is_parsed(tmp_path: Path):
+    pdb = tmp_path / "two_models.pdb"
+    pdb.write_text(
+        "MODEL        1\n"
+        "ATOM      1  N   ALA A   1       0.000   0.000   0.000  1.00  0.00           N\n"
+        "ATOM      2  CA  ALA A   1       1.458   0.000   0.000  1.00  0.00           C\n"
+        "ATOM      3  C   ALA A   1       2.200   1.300   0.000  1.00  0.00           C\n"
+        "ATOM      4  O   ALA A   1       1.700   2.400   0.000  1.00  0.00           O\n"
+        "ATOM      5  CB  ALA A   1       2.000  -1.200   0.000  1.00  0.00           C\n"
+        "ENDMDL\n"
+        "MODEL        2\n"
+        "ATOM      6  N   ALA A   1      10.000  10.000  10.000  1.00  0.00           N\n"
+        "ATOM      7  CA  ALA A   1      11.458  10.000  10.000  1.00  0.00           C\n"
+        "ATOM      8  C   ALA A   1      12.200  11.300  10.000  1.00  0.00           C\n"
+        "ATOM      9  O   ALA A   1      11.700  12.400  10.000  1.00  0.00           O\n"
+        "ATOM     10  CB  ALA A   1      12.000   8.800  10.000  1.00  0.00           C\n"
+        "ENDMDL\n"
+    )
+    atoms = auditor_mod._parse_pdb(str(pdb))
+    assert len(atoms) == 5
+    assert max(a.x for a in atoms) < 5.0

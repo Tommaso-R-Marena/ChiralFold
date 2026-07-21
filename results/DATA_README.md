@@ -79,7 +79,10 @@ the Childs et al. (2025) DP19/DP9/DP12 systems and variants. 478 chiral
 residues, 0 ChiralFold violations.
 
 `molprobity_comparison.json` — ChiralFold auditor vs wwPDB/MolProbity
-on 31 PDB structures spanning 0.48–3.4 Å.
+on 31 PDB structures spanning 0.48–3.4 Å. Regenerated after the
+clashscore topology fix (v3.5.x): mean `cf_clash` is now ~24 (was ~265
+from false 1–3 / deposited-H hits). Primary paper Rama calibration remains
+the n=362 era-representative set, not this 31-structure panel.
 
 `summary.json` — Headline statistics consumed by the paper:
 - 46 total benchmark sequences (31 pure D + 15 diastereomer)
