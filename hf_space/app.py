@@ -374,7 +374,7 @@ demo = build_app()
 
 if __name__ == "__main__":
     demo.queue(default_concurrency_limit=4)
-    # Force Gradio light chrome (also use ?__theme=light in Space URLs).
+    # Theme via header toggle or ?__theme=light|dark (Gradio).
     demo.launch(
         server_name="0.0.0.0",
         server_port=7860,
