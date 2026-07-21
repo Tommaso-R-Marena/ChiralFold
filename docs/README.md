@@ -8,6 +8,7 @@
 | [../results/REPRODUCIBILITY.md](../results/REPRODUCIBILITY.md) | Benchmark reproduction |
 | [../benchmarks/README.md](../benchmarks/README.md) | Benchmark scripts |
 | [../paper/submission/bioinformatics/](../paper/submission/bioinformatics/) | Manuscript package |
+| [REVIEWER_COLAB.md](REVIEWER_COLAB.md) | **Reviewer path:** Colab notebooks + HF Space (ordered) |
 
 ## Colab notebooks (`demos/`)
 

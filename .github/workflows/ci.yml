@@ -203,3 +203,33 @@ jobs:
 
       - name: Check Bioinformatics manuscript overflow
         run: ./paper/submission/bioinformatics/check_latex_overflow.sh
+
+  # ------------------------------------------------------------------
+  # Hugging Face Space — Docker build + runtime smoke (parity with live Space)
+  # ------------------------------------------------------------------
+  hf-space-docker:
+    name: HF Space Docker smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build HF Space Docker image
+        run: docker build -f hf_space/Dockerfile -t chiralfold-hf:ci hf_space
+
+      - name: Import smoke inside container
+        run: |
+          docker run --rm chiralfold-hf:ci python -c "
+          import app
+          from chiralfold.af3_correct import detect_chirality_violations
+          toy = 'examples/toy_ubiquitin_fragment.pdb'
+          inv = 'examples/synthetic_l_ala_inverted.pdb'
+          assert detect_chirality_violations(toy)['n_violations'] == 0
+          assert detect_chirality_violations(inv)['n_violations'] >= 1
+          md, j = app.run_audit(toy)
+          assert 'Stereochemistry audit' in md and j
+          md2, p = app.run_correct(inv)
+          assert detect_chirality_violations(p)['n_violations'] == 0
+          d = app.build_app()
+          assert hasattr(d, 'launch')
+          print('HF Space Docker smoke OK')
+          "

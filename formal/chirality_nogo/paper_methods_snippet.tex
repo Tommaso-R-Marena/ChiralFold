@@ -31,7 +31,16 @@ Lean theorem & Biological consequence \\
 \end{table}
 
 \noindent\textbf{Limitation.}
-These theorems characterize distance-only representations; they are not an
+These theorems characterize \emph{distance-only} algebraic representations; they are not an
 impossibility result for AlphaFold~3 or for general SE(3)-equivariant predictors,
 which may incorporate angular, tensorial, higher-order, sequence-derived, or
 other orientation-sensitive features.
+ChiralFold does \textbf{not} model the complete thermodynamic landscape of structural
+ensembles, sample Boltzmann-weighted conformers, or perform molecular-mechanics energy
+minimization.
+It applies an explicit \emph{algebraic data-representation constraint}---signed
+C$\alpha$ tetrahedron volume and exact improper reflection during coordinate
+mapping---to audit labels, correct diffusion outputs, and enumerate diastereomer
+patterns.
+Evaluating ChiralFold as a force-field, free-energy, or ensemble-dynamics tool would
+misstate its scope.

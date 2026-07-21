@@ -21,6 +21,8 @@
 | `HIGHLIGHTS.md` | Key points for submission form |
 | `build_submission.sh` | Compile PDFs and create upload zip |
 
+**Reviewer reproduction path:** [`docs/REVIEWER_COLAB.md`](../../../docs/REVIEWER_COLAB.md) — ordered Colab notebooks + HF Space.
+
 ## Build locally
 
 ```bash

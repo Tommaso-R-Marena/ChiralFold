@@ -85,6 +85,9 @@ For four points in $\mathbb{R}^3$, the six pairwise squared distances determine 
 \paragraph{What is not proved.}
 This is \textbf{not} an impossibility theorem for AlphaFold~3 or for all SE(3)-equivariant neural networks. An SE(3)-equivariant architecture may use angular, tensorial, higher-order, or sequence-derived features and need not factor through a pairwise distance matrix. The formal results state their distance-factoring / full-orthogonal-invariance hypotheses explicitly.
 
+\paragraph{Software scope (not molecular mechanics).}
+ChiralFold does \textbf{not} model the complete thermodynamic landscape of structural ensembles, assign Boltzmann weights to conformers, or perform force-field energy minimization. It applies an explicit algebraic data-representation constraint---signed C$\alpha$ volume and exact coordinate reflection---during mapping and auditing. Structural biologists should not evaluate it as a molecular mechanics or ensemble-dynamics simulator.
+
 \subsection{Definitions and notation}
 
 \begin{definition}[Four-point configuration]

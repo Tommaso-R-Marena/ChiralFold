@@ -18,6 +18,9 @@
 | **Full mmCIF survey** (known errors + live mmCIF-only universe) | [Colab](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Reproduce_mmCIF_D_Residue_Survey.ipynb) |
 | **Interactive results dashboard** | [Colab dashboard](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/ChiralFold_Results_Dashboard.ipynb) |
 | **Unusual cases + clash-safety** | [Colab](https://colab.research.google.com/github/Tommaso-R-Marena/ChiralFold/blob/master/demos/Demo_Unusual_Cases_Clash_Safety.ipynb) |
+| **Web UI (audit / correct / mirror)** | [Hugging Face Space](https://huggingface.co/spaces/The-Philosopher/ChiralFold-App) |
+
+Full reviewer path: [`docs/REVIEWER_COLAB.md`](docs/REVIEWER_COLAB.md).
 | **Lean 4 chirality no-go proofs** | [`formal/chirality_nogo/`](formal/chirality_nogo/) |
 
 ---

@@ -149,7 +149,7 @@ Theorem (short name) & Geometric / biological consequence \\
 \end{table}
 
 \paragraph{Scope.}
-These theorems characterize \emph{distance-only} representations. They are not an impossibility result for AF3 \citep{abramson2024} or for general SE(3)-equivariant networks that may use angular, tensorial, or sequence-derived features (Supplementary Notes~S1).
+These theorems characterize \emph{distance-only} representations. They are not an impossibility result for AF3 \citep{abramson2024} or for general SE(3)-equivariant networks that may use angular, tensorial, or sequence-derived features (Supplementary Notes~S1). ChiralFold does not model thermodynamic ensembles or molecular-mechanics free energies; it enforces an algebraic signed-volume constraint during coordinate mapping and auditing.
 
 \subsection{AF3 D-peptide sequences and synthetic correction}
 
@@ -167,7 +167,14 @@ Deposition year predicts errors (logistic OR$=1.60$ per year; Mann--Whitney $p=1
 
 The Lean no-go results explain why distance-respecting validation and diffusion post-processing cannot substitute for signed-volume audits: pairwise distances determine $|\mathrm{orient}|^2$ but not its sign (Supplementary Notes~S1). ChiralFold's Eq.~\ref{eq:signed_volume} is the minimal geometric invariant that closes this gap for C$\alpha$. ChiralFold is complementary to MolProbity, not a replacement: MolProbity remains stronger for L-protein Ramachandran contours and rotamers \citep{williams2018}; ChiralFold addresses the D-label blind spot that left the 29 mismatches invisible to existing pipelines.
 
-Therapeutically, correct D-stereochemistry matters for proteolysis resistance and target engagement in D-peptide programs \citep{welch2009,funke2010,garton2018}. Structurally, silent D-label errors corrupt any downstream analysis that trusts residue names as stereochemical ground truth---including training sets for structure predictors and automated CCD assignment tools. ChiralFold is a stereochemistry post-processor, not a de novo folder: use AF3, ESMFold, or RoseTTAFold for folding \citep{abramson2024,lin2023,baek2021}, then audit or correct with ChiralFold. Limitations include chi1-only rotamer scoring, two borderline cases with $|V|<1.0$~\AA$^3$, no experimental binding validation of mirror-designed peptides, and the primary survey's use of legacy PDB format (closed via mmCIF re-verification of known errors and the live mmCIF-only universe survey; Supplementary Methods). Formal theorems characterize distance-only representations and do not claim impossibility for general SE(3)-equivariant predictors.
+Therapeutically, correct D-stereochemistry matters for proteolysis resistance and target engagement in D-peptide programs \citep{welch2009,funke2010,garton2018}. Structurally, silent D-label errors corrupt any downstream analysis that trusts residue names as stereochemical ground truth---including training sets for structure predictors and automated CCD assignment tools. ChiralFold is a stereochemistry post-processor, not a de novo folder: use AF3, ESMFold, or RoseTTAFold for folding \citep{abramson2024,lin2023,baek2021}, then audit or correct with ChiralFold.
+
+\paragraph{Scope and limitations.}
+ChiralFold does \textbf{not} claim to model the complete thermodynamic landscape of structural ensembles, sample Boltzmann-weighted conformers, or replace molecular-mechanics force fields.
+Its operations fix an explicit \emph{algebraic data-representation constraint} during coordinate mapping: signed C$\alpha$ tetrahedron volume for auditing, exact improper reflection for L$\leftrightarrow$D mirroring and AF3 correction, and deterministic diastereomer enumeration.
+Evaluating the tool as an energy-minimization or ensemble-dynamics simulator would misstate its design.
+Additional limitations include chi1-only rotamer scoring, two borderline cases with $|V|<1.0$~\AA$^3$, no experimental binding validation of mirror-designed peptides, and the primary survey's use of legacy PDB format (closed via mmCIF re-verification of known errors and the live mmCIF-only universe survey; Supplementary Methods).
+Formal theorems characterize distance-only representations and do not claim impossibility for general SE(3)-equivariant predictors.
 
 \section{Conclusion}
 
