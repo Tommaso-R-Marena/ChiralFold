@@ -74,12 +74,74 @@ VDW_RADII: Dict[str, float] = {
 }
 VDW_DEFAULT = 1.70
 
-# Bonded atom-name pairs to skip during clash detection
-_BACKBONE_BONDS: Set[Tuple[str, str]] = {
-    frozenset(["N", "CA"]),
-    frozenset(["CA", "C"]),
-    frozenset(["C", "O"]),
-    frozenset(["C", "OXT"]),
+# Covalent heavy-atom bonds used for 1-2 / 1-3 clash exclusions (MolProbity-like).
+# Names are stripped PDB atom names. D-CCD residues map via _RESNAME_FOR_BONDS.
+_BACKBONE_BOND_PAIRS: Tuple[Tuple[str, str], ...] = (
+    ("N", "CA"),
+    ("CA", "C"),
+    ("C", "O"),
+    ("C", "OXT"),
+    ("N", "H"),
+    ("N", "H1"),
+    ("N", "H2"),
+    ("N", "H3"),
+    ("N", "HN"),
+)
+
+_SIDECHAIN_BOND_PAIRS: Dict[str, Tuple[Tuple[str, str], ...]] = {
+    "ALA": (("CA", "CB"),),
+    "ARG": (
+        ("CA", "CB"), ("CB", "CG"), ("CG", "CD"), ("CD", "NE"),
+        ("NE", "CZ"), ("CZ", "NH1"), ("CZ", "NH2"),
+    ),
+    "ASN": (("CA", "CB"), ("CB", "CG"), ("CG", "OD1"), ("CG", "ND2")),
+    "ASP": (("CA", "CB"), ("CB", "CG"), ("CG", "OD1"), ("CG", "OD2")),
+    "CYS": (("CA", "CB"), ("CB", "SG")),
+    "GLN": (
+        ("CA", "CB"), ("CB", "CG"), ("CG", "CD"), ("CD", "OE1"), ("CD", "NE2"),
+    ),
+    "GLU": (
+        ("CA", "CB"), ("CB", "CG"), ("CG", "CD"), ("CD", "OE1"), ("CD", "OE2"),
+    ),
+    "GLY": (),
+    "HIS": (
+        ("CA", "CB"), ("CB", "CG"), ("CG", "ND1"), ("CG", "CD2"),
+        ("ND1", "CE1"), ("CD2", "NE2"), ("CE1", "NE2"),
+    ),
+    "ILE": (("CA", "CB"), ("CB", "CG1"), ("CB", "CG2"), ("CG1", "CD1")),
+    "LEU": (("CA", "CB"), ("CB", "CG"), ("CG", "CD1"), ("CG", "CD2")),
+    "LYS": (("CA", "CB"), ("CB", "CG"), ("CG", "CD"), ("CD", "CE"), ("CE", "NZ")),
+    "MET": (("CA", "CB"), ("CB", "CG"), ("CG", "SD"), ("SD", "CE")),
+    "PHE": (
+        ("CA", "CB"), ("CB", "CG"), ("CG", "CD1"), ("CG", "CD2"),
+        ("CD1", "CE1"), ("CD2", "CE2"), ("CE1", "CZ"), ("CE2", "CZ"),
+    ),
+    "PRO": (("CA", "CB"), ("CB", "CG"), ("CG", "CD"), ("CD", "N")),
+    "SER": (("CA", "CB"), ("CB", "OG")),
+    "THR": (("CA", "CB"), ("CB", "OG1"), ("CB", "CG2")),
+    "TRP": (
+        ("CA", "CB"), ("CB", "CG"), ("CG", "CD1"), ("CG", "CD2"),
+        ("CD1", "NE1"), ("NE1", "CE2"), ("CD2", "CE2"), ("CD2", "CE3"),
+        ("CE2", "CZ2"), ("CE3", "CZ3"), ("CZ2", "CH2"), ("CZ3", "CH2"),
+    ),
+    "TYR": (
+        ("CA", "CB"), ("CB", "CG"), ("CG", "CD1"), ("CG", "CD2"),
+        ("CD1", "CE1"), ("CD2", "CE2"), ("CE1", "CZ"), ("CE2", "CZ"),
+        ("CZ", "OH"),
+    ),
+    "VAL": (("CA", "CB"), ("CB", "CG1"), ("CB", "CG2")),
+    "MSE": (("CA", "CB"), ("CB", "CG"), ("CG", "SE"), ("SE", "CE")),
+}
+
+# D-CCD / common variants → template used for side-chain bonds
+_RESNAME_FOR_BONDS: Dict[str, str] = {
+    "DAL": "ALA", "DAR": "ARG", "DSG": "ASN", "DAS": "ASP", "DCY": "CYS",
+    "DGL": "GLU", "DGN": "GLN", "DHI": "HIS", "DIL": "ILE", "DLE": "LEU",
+    "DLY": "LYS", "MED": "MET", "DPN": "PHE", "DPR": "PRO", "DSN": "SER",
+    "DTH": "THR", "DTR": "TRP", "DTY": "TYR", "DVA": "VAL",
+    "HSD": "HIS", "HSE": "HIS", "HSP": "HIS", "HIE": "HIS", "HID": "HIS",
+    "HIP": "HIS", "CYX": "CYS", "CYM": "CYS", "SEP": "SER", "TPO": "THR",
+    "PTR": "TYR",
 }
 
 # D-amino acid residue names (from pdb_pipeline.py mapping)
@@ -806,33 +868,238 @@ def _vdw_radius(atom: _Atom) -> float:
     return VDW_RADII.get(elem, VDW_DEFAULT)
 
 
+def _bond_template_resname(resname: str) -> str:
+    """Map PDB / D-CCD residue names to a side-chain bond template."""
+    rn = resname.upper().strip()
+    if rn in _SIDECHAIN_BOND_PAIRS:
+        return rn
+    return _RESNAME_FOR_BONDS.get(rn, rn)
+
+
+def _intra_residue_bond_pairs(resname: str) -> List[Tuple[str, str]]:
+    tmpl = _bond_template_resname(resname)
+    pairs = list(_BACKBONE_BOND_PAIRS)
+    pairs.extend(_SIDECHAIN_BOND_PAIRS.get(tmpl, ()))
+    # Unknown residues: still connect CA–CB when present via backbone only;
+    # distance fallback in _clash_excluded_pairs covers remaining 1-3.
+    if tmpl not in _SIDECHAIN_BOND_PAIRS and tmpl not in ("GLY",):
+        pairs.append(("CA", "CB"))
+    return pairs
+
+
+def _residue_key(atom: _Atom) -> Tuple[str, int, str]:
+    return (atom.chain, atom.resseq, atom.icode)
+
+
+def _clash_excluded_index_pairs(atoms: List[_Atom]) -> Set[Tuple[int, int]]:
+    """
+    Build index pairs that must not score as clashes (covalent 1-2 and 1-3).
+
+    Uses standard amino-acid topology (not a fragile distance cutoff). Same-
+    residue CA–CG (~2.5–2.7 Å) is a classic 1-3 false positive when a 2.6 Å
+    distance gate is used — that bug inflated clash scores on AFDB/PDB models.
+    """
+    # name → list of atom indices in that residue
+    by_res: Dict[Tuple[str, int, str], Dict[str, List[int]]] = defaultdict(
+        lambda: defaultdict(list)
+    )
+    for idx, atom in enumerate(atoms):
+        by_res[_residue_key(atom)][atom.name.strip()].append(idx)
+
+    excluded: Set[Tuple[int, int]] = set()
+
+    def _add_edge(i: int, j: int, adj: Dict[int, Set[int]]) -> None:
+        adj[i].add(j)
+        adj[j].add(i)
+
+    # Per-residue covalent graphs
+    residue_adj: Dict[Tuple[str, int, str], Dict[int, Set[int]]] = {}
+    for rkey, name_map in by_res.items():
+        # Pick a representative resname from any atom in the residue
+        sample_idx = next(iter(next(iter(name_map.values()))))
+        resname = atoms[sample_idx].resname
+        adj: Dict[int, Set[int]] = defaultdict(set)
+        for a_name, b_name in _intra_residue_bond_pairs(resname):
+            for i in name_map.get(a_name, ()):
+                for j in name_map.get(b_name, ()):
+                    _add_edge(i, j, adj)
+        residue_adj[rkey] = adj
+
+        # Exclude 1-2, 1-3, and 1-4 within the residue (MolProbity Probe -4).
+        nodes = list(adj.keys())
+        for name_idxs in name_map.values():
+            for i in name_idxs:
+                if i not in adj:
+                    adj[i] = set()
+                    nodes.append(i)
+        for start in nodes:
+            # BFS up to depth 3
+            frontier = {start}
+            visited = {start}
+            for _depth in range(3):
+                nxt: Set[int] = set()
+                for node in frontier:
+                    for nb in adj[node]:
+                        if nb in visited:
+                            continue
+                        visited.add(nb)
+                        nxt.add(nb)
+                        a, b = (start, nb) if start < nb else (nb, start)
+                        excluded.add((a, b))
+                frontier = nxt
+
+    # Peptide bonds + cross-residue 1-3 (C–CA_next, CA–N_next, O–N_next, C–H_next)
+    ordered = sorted(by_res.keys(), key=lambda k: (k[0], k[1], k[2]))
+    for i in range(len(ordered) - 1):
+        k0, k1 = ordered[i], ordered[i + 1]
+        if k0[0] != k1[0]:
+            continue
+        if abs(k1[1] - k0[1]) > 2:
+            continue
+        m0, m1 = by_res[k0], by_res[k1]
+        # Continuity: CA–CA distance if both present
+        if m0.get("CA") and m1.get("CA"):
+            ca0 = atoms[m0["CA"][0]].xyz
+            ca1 = atoms[m1["CA"][0]].xyz
+            if float(np.linalg.norm(ca1 - ca0)) > 4.5:
+                continue
+        cross_12_13 = [
+            ("C", "N"),    # peptide 1-2
+            ("CA", "N"),   # 1-3 via C
+            ("C", "CA"),   # 1-3 via N
+            ("O", "N"),    # 1-3 via C
+            ("C", "H"),    # 1-3 via N (added amide H)
+            ("C", "HN"),
+            ("O", "H"),
+            ("O", "HN"),
+            # Proline: CD bonded to N → previous-residue contacts through N
+            ("C", "CD"),
+            ("CA", "CD"),
+            ("O", "CD"),
+            # 1-4 peptide contacts (Probe -4 style)
+            ("CA", "H"),
+            ("CA", "HN"),
+            ("O", "CA"),
+            ("C", "C"),
+            ("N", "CA"),   # N(i)–CA(i+1) is 1-4 via CA(i)–C(i)–N / C–N–CA
+            ("N", "H"),
+            ("N", "HN"),
+            ("O", "C"),
+        ]
+        for a_name, b_name in cross_12_13:
+            for ia in m0.get(a_name, ()):
+                for ib in m1.get(b_name, ()):
+                    key = (ia, ib) if ia < ib else (ib, ia)
+                    excluded.add(key)
+
+    # Covalent disulfides: SG–SG within 2.5 Å, plus 1-3/1-4 across the bridge
+    sg_idxs = [
+        i for i, a in enumerate(atoms)
+        if a.name.strip() == "SG"
+    ]
+    for a in range(len(sg_idxs)):
+        for b in range(a + 1, len(sg_idxs)):
+            i, j = sg_idxs[a], sg_idxs[b]
+            dist = float(np.linalg.norm(atoms[i].xyz - atoms[j].xyz))
+            if dist > 2.5:
+                continue
+            key = (i, j) if i < j else (j, i)
+            excluded.add(key)
+            # 1-3: CB–SG_partner ; 1-4: CA–SG_partner, CB–CB
+            for sg_i, sg_j in ((i, j), (j, i)):
+                rkey = _residue_key(atoms[sg_i])
+                partner_key = _residue_key(atoms[sg_j])
+                for cb_i in by_res[rkey].get("CB", ()):
+                    k = (cb_i, sg_j) if cb_i < sg_j else (sg_j, cb_i)
+                    excluded.add(k)
+                    for cb_j in by_res[partner_key].get("CB", ()):
+                        k2 = (cb_i, cb_j) if cb_i < cb_j else (cb_j, cb_i)
+                        excluded.add(k2)
+                for ca_i in by_res[rkey].get("CA", ()):
+                    k = (ca_i, sg_j) if ca_i < sg_j else (sg_j, ca_i)
+                    excluded.add(k)
+
+    # Distance fallback ONLY for residues without a known covalent template
+    # (ligands / nonstandard) — never for standard AA where topology is complete.
+    for rkey, name_map in by_res.items():
+        sample_idx = next(iter(next(iter(name_map.values()))))
+        tmpl = _bond_template_resname(atoms[sample_idx].resname)
+        if tmpl in _SIDECHAIN_BOND_PAIRS or tmpl == "GLY":
+            continue
+        idxs = [i for lst in name_map.values() for i in lst]
+        for a in range(len(idxs)):
+            for b in range(a + 1, len(idxs)):
+                i, j = idxs[a], idxs[b]
+                key = (i, j) if i < j else (j, i)
+                if key in excluded:
+                    continue
+                dist = float(np.linalg.norm(atoms[i].xyz - atoms[j].xyz))
+                if dist < 2.9:
+                    excluded.add(key)
+
+    return excluded
+
+
+def _is_hbond_donor_acceptor_pair(a: _Atom, b: _Atom) -> bool:
+    """True if (a,b) is a plausible H-bond donor/acceptor pair (not a clash)."""
+    def _role(atom: _Atom) -> str:
+        name = atom.name.strip().upper()
+        elem = atom.element_upper
+        if elem == "H" or name in ("H", "HN", "H1", "H2", "H3"):
+            return "donor_h"
+        if elem == "O" or name in (
+            "O", "OD1", "OD2", "OE1", "OE2", "OG", "OG1", "OH", "OXT"
+        ):
+            return "acceptor"
+        if name in (
+            "N", "ND1", "ND2", "NE", "NE1", "NE2", "NH1", "NH2", "NZ"
+        ):
+            return "donor_n"
+        return ""
+
+    ra, rb = _role(a), _role(b)
+    roles = {ra, rb}
+    if roles == {"donor_h", "acceptor"}:
+        return True
+    # Heavy-atom H-bond geometry (N···O ≈ 2.5–3.5 Å) — not a steric clash.
+    if roles == {"donor_n", "acceptor"}:
+        return _bond_length(a.xyz, b.xyz) < 3.5
+    return False
+
+
 def _are_bonded_or_angled(a: _Atom, b: _Atom) -> bool:
     """
-    Return True if atoms a and b are 1-2 (bonded) or 1-3 (angle partners)
-    and should be excluded from clash detection.
+    Return True if atoms a and b are covalent 1-2 or 1-3 partners.
 
-    Rules:
-    - Same residue: exclude if distance < 2.5 Å (covers bonds + angle partners).
-    - Adjacent residues (|resseq difference| ≤ 1): exclude the C(i)–N(i+1)
-      peptide bond, plus 1-3 partners C(i)–CA(i+1) and N(i+1)–CA(i) which
-      are connected through the C–N–CA or CA–C–N angle.
+    Prefer :func:`_clash_excluded_index_pairs` inside bulk clash checks.
+    This helper remains for unit tests and ad-hoc calls; it uses topology
+    when both atoms share a residue key, else a conservative distance gate.
     """
-    same_res = (a.chain == b.chain
-                and a.resseq == b.resseq
-                and a.icode == b.icode)
-
+    same_res = (
+        a.chain == b.chain and a.resseq == b.resseq and a.icode == b.icode
+    )
+    dist = _bond_length(a.xyz, b.xyz)
     if same_res:
-        dist = _bond_length(a.xyz, b.xyz)
-        return dist < 2.6   # 1-2 and 1-3 in same residue
+        # Topology-aware path for standard residues
+        pairs = _intra_residue_bond_pairs(a.resname)
+        names = {a.name.strip(), b.name.strip()}
+        # Direct bond
+        for x, y in pairs:
+            if names == {x, y}:
+                return True
+        # 1-3: share a common bonded neighbor name in the template graph
+        adj: Dict[str, Set[str]] = defaultdict(set)
+        for x, y in pairs:
+            adj[x].add(y)
+            adj[y].add(x)
+        na, nb = a.name.strip(), b.name.strip()
+        if adj[na] & adj[nb]:
+            return True
+        return dist < 2.9
 
-    adjacent = (a.chain == b.chain and abs(a.resseq - b.resseq) <= 1)
+    adjacent = a.chain == b.chain and abs(a.resseq - b.resseq) <= 1
     if adjacent:
-        # Peptide bond atoms: C(i)–N(i+1) is 1-2
-        # C(i)–CA(i+1) and O(i)–N(i+1) and C(i)–H(i+1)N are 1-3
-        # Exclude by distance threshold for adjacent residues
-        dist = _bond_length(a.xyz, b.xyz)
-        return dist < 2.7   # peptide bond ~1.33 Å; 1-3 ~2.4–2.5 Å
-
+        return dist < 2.7
     return False
 
 
@@ -866,6 +1133,9 @@ def _add_backbone_hydrogens(atoms: List[_Atom]) -> List[_Atom]:
         ca_atom = res.get('CA')
         if n_atom is None or ca_atom is None:
             continue
+        # Proline (and D-Pro) has no amide hydrogen — do not invent one.
+        if n_atom.resname.upper().strip() in PROLINE_RESNAMES:
+            continue
         # Skip if H already present
         if 'H' in res or 'HN' in res:
             continue
@@ -877,18 +1147,17 @@ def _add_backbone_hydrogens(atoms: List[_Atom]) -> List[_Atom]:
         if prev_c is None:
             continue
 
-        # Place H opposite to C(prev) direction from N, at 1.02 A
+        # Place H in the peptide plane of C(prev)–N–CA, opposite the angle
+        # bisector at N (MolProbity Reduce-style). Vectors must originate at N.
         n_pos = np.array([n_atom.x, n_atom.y, n_atom.z])
         c_pos = np.array([prev_c.x, prev_c.y, prev_c.z])
         ca_pos = np.array([ca_atom.x, ca_atom.y, ca_atom.z])
 
-        # H is roughly in the plane of C-N-CA, opposite to C
-        cn_vec = n_pos - c_pos
-        cn_vec = cn_vec / (np.linalg.norm(cn_vec) + 1e-12)
-        nca_vec = ca_pos - n_pos
-        nca_vec = nca_vec / (np.linalg.norm(nca_vec) + 1e-12)
-        # Bisector direction
-        h_dir = -(cn_vec + nca_vec)
+        v_nc = c_pos - n_pos
+        v_nca = ca_pos - n_pos
+        n_nc = np.linalg.norm(v_nc) + 1e-12
+        n_nca = np.linalg.norm(v_nca) + 1e-12
+        h_dir = -(v_nc / n_nc + v_nca / n_nca)
         h_dir = h_dir / (np.linalg.norm(h_dir) + 1e-12)
         h_pos = n_pos + h_dir * 1.02
 
@@ -911,6 +1180,7 @@ def _check_clashes(atoms: List[_Atom]) -> dict:
 
     Two atoms clash when their distance < (rvdw_A + rvdw_B - 0.4) Å.
     Backbone amide hydrogens are added if not present (MolProbity-compatible).
+    Covalent 1-2 and 1-3 pairs are excluded via residue topology.
 
     Clash score = clashes per 1000 atoms (MolProbity convention).
     """
@@ -920,6 +1190,8 @@ def _check_clashes(atoms: List[_Atom]) -> dict:
     n_atoms = len(atoms)
     if n_atoms < 2:
         return {"n_clashes": 0, "clash_score": 0.0, "worst_clashes": []}
+
+    excluded = _clash_excluded_index_pairs(all_atoms_for_check)
 
     coords = np.asarray(
         [[a.x, a.y, a.z] for a in all_atoms_for_check], dtype=float
@@ -936,9 +1208,14 @@ def _check_clashes(atoms: List[_Atom]) -> dict:
     seen: Set[Tuple[int, int]] = set()
 
     for i, j in pairs:
-        ai = all_atoms_for_check[int(i)]
-        aj = all_atoms_for_check[int(j)]
-        if _are_bonded(ai, aj):
+        i_i, j_i = int(i), int(j)
+        ex_key = (i_i, j_i) if i_i < j_i else (j_i, i_i)
+        if ex_key in excluded:
+            continue
+        ai = all_atoms_for_check[i_i]
+        aj = all_atoms_for_check[j_i]
+        # MolProbity: donor–acceptor contacts are H-bonds, not clashes.
+        if _is_hbond_donor_acceptor_pair(ai, aj):
             continue
         dist = float(np.linalg.norm(coords[i] - coords[j]))
         clash_limit = radii[i] + radii[j] - 0.4

@@ -8,6 +8,7 @@
 - CLI: `chiralfold fetch`, `audit --id`, `correct-af3 --id`; structure args accept `.pdb/.cif/.fasta`.
 
 ### Fixed
+- **Clash score false positives:** exclude covalent 1-2/1-3/1-4 via amino-acid topology (not a brittle 2.6 Å cutoff), skip proline amide H, ignore disulfides and donor–acceptor H-bonds, and fix amide-H placement. AFDB/PDB audits no longer report hundreds of fake clashes (e.g. LEU CA–CG).
 - Windows CI `UnicodeDecodeError` when reading Colab notebooks (`tests/test_colab_publication.py` now forces UTF-8).
 - `conda-recipe/meta.yaml` version bumped **3.4.0 → 3.5.1** to match PyPI.
 
