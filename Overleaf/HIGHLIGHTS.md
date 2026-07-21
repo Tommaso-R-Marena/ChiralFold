@@ -14,4 +14,4 @@
 
 - Machine-checked Lean 4 chirality no-go proofs with full derivations in Supplementary Notes S1.
 
-- Clashscore uses topology-aware 1–2/1–3/1–4 exclusions (secondary UI metric; survey/Rama claims unaffected).
+- Clashscore uses topology-aware 1–2/1–3/1–4 exclusions (secondary UI metric; survey/Rama claims unaffected; panel mean cf_clash 23.8 vs wwPDB 18.0).
