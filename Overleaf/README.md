@@ -10,7 +10,9 @@ Use `ChiralFold_Bioinformatics_Overleaf.zip` for one-click Overleaf upload.
 Optional local previews (already compiled under TeX Live) are in
 `compiled_preview/`:
 
-- `chiralfold_bioinformatics.pdf` — main manuscript (~3 pages; Bioinformatics Original Paper limit is 7)
-- `supplementary_material.pdf` — supplementary PDF (~4 pages)
+- `chiralfold_bioinformatics.pdf` — main manuscript (7 pages; Bioinformatics Original Paper limit is 7)
+- `supplementary_material.pdf` — supplementary PDF
+
+Also in this folder: `COVER_LETTER.txt`, `HIGHLIGHTS.md` (not required for Overleaf compile).
 
 To refresh the zip from source, run `scripts/build_overleaf_package.sh` from the repository root.

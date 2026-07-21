@@ -7,10 +7,13 @@
 - **mmCIF + FASTA inputs**: core `structure_io` converts mmCIF→PDB (no gemmi); FASTA with a UniProt header resolves via AFDB.
 - CLI: `chiralfold fetch`, `audit --id`, `correct-af3 --id`; structure args accept `.pdb/.cif/.fasta`.
 
+### Changed
+- Overleaf/Bioinformatics package synced: clashscore + RCSB/AFDB fetch + Light/Dark Space notes in main Methods/Availability; SI Methods for clashscore and structure I/O; cover letter dated; highlights updated; zip rebuilt (main ~7 pp, SI ~10 pp).
+
 ### Fixed
 - **Clash score false positives:** exclude covalent 1-2/1-3/1-4 via amino-acid topology (not a brittle 2.6 Å cutoff), skip proline amide H, ignore disulfides and donor–acceptor H-bonds, and fix amide-H placement. AFDB/PDB audits no longer report hundreds of fake clashes (e.g. LEU CA–CG).
 - Clashscore: strip deposited hydrogens (re-add backbone HN only) and read **first MODEL only** — NMR/high-res files with explicit H no longer score every C–H bond as a clash.
-- Regenerated `results/molprobity_comparison.json`, paper data copy, and `results/af3_experimental_systems.json` after the clashscore fix (mean `cf_clash` 265 → ~30, in range of wwPDB).
+- Regenerated `results/molprobity_comparison.json`, paper data copy, and `results/af3_experimental_systems.json` after the clashscore fix (mean `cf_clash` ~265 → ~24; panel wwPDB mean ~18).
 - Windows CI `UnicodeDecodeError` when reading Colab notebooks (`tests/test_colab_publication.py` now forces UTF-8).
 - `conda-recipe/meta.yaml` version bumped **3.4.0 → 3.5.1** to match PyPI.
 
