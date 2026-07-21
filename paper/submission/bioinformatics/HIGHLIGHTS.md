@@ -8,8 +8,10 @@
 
 4. Machine-checked Lean 4 proofs: chirality sign cannot factor through pairwise distances alone.
 
-5. Open software: pip install chiralfold, Docker image, GitHub v3.5.1, 48 tests, full reproduction package.
+5. Open software: pip install chiralfold, Docker, GitHub v3.5.1, HF Space (Light/Dark; RCSB + AlphaFold DB fetch; PDB/mmCIF/FASTA), full reproduction package.
 
 - Full live mmCIF-only D-residue universe survey (79 entries): recovers 29/29 known errors; finds 9BC4 DLE mismatch.
 
 - Machine-checked Lean 4 chirality no-go proofs with full derivations in Supplementary Notes S1.
+
+- Clashscore uses topology-aware 1–2/1–3/1–4 exclusions (secondary UI metric; survey/Rama claims unaffected).

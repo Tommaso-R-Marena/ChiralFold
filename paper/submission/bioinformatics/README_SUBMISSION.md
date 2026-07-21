@@ -77,7 +77,7 @@ Skip for initial submission unless your institution requires a DOI. After accept
 - [ ] Version cited: 3.5.1
 - [ ] License: MIT
 - [ ] Test data: `results/d_residue_verification.csv`, `tests/fixtures/`
-- [ ] Documentation: README.md
+- [ ] Hugging Face Space: https://huggingface.co/spaces/The-Philosopher/ChiralFold-App (Light/Dark; RCSB + AFDB fetch)
 
 ### Before you click Submit
 - [ ] Confirm main manuscript ≤7 typeset pages (compile and check page count)

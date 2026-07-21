@@ -33,7 +33,7 @@
 \abstract{%
 \textbf{Motivation:} D-amino acids are essential in therapeutics and natural products, yet standard validators do not audit D-residue stereochemistry in deposited structures, and diffusion predictors violate D-chirality at high rates.\\
 \textbf{Results:} We audited 12{,}573 D-residues in 4{,}623 PDB files and found 29 D-label/L-coordinate mismatches (0.23\%) in 16 structures not covered by MolProbity's L-residue C$\alpha$ check. ChiralFold, calibrated on 362 structures (Ramachandran Spearman $\rho=0.52$ vs wwPDB), detects errors via signed C$\alpha$ volume. Machine-checked Lean~4 proofs (Supplementary Notes~S1) show that chirality sign cannot factor through pairwise distances alone.\\
-\textbf{Availability:} \url{https://github.com/Tommaso-R-Marena/ChiralFold}; \texttt{pip install chiralfold} (v3.5.1); Python~3.9+; Linux/macOS/Windows; web UI at \url{https://huggingface.co/spaces/The-Philosopher/ChiralFold-App}.\\
+\textbf{Availability:} \url{https://github.com/Tommaso-R-Marena/ChiralFold}; \texttt{pip install chiralfold} (v3.5.1); Python~3.9+; Linux/macOS/Windows; web UI at \url{https://huggingface.co/spaces/The-Philosopher/ChiralFold-App} (Light/Dark theme; optional RCSB and AlphaFold~DB fetch).\\
 \textbf{Contact:} \href{marena@cua.edu}{marena@cua.edu}\\
 \textbf{Supplementary information:} Supplementary data, Lean~4 proofs with derivations, and extended analyses are available at Bioinformatics online and at \url{https://github.com/Tommaso-R-Marena/ChiralFold}.}
 
@@ -49,7 +49,7 @@ Two gaps are especially consequential. First, AlphaFold~3 (AF3) \citep{abramson2
 
 We present ChiralFold, a pip-installable stereochemistry toolkit, and the first systematic PDB-wide audit of D-residue chirality. Using an independent signed-volume classifier grounded in CIP/IUPAC stereochemical convention \citep{cip2013}, we scanned 12{,}573 checkable D-residues across 4{,}623 files ($>$91\% coverage of each of the 18 standard D-amino acid Chemical Component Dictionary (CCD) codes \citep{shao2015}), classified error modes (genuine stereochemistry errors, CCD-code misassignments, polymer mislabels, and borderline near-zero volumes), and calibrated the auditor against wwPDB/MolProbity on an era-representative set of 362 structures. Critically, we complement the empirical survey with machine-checked Lean~4 no-go theorems showing that any geometric readout whose entire dependence factors through the pairwise distance matrix is necessarily blind to enantiomeric sign (Supplementary Notes~S1; \repopath{formal/chirality_nogo/}). That formal obstruction motivates signed volume as the minimal non-distance stereochemical audit and places AF3-style distance-respecting denoising in a precise theoretical context---without claiming impossibility for general SE(3)-equivariant predictors that use angular or higher-order features.
 
-Beyond auditing, ChiralFold provides exact L$\leftrightarrow$D mirroring, an AF3 chirality-correction post-processor, diastereomer enumeration, and interface scoring, released as open software (v3.5.1) with Colab notebooks, Docker images, a Hugging Face web UI, and a five-minute offline reproduction path for the 29-error survey.
+Beyond auditing, ChiralFold provides exact L$\leftrightarrow$D mirroring, an AF3 chirality-correction post-processor, diastereomer enumeration, interface scoring, and optional online structure fetch (RCSB PDB IDs; AlphaFold~DB by UniProt/AFDB identifier), released as open software (v3.5.1) with Colab notebooks, Docker images, a Hugging Face web UI (Light/Dark), and a five-minute offline reproduction path for the 29-error survey.
 
 \section{Materials and methods}
 
@@ -66,11 +66,11 @@ The primary PDB survey was performed with an independent numpy-only script that 
 
 \subsection{ChiralFold auditor and pipelines}
 
-The auditor validates six criteria: C$\alpha$ chirality (Eq.~\ref{eq:signed_volume}), bond geometry (RMSD to Engh \& Huber ideals), Ramachandran backbone dihedrals (hybrid empirical PDB grid plus calibrated rectangular regions), peptide-bond planarity ($\omega$ deviation from $180^\circ$), steric clashes (van der Waals overlap with backbone hydrogen placement; KD-tree spatial search), and a weighted composite score (0--100). This design is intentionally complementary to MolProbity's all-atom L-protein validation suite \citep{chen2010,williams2018}: ChiralFold does not attempt to replace rotamer contour libraries or H-bond networks, but adds native D-residue chirality auditing that those tools omit.
+The auditor validates six criteria: C$\alpha$ chirality (Eq.~\ref{eq:signed_volume}), bond geometry (RMSD to Engh \& Huber ideals), Ramachandran backbone dihedrals (hybrid empirical PDB grid plus calibrated rectangular regions), peptide-bond planarity ($\omega$ deviation from $180^\circ$), steric clashes (MolProbity-inspired overlap score with topology-aware exclusions; Supplementary Methods), and a weighted composite score (0--100). This design is intentionally complementary to MolProbity's all-atom L-protein validation suite \citep{chen2010,williams2018}: ChiralFold does not attempt to replace rotamer contour libraries or H-bond networks, but adds native D-residue chirality auditing that those tools omit. Clashscore is a secondary quality metric; the D-residue survey and Ramachandran calibration ($n=362$) do not depend on it.
 
 Mirror L$\leftrightarrow$D reflection $(x,y,z)\to(-x,y,z)$ inverts all stereocenters ($\det=-1$) while preserving bond lengths, angles, and torsion magnitudes exactly; residue names map to D-CCD equivalents (ALA$\to$DAL, \ldots). Because reflection is an isometry, MolProbity-style clashscore is unchanged (\repopath{tests/test_clash_preservation.py}).
 
-For AF3 outputs, each C$\alpha$ whose signed volume disagrees with its residue label is reflected across the plane of its three backbone neighbours (N, C, C$\beta$), preserving CA--N/C/C$\beta$ bond lengths to $<10^{-3}$~\AA\ and driving residual chirality violations to zero on synthetic fixtures (\repopath{chiralfold/af3_correct.py}; \repopath{tests/test_af3_correction.py}). Diastereomer enumeration builds all $2^k$ L/D patterns for $k$ variable sites; interface scoring reports BSA, H-bonds, salt bridges, and a composite contact score (Supplementary Methods).
+For AF3 or AlphaFold~DB outputs, each C$\alpha$ whose signed volume disagrees with its residue label is reflected across the plane of its three backbone neighbours (N, C, C$\beta$), preserving CA--N/C/C$\beta$ bond lengths to $<10^{-3}$~\AA\ and driving residual chirality violations to zero on synthetic fixtures (\repopath{chiralfold/af3_correct.py}; \repopath{tests/test_af3_correction.py}). Diastereomer enumeration builds all $2^k$ L/D patterns for $k$ variable sites; interface scoring reports BSA, H-bonds, salt bridges, and a composite contact score. Optional RCSB/AlphaFold~DB fetch and PDB/mmCIF/FASTA inputs are documented in Supplementary Methods.
 
 \subsection{Ramachandran calibration against wwPDB}
 
@@ -91,7 +91,7 @@ Informally: (1)~reflection is an isometry, so it preserves $\mathrm{distMatrix4}
 
 \subsection{Software, availability, and reproducibility}
 
-ChiralFold v3.5.1 is installable via \texttt{pip install chiralfold}, conda (\repopath{conda-recipe/}), Docker (\repopath{ghcr.io/tommaso-r-marena/chiralfold:3.5.1}), and a Gradio web UI (local \texttt{chiralfold-web} or Hugging Face Space). Reviewers can reproduce the 29-error survey offline after clone with \repopath{python benchmarks/reproduce_d_residue_errors.py} (numpy only). Lean proofs build with \texttt{lake build} under \repopath{formal/chirality_nogo/}. Colab notebooks cover the five-minute survey, mmCIF expansion, experimental validation, unusual cases, and the interactive results dashboard.
+ChiralFold v3.5.1 is installable via \texttt{pip install chiralfold}, conda (\repopath{conda-recipe/}), Docker (\repopath{ghcr.io/tommaso-r-marena/chiralfold:3.5.1}), and a Gradio web UI (local \texttt{chiralfold-web} or Hugging Face Space with Light/Dark theme and optional RCSB/AlphaFold~DB fetch). Reviewers can reproduce the 29-error survey offline after clone with \repopath{python benchmarks/reproduce_d_residue_errors.py} (numpy only). Lean proofs build with \texttt{lake build} under \repopath{formal/chirality_nogo/}. Colab notebooks cover the five-minute survey, mmCIF expansion, experimental validation, unusual cases, and the interactive results dashboard.
 
 \section{Results}
 
@@ -173,7 +173,7 @@ Therapeutically, correct D-stereochemistry matters for proteolysis resistance an
 ChiralFold does \textbf{not} claim to model the complete thermodynamic landscape of structural ensembles, sample Boltzmann-weighted conformers, or replace molecular-mechanics force fields.
 Its operations fix an explicit \emph{algebraic data-representation constraint} during coordinate mapping: signed C$\alpha$ tetrahedron volume for auditing, exact improper reflection for L$\leftrightarrow$D mirroring and AF3 correction, and deterministic diastereomer enumeration.
 Evaluating the tool as an energy-minimization or ensemble-dynamics simulator would misstate its design.
-Additional limitations include chi1-only rotamer scoring, two borderline cases with $|V|<1.0$~\AA$^3$, no experimental binding validation of mirror-designed peptides, and the primary survey's use of legacy PDB format (closed via mmCIF re-verification of known errors and the live mmCIF-only universe survey; Supplementary Methods).
+Additional limitations include chi1-only rotamer scoring, two borderline cases with $|V|<1.0$~\AA$^3$, no experimental binding validation of mirror-designed peptides, a MolProbity-inspired (not Probe-identical) clashscore (Supplementary Methods), and the primary survey's use of legacy PDB format (closed via mmCIF re-verification of known errors and the live mmCIF-only universe survey; Supplementary Methods).
 Formal theorems characterize distance-only representations and do not claim impossibility for general SE(3)-equivariant predictors.
 
 \section{Conclusion}
@@ -182,7 +182,7 @@ ChiralFold combines a PDB stereochemistry auditor calibrated against wwPDB/MolPr
 
 \section*{Data availability}
 
-Verification data: \url{https://github.com/Tommaso-R-Marena/ChiralFold} (\repopath{results/d_residue_verification.csv}). Experimental validation: \repopath{results/experimental_validation_report.json}. mmCIF survey outputs: \repopath{results/mmcif_d_residue_expansion_*}. Lean proofs: \repopath{formal/chirality_nogo/}. Ramachandran benchmark: \repopath{results/ramachandran_279struct_chainfix_*}. Software: PyPI \texttt{chiralfold} (v3.5.1); Docker image \texttt{chiralfold:3.5.1} on GHCR; GitHub release v3.5.1; Hugging Face Space \url{https://huggingface.co/spaces/The-Philosopher/ChiralFold-App}.
+Verification data: \url{https://github.com/Tommaso-R-Marena/ChiralFold} (\repopath{results/d_residue_verification.csv}). Experimental validation: \repopath{results/experimental_validation_report.json}. mmCIF survey outputs: \repopath{results/mmcif_d_residue_expansion_*}. Lean proofs: \repopath{formal/chirality_nogo/}. Ramachandran benchmark: \repopath{results/ramachandran_279struct_chainfix_*}. MolProbity head-to-head panel (secondary clash/planarity fields regenerated after topology-aware clashscore): \repopath{results/molprobity_comparison.json}. Software: PyPI \texttt{chiralfold} (v3.5.1); Docker image \texttt{chiralfold:3.5.1} on GHCR; GitHub release v3.5.1; Hugging Face Space \url{https://huggingface.co/spaces/The-Philosopher/ChiralFold-App}.
 
 \section*{Funding}
 None declared.
