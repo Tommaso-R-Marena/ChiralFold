@@ -233,3 +233,46 @@ jobs:
           assert hasattr(d, 'launch')
           print('HF Space Docker smoke OK')
           "
+
+  # ------------------------------------------------------------------
+  # Single required gate — all jobs above must pass before merge
+  # (set branch protection required check to: CI success)
+  # ------------------------------------------------------------------
+  ci-success:
+    name: CI success
+    if: always()
+    needs:
+      - test-linux
+      - test-macos
+      - test-windows
+      - web-smoke
+      - docker-web
+      - latex-overflow
+      - hf-space-docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all CI jobs succeeded
+        run: |
+          echo "Job results:"
+          echo "  test-linux: ${{ needs.test-linux.result }}"
+          echo "  test-macos: ${{ needs.test-macos.result }}"
+          echo "  test-windows: ${{ needs.test-windows.result }}"
+          echo "  web-smoke: ${{ needs.web-smoke.result }}"
+          echo "  docker-web: ${{ needs.docker-web.result }}"
+          echo "  latex-overflow: ${{ needs.latex-overflow.result }}"
+          echo "  hf-space-docker: ${{ needs.hf-space-docker.result }}"
+          for r in \
+            "${{ needs.test-linux.result }}" \
+            "${{ needs.test-macos.result }}" \
+            "${{ needs.test-windows.result }}" \
+            "${{ needs.web-smoke.result }}" \
+            "${{ needs.docker-web.result }}" \
+            "${{ needs.latex-overflow.result }}" \
+            "${{ needs.hf-space-docker.result }}"
+          do
+            if [ "$r" != "success" ]; then
+              echo "CI gate failed: at least one job result is '$r' (need success)."
+              exit 1
+            fi
+          done
+          echo "All CI jobs passed."

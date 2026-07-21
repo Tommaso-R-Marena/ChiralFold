@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import html
 import traceback
-from typing import Optional
 
 
 def report_pre_html(text: str) -> str:
