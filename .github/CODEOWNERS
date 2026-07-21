@@ -1,0 +1,3 @@
+# Default owner for everything in this repository.
+# Requires branch protection "Require review from Code Owners" to enforce.
+*       @Tommaso-R-Marena
