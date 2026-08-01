@@ -13,8 +13,9 @@ Metrics computed
   complementary range vs. clashing (<3.5 Å) or no-contact (>5.0 Å).
 - Hydrogen bonds: N/O…N/O donor-acceptor pairs within 2.5–3.5 Å.
 - Salt bridges: Charged side-chain groups of oppositely charged residues
-  (K NZ, R NE/NH1/NH2, H ND1/NE2 vs D OD1/OD2, E OE1/OE2, C-terminal OXT)
-  within 4.0 Å, following Barlow & Thornton (1983).
+  (K NZ, R NE/NH1/NH2, H ND1/NE2 vs D OD1/OD2, E OE1/OE2) within 4.0 Å,
+  following Barlow & Thornton (1983). Terminal ammonium/carboxylate groups
+  are not treated as separate charge centres.
 - Hydrophobic contacts: F/W/Y/L/I/V/A/M Cα pairs within 6.0 Å.
 - Interface residues: Residues with ≥1 heavy atom within 5 Å of the partner.
 - Interface score: Weighted composite 0–100.
