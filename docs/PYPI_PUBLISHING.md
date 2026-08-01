@@ -1,10 +1,10 @@
 # PyPI publishing for ChiralFold
 
-**Status:** `chiralfold==3.5.1` is live on PyPI:
+**Status:** `chiralfold==3.6.0` is live on PyPI:
 https://pypi.org/project/chiralfold/
 
 ```bash
-pip install chiralfold==3.5.1
+pip install chiralfold==3.6.0
 ```
 
 ## Future releases
@@ -25,4 +25,4 @@ Configure at https://pypi.org/manage/project/chiralfold/settings/publishing/:
 
 Fallback: set GitHub Actions secret `PYPI_API_TOKEN` to a project-scoped `pypi-...` token.
 
-If you see `invalid-publisher`, the publisher fields do not match the workflow claims — see the troubleshooting table historically used for the first upload of v3.5.1.
+If you see `invalid-publisher`, the publisher fields do not match the workflow claims — see the troubleshooting table historically used for the first upload of v3.6.0.

@@ -8,7 +8,9 @@
 
 4. Machine-checked Lean 4 proofs: chirality sign cannot factor through pairwise distances alone.
 
-5. Open software: pip install chiralfold, Docker, GitHub v3.5.1, HF Space (Light/Dark; RCSB + AlphaFold DB fetch; PDB/mmCIF/FASTA), full reproduction package.
+5. Deployable at archive scale: the auditor runs at 15-18 us per atom with wall time linear in structure size (1,589-25,424 atoms), 3.5-3.9x faster than the previous release; interface scoring 3.1-6.1x faster with peak memory cut from 1,260 MB to 183 MB. Offline harnesses reproduce both the absolute and before/after numbers.
+
+6. Open software: pip install chiralfold, Docker, GitHub v3.6.0, HF Space (Light/Dark; RCSB + AlphaFold DB fetch; PDB/mmCIF/FASTA), full reproduction package.
 
 - Full live mmCIF-only D-residue universe survey (79 entries): recovers 29/29 known errors; finds 9BC4 DLE mismatch.
 

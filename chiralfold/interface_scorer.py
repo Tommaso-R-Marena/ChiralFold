@@ -12,19 +12,32 @@ Metrics computed
 - Shape Complementarity (SC): Fraction of interface pairs in the 3.5–5.0 Å
   complementary range vs. clashing (<3.5 Å) or no-contact (>5.0 Å).
 - Hydrogen bonds: N/O…N/O donor-acceptor pairs within 2.5–3.5 Å.
-- Salt bridges: Oppositely charged residue pairs (K/R/H vs D/E) within 4.0 Å
-  Cα–Cα distance.
+- Salt bridges: Charged side-chain groups of oppositely charged residues
+  (K NZ, R NE/NH1/NH2, H ND1/NE2 vs D OD1/OD2, E OE1/OE2, C-terminal OXT)
+  within 4.0 Å, following Barlow & Thornton (1983).
 - Hydrophobic contacts: F/W/Y/L/I/V/A/M Cα pairs within 6.0 Å.
 - Interface residues: Residues with ≥1 heavy atom within 5 Å of the partner.
 - Interface score: Weighted composite 0–100.
+
+All neighbour searches go through :class:`scipy.spatial.cKDTree`. The previous
+implementation materialised a dense ``(N_receptor, N_ligand)`` distance matrix,
+which is quadratic in memory: two 20,000-atom chains needed ~3 GB and could not
+be scored at all. Only pairs inside the cutoff are ever built now.
+
+References:
+    Barlow, D.J. & Thornton, J.M. (1983) Ion-pairs in proteins.
+    J. Mol. Biol. 168:867-885.
 """
 
 from __future__ import annotations
 
 import os
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
+from scipy.spatial import cKDTree
+
+from ._pdbio import read_atom_records
 
 # Module-level: do NOT call warnings.filterwarnings globally.
 
@@ -40,7 +53,7 @@ HBOND_MAX           = 3.5    # hydrogen bond maximum
 HBOND_DONORS        = {"N", "O"}   # simplified: any N or O can donate/accept
 CLASH_CUTOFF        = 3.5    # pairs closer than this are clashing
 COMPLEMENTARY_MAX   = 5.0    # pairs in 3.5–5.0 Å are complementary
-SALT_BRIDGE_CUTOFF  = 4.0    # Cα–Cα cutoff for salt bridge detection (Å)
+SALT_BRIDGE_CUTOFF  = 4.0    # charged side-chain group cutoff (Å)
 HYDROPHOBIC_CUTOFF  = 6.0    # Cα–Cα cutoff for hydrophobic contacts (Å)
 
 # Residue sets
@@ -49,6 +62,23 @@ POSITIVE_RESIDUES   = {"LYS", "ARG", "HIS", "HIE", "HID", "HIP", "HSE", "HSD", "
 NEGATIVE_RESIDUES   = {"ASP", "GLU", "DAS", "DGL"}
 HYDROPHOBIC_RESIDUES = {"PHE", "TRP", "TYR", "LEU", "ILE", "VAL", "ALA", "MET",
                          "DPN", "DTR", "DTY", "DLE", "DIL", "DVA", "DAL", "MED"}
+
+# Charged side-chain group atoms per residue (Barlow & Thornton 1983). Cα is
+# listed as a last-resort fallback so that Cα-only models (backbone traces,
+# coarse-grained output) still report ion pairs instead of silently scoring zero.
+CATIONIC_ATOMS: Dict[str, Tuple[str, ...]] = {
+    "LYS": ("NZ",), "DLY": ("NZ",),
+    "ARG": ("NE", "NH1", "NH2"), "DAR": ("NE", "NH1", "NH2"),
+    "HIS": ("ND1", "NE2"), "DHI": ("ND1", "NE2"),
+    "HIE": ("ND1", "NE2"), "HID": ("ND1", "NE2"), "HIP": ("ND1", "NE2"),
+    "HSE": ("ND1", "NE2"), "HSD": ("ND1", "NE2"), "HSP": ("ND1", "NE2"),
+}
+ANIONIC_ATOMS: Dict[str, Tuple[str, ...]] = {
+    "ASP": ("OD1", "OD2"), "DAS": ("OD1", "OD2"),
+    "GLU": ("OE1", "OE2"), "DGL": ("OE1", "OE2"),
+}
+#: Used when none of a charged residue's side-chain group atoms are modelled.
+CHARGE_CENTER_FALLBACK: Tuple[str, ...] = ("CA",)
 
 # Approximate solvent-accessible area per interface atom (Å²)
 SA_PER_ATOM = 10.0
@@ -73,17 +103,18 @@ class _Atom:
 
     __slots__ = [
         "record", "serial", "name", "resname",
-        "chain", "resseq", "x", "y", "z", "element",
+        "chain", "resseq", "icode", "x", "y", "z", "element",
     ]
 
     def __init__(self, record, serial, name, resname,
-                 chain, resseq, x, y, z, element):
+                 chain, resseq, x, y, z, element, icode=" "):
         self.record  = record
         self.serial  = serial
         self.name    = name
         self.resname = resname
         self.chain   = chain
         self.resseq  = resseq
+        self.icode   = icode
         self.x       = x
         self.y       = y
         self.z       = z
@@ -108,54 +139,21 @@ def _parse_atoms(pdb_path: str,
     """
     Parse ATOM/HETATM records from *pdb_path*, optionally filtered by chain(s).
 
-    Skips water molecules, keeps only the first altloc position.
+    Delegates to :mod:`chiralfold._pdbio`, so water is skipped, only the first
+    model of a multi-model file is read, and alternate locations are resolved to
+    one self-consistent conformation per residue. De-duplication now includes the
+    insertion code: keying on ``(chain, resseq, name)`` made residues ``47`` and
+    ``47A`` overwrite each other, silently deleting atoms from any structure with
+    insertion codes (common in antibody and protease numbering).
     """
-    atoms: List[_Atom] = []
-    seen: Dict[Tuple, bool] = {}
-
-    with open(pdb_path) as fh:
-        for line in fh:
-            if not line.startswith(("ATOM  ", "HETATM")):
-                continue
-            if len(line) < 54:
-                continue
-
-            resname = line[17:20].strip()
-            if resname in ("HOH", "WAT", "DOD"):
-                continue
-
-            altloc = line[16]
-            if altloc not in (" ", "A", "1", ""):
-                continue
-
-            try:
-                record  = line[0:6].strip()
-                serial  = int(line[6:11])
-                name    = line[12:16].strip()
-                chain   = line[21] if len(line) > 21 else " "
-                resseq  = int(line[22:26])
-                x       = float(line[30:38])
-                y       = float(line[38:46])
-                z       = float(line[46:54])
-                element = line[76:78].strip() if len(line) >= 78 else ""
-            except (ValueError, IndexError):
-                continue
-
-            if chains is not None and chain not in chains:
-                continue
-
-            # Deduplicate
-            key = (chain, resseq, name)
-            if key in seen:
-                continue
-            seen[key] = True
-
-            atoms.append(_Atom(
-                record=record, serial=serial, name=name, resname=resname,
-                chain=chain, resseq=resseq, x=x, y=y, z=z, element=element,
-            ))
-
-    return atoms
+    return [
+        _Atom(
+            record=r.record, serial=r.serial, name=r.name, resname=r.resname,
+            chain=r.chain, resseq=r.resseq, icode=r.icode,
+            x=r.x, y=r.y, z=r.z, element=r.element,
+        )
+        for r in read_atom_records(pdb_path, chains=chains)
+    ]
 
 
 def _infer_chains(pdb_path: str) -> List[str]:
@@ -176,8 +174,55 @@ def _dist(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.linalg.norm(a - b))
 
 
-def _build_coords_array(atoms: List[_Atom]) -> np.ndarray:
-    return np.array([a.xyz for a in atoms])
+def _build_coords_array(atoms: Sequence[_Atom]) -> np.ndarray:
+    """Return an ``(n, 3)`` coordinate array without per-atom allocations."""
+    out = np.empty((len(atoms), 3), dtype=float)
+    for i, a in enumerate(atoms):
+        out[i, 0] = a.x
+        out[i, 1] = a.y
+        out[i, 2] = a.z
+    return out
+
+
+def _cross_pairs_within(
+    left: Sequence[_Atom],
+    right: Sequence[_Atom],
+    cutoff: float,
+) -> List[Tuple[_Atom, _Atom, float]]:
+    """All ``(left_atom, right_atom, distance)`` pairs closer than *cutoff* Å.
+
+    Uses a KD-tree ball query so cost scales with the number of contacts rather
+    than with ``len(left) * len(right)``. Pairs are emitted in ascending
+    (left index, right index) order, matching the dense-matrix implementation
+    this replaced.
+    """
+    if not left or not right or cutoff <= 0:
+        return []
+
+    left_coords = _build_coords_array(left)
+    right_coords = _build_coords_array(right)
+    neighbours = cKDTree(right_coords).query_ball_point(
+        left_coords, r=cutoff, return_sorted=True
+    )
+
+    li: List[int] = []
+    ri: List[int] = []
+    for i, hits in enumerate(neighbours):
+        if not len(hits):
+            continue
+        li.extend([i] * len(hits))
+        ri.extend(hits)
+    if not li:
+        return []
+
+    li_arr = np.asarray(li, dtype=np.intp)
+    ri_arr = np.asarray(ri, dtype=np.intp)
+    delta = left_coords[li_arr] - right_coords[ri_arr]
+    dists = np.sqrt(np.einsum("ij,ij->i", delta, delta))
+    return [
+        (left[int(a)], right[int(b)], float(d))
+        for a, b, d in zip(li_arr, ri_arr, dists)
+    ]
 
 
 def _find_interface_pairs(
@@ -190,22 +235,7 @@ def _find_interface_pairs(
 
     Returns list of (rec_atom, lig_atom, distance) tuples.
     """
-    if not rec_atoms or not lig_atoms:
-        return []
-
-    rec_coords = _build_coords_array(rec_atoms)  # (N_rec, 3)
-    lig_coords = _build_coords_array(lig_atoms)  # (N_lig, 3)
-
-    # Pairwise distances via broadcasting
-    diff = rec_coords[:, np.newaxis, :] - lig_coords[np.newaxis, :, :]
-    dists = np.sqrt(np.sum(diff ** 2, axis=-1))  # (N_rec, N_lig)
-
-    pairs = []
-    rec_i, lig_j = np.where(dists <= cutoff)
-    for ri, lj in zip(rec_i, lig_j):
-        pairs.append((rec_atoms[ri], lig_atoms[lj], float(dists[ri, lj])))
-
-    return pairs
+    return _cross_pairs_within(rec_atoms, lig_atoms, cutoff)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -219,8 +249,12 @@ def _compute_bsa(pairs: List[Tuple[_Atom, _Atom, float]]) -> float:
     Counts unique receptor and ligand atoms at the interface and
     multiplies by SA_PER_ATOM per atom.
     """
-    rec_atoms_at_iface = {id(rec) for rec, lig, dist in pairs}
-    lig_atoms_at_iface = {id(lig) for rec, lig, dist in pairs}
+    rec_atoms_at_iface = {
+        (rec.chain, rec.resseq, rec.icode, rec.name) for rec, _l, _d in pairs
+    }
+    lig_atoms_at_iface = {
+        (lig.chain, lig.resseq, lig.icode, lig.name) for _r, lig, _d in pairs
+    }
     n_interface_atoms  = len(rec_atoms_at_iface) + len(lig_atoms_at_iface)
     return n_interface_atoms * SA_PER_ATOM
 
@@ -282,20 +316,32 @@ def _ca_pairs(
     """
     rec_ca = [a for a in rec_atoms if a.name == "CA"]
     lig_ca = [a for a in lig_atoms if a.name == "CA"]
+    return _cross_pairs_within(rec_ca, lig_ca, cutoff)
 
-    if not rec_ca or not lig_ca:
-        return []
 
-    pairs = []
-    rec_coords = _build_coords_array(rec_ca)
-    lig_coords = _build_coords_array(lig_ca)
-    diff  = rec_coords[:, np.newaxis, :] - lig_coords[np.newaxis, :, :]
-    dists = np.sqrt(np.sum(diff ** 2, axis=-1))
-    ri_arr, lj_arr = np.where(dists <= cutoff)
-    for ri, lj in zip(ri_arr, lj_arr):
-        pairs.append((rec_ca[ri], lig_ca[lj], float(dists[ri, lj])))
+def _charge_group_atoms(atoms: Sequence[_Atom], sign: str) -> List[_Atom]:
+    """Charged side-chain group atoms of residues carrying *sign* (``+``/``-``).
 
-    return pairs
+    Falls back to Cα for a charged residue whose group atoms are all missing,
+    so backbone-only models still contribute.
+    """
+    table = CATIONIC_ATOMS if sign == "+" else ANIONIC_ATOMS
+    resset = POSITIVE_RESIDUES if sign == "+" else NEGATIVE_RESIDUES
+
+    by_res: Dict[Tuple[str, int, str], List[_Atom]] = {}
+    for a in atoms:
+        if a.resname.upper() not in resset:
+            continue
+        by_res.setdefault((a.chain, a.resseq, a.icode), []).append(a)
+
+    out: List[_Atom] = []
+    for group in by_res.values():
+        wanted = table.get(group[0].resname.upper(), ())
+        picked = [a for a in group if a.name.upper() in wanted]
+        if not picked:
+            picked = [a for a in group if a.name.upper() in CHARGE_CENTER_FALLBACK]
+        out.extend(picked)
+    return out
 
 
 def _compute_salt_bridges(
@@ -303,19 +349,31 @@ def _compute_salt_bridges(
     lig_atoms: List[_Atom],
 ) -> int:
     """
-    Count salt bridges: oppositely charged residue Cα pairs within
-    SALT_BRIDGE_CUTOFF (4.0 Å).
+    Count inter-chain salt bridges (ion pairs).
+
+    A salt bridge is counted once per oppositely-charged residue pair whose
+    charged side-chain group atoms come within :data:`SALT_BRIDGE_CUTOFF`
+    (4.0 Å) — the Barlow & Thornton (1983) criterion.
+
+    Earlier releases measured Cα–Cα distance against the same 4.0 Å cutoff.
+    Cα atoms of residues on opposite sides of an interface are essentially never
+    that close (packed Cα–Cα contacts start around 4.5 Å and typically sit at
+    5–8 Å), so that test returned zero on real complexes and the 5-point
+    salt-bridge term never contributed to the composite score.
     """
-    ca_pairs = _ca_pairs(rec_atoms, lig_atoms, SALT_BRIDGE_CUTOFF)
-    count = 0
-    for rec_ca, lig_ca, d in ca_pairs:
-        rec_pos = rec_ca.resname.upper() in POSITIVE_RESIDUES
-        rec_neg = rec_ca.resname.upper() in NEGATIVE_RESIDUES
-        lig_pos = lig_ca.resname.upper() in POSITIVE_RESIDUES
-        lig_neg = lig_ca.resname.upper() in NEGATIVE_RESIDUES
-        if (rec_pos and lig_neg) or (rec_neg and lig_pos):
-            count += 1
-    return count
+    pos_rec = _charge_group_atoms(rec_atoms, "+")
+    neg_rec = _charge_group_atoms(rec_atoms, "-")
+    pos_lig = _charge_group_atoms(lig_atoms, "+")
+    neg_lig = _charge_group_atoms(lig_atoms, "-")
+
+    residue_pairs = set()
+    for left, right in ((pos_rec, neg_lig), (neg_rec, pos_lig)):
+        for a, b, _d in _cross_pairs_within(left, right, SALT_BRIDGE_CUTOFF):
+            residue_pairs.add((
+                (a.chain, a.resseq, a.icode),
+                (b.chain, b.resseq, b.icode),
+            ))
+    return len(residue_pairs)
 
 
 def _compute_hydrophobic(
@@ -343,21 +401,15 @@ def _interface_residues(
     """
     Identify residues at the interface (any atom within INTERFACE_CUTOFF).
 
-    Returns dicts of receptor and ligand interface residue identifiers.
-    """
-    rec_iface_atoms = {id(rec) for rec, lig, dist in pairs}
-    lig_iface_atoms = {id(lig) for rec, lig, dist in pairs}
+    Returns dicts of receptor and ligand interface residue identifiers. The
+    residue set is read straight off the contact pairs rather than by scanning
+    every atom and testing ``id()`` membership, which was O(N) per side.
 
-    rec_residues = sorted({
-        (a.chain, a.resseq, a.resname)
-        for a in rec_atoms
-        if id(a) in rec_iface_atoms
-    })
-    lig_residues = sorted({
-        (a.chain, a.resseq, a.resname)
-        for a in lig_atoms
-        if id(a) in lig_iface_atoms
-    })
+    ``rec_atoms`` / ``lig_atoms`` are accepted for signature stability and are
+    not needed: every interface residue by definition appears in *pairs*.
+    """
+    rec_residues = sorted({(rec.chain, rec.resseq, rec.resname) for rec, _l, _d in pairs})
+    lig_residues = sorted({(lig.chain, lig.resseq, lig.resname) for _r, lig, _d in pairs})
 
     return {
         "receptor": [{"chain": c, "resnum": r, "resname": n}

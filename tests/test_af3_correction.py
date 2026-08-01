@@ -202,7 +202,17 @@ def test_parse_pdb_full_skips_water_altloc_duplicates_and_short_lines(tmp_path):
     assert atoms[0].line_idx == 1
 
 
-def test_detect_skips_gly_pro_missing_backbone_and_uses_estimated_cb(tmp_path):
+def test_detect_skips_gly_pro_and_reports_unassignable_without_fourth_substituent(
+    tmp_path,
+):
+    """Gly/Pro are skipped; a residue with no Cβ and no Hα is unassignable.
+
+    Releases up to v3.5.1 substituted an idealised L-Cβ built from N/Cα/C for
+    such residues. That construction always yields V > 0, so the residue was
+    unconditionally classified "L" — a false violation for any D-residue whose
+    side chain is not modelled, and a meaningless "correction" (reflecting Cα
+    across an invented plane does not invert the real stereocentre).
+    """
     pdb = tmp_path / "detect_edges.pdb"
     pdb.write_text(
         textwrap.dedent(
@@ -225,7 +235,37 @@ def test_detect_skips_gly_pro_missing_backbone_and_uses_estimated_cb(tmp_path):
     report = detect_chirality_violations(str(pdb))
 
     assert report["n_residues"] == 4
-    assert report["n_checked"] == 1
+    # GLY skipped (achiral), PRO skipped (ring), ALA has no backbone N/C,
+    # UNK has backbone but neither Cβ nor Hα → unassignable, not "L".
+    assert report["n_checked"] == 0
+    assert report["n_unassignable"] == 1
+    assert report["n_violations"] == 0
+
+
+def test_detect_uses_ha_when_cb_absent(tmp_path):
+    """With Cβ missing but Hα present, handedness comes from the Hα tetrahedron.
+
+    The same coordinates are written twice: once labelled ALA (L expected) and
+    once labelled DAL (D expected). Exactly one of the two must be flagged,
+    which pins the Hα sign convention.
+    """
+    body = (
+        "ATOM      1  N   {rn} {ch}   1       1.201   0.847   0.000  1.00  0.00           N\n"
+        "ATOM      2  CA  {rn} {ch}   1       0.000   0.000   0.000  1.00  0.00           C\n"
+        "ATOM      3  C   {rn} {ch}   1      -1.250   0.881   0.000  1.00  0.00           C\n"
+        "ATOM      4  HA  {rn} {ch}   1       0.000  -0.500  -1.090  1.00  0.00           H\n"
+    )
+    pdb = tmp_path / "ha_only.pdb"
+    pdb.write_text(
+        body.format(rn="ALA", ch="A") + body.format(rn="DAL", ch="B") + "END\n"
+    )
+
+    report = detect_chirality_violations(str(pdb))
+
+    assert report["n_checked"] == 2
+    assert report["n_unassignable"] == 0
+    assert report["n_violations"] == 1
+    assert {v["basis"] for v in report["violations"]} == {"ha"}
 
 
 def test_detect_missing_file_and_correct_chirality_missing_file_raise(tmp_path):

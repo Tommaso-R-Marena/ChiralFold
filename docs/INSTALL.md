@@ -6,7 +6,7 @@ ChiralFold supports **Python 3.9–3.12** on Linux, macOS, and Windows.
 
 ```bash
 pip install -U pip
-pip install "chiralfold==3.5.1"
+pip install "chiralfold==3.6.0"
 python -c "import chiralfold; print(chiralfold.__version__)"
 ```
 
@@ -50,4 +50,4 @@ docker compose up web   # Gradio on :7860
 - **`ModuleNotFoundError: rdkit`** → install RDKit via conda-forge, then reinstall ChiralFold.
 - **Gradio / `HfFolder` import errors** → `pip install "chiralfold[web]"` pins a compatible `huggingface_hub`.
 - **Slow Colab first cell** → expected; notebooks clone + pip install (~1–2 min).
-- **Prefer a pinned release** → `pip install chiralfold==3.5.1`. Git install remains available for development.
+- **Prefer a pinned release** → `pip install chiralfold==3.6.0`. Git install remains available for development.

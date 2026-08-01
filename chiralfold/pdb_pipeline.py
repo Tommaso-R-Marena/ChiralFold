@@ -118,12 +118,22 @@ def mirror_pdb(input_path, output_path=None, chains=None, axis='x',
     Reflects all atomic coordinates across the specified plane and
     optionally renames residues to D-amino acid nomenclature.
 
+    Multi-model (NMR / ensemble) inputs keep their ``MODEL``/``ENDMDL`` framing:
+    every model is reflected and the model records are written back out. Prior
+    releases dropped those records, so an *n*-model ensemble was emitted as a
+    single model containing *n* superimposed copies of every residue — a file
+    that most parsers then silently collapsed to one copy, and that inflated
+    ``n_atoms`` by a factor of *n*.
+
     Args:
         input_path: Path to input PDB file (L-peptide/protein).
         output_path: Path to write the D-enantiomer PDB. If None,
                     returns the transformed data without writing.
         chains: List of chain IDs to transform (e.g. ['A', 'B']).
-                If None, transforms all chains.
+                If None, transforms all chains. Chains **not** listed are
+                excluded from the output entirely: emitting a reflected chain
+                alongside an unreflected one would describe a complex that
+                does not exist.
         axis: Reflection axis — 'x', 'y', or 'z' (default 'x').
         rename_residues: If True, rename L-amino acid residues to
                         their D-amino acid PDB codes (e.g. ALA→DAL).
@@ -132,37 +142,58 @@ def mirror_pdb(input_path, output_path=None, chains=None, axis='x',
         dict with:
           - 'atoms': List of transformed PDBAtom objects
           - 'n_atoms': Number of atoms transformed
-          - 'n_residues': Number of residues
+          - 'n_residues': Number of residues (per model)
+          - 'n_models': Number of models in the input
           - 'chains': Set of chain IDs
-          - 'sequence_l': Original L-amino acid sequence (one-letter)
-          - 'sequence_d': D-amino acid sequence (one-letter, same letters)
+          - 'sequence': Amino-acid sequence (one-letter, first model)
           - 'output_path': Path to output file (if written)
           - 'stats': Transformation statistics
     """
     axis_idx = {'x': 0, 'y': 1, 'z': 2}[axis]
 
     atoms = []
-    other_lines = []  # Non-atom lines (HEADER, REMARK, etc.)
+    header_lines = []   # Preamble lines kept ahead of the coordinates
     chain_set = set()
     residue_set = set()
     n_renamed = 0
+    # Per-model atom lists, in model order; key 1 when the file has no MODEL.
+    models: dict = {}
+    current_model = 1
+    saw_model = False
+    # Bound to the active model's list so the per-atom path stays a plain
+    # list append rather than a dict lookup.
+    current_atoms: list = models.setdefault(current_model, [])
+    first_model = current_model
 
     with open(input_path) as f:
         for line in f:
+            if line.startswith('MODEL'):
+                if not saw_model:
+                    # Drop the placeholder created for a header-less file.
+                    models.pop(current_model, None)
+                saw_model = True
+                try:
+                    current_model = int(line[10:14])
+                except ValueError:
+                    current_model = len(models) + 1
+                current_atoms = models.setdefault(current_model, [])
+                first_model = min(models)
+                continue
+            if line.startswith('ENDMDL'):
+                continue
+
             if line.startswith(('ATOM  ', 'HETATM')):
                 try:
                     atom = PDBAtom.from_line(line)
                 except (ValueError, IndexError):
-                    other_lines.append(line)
                     continue
 
                 # Skip water
-                if atom.resname == 'HOH':
+                if atom.resname in ('HOH', 'WAT', 'DOD'):
                     continue
 
                 # Chain filter
                 if chains is not None and atom.chain not in chains:
-                    other_lines.append(line)
                     continue
 
                 # Reflect coordinate
@@ -181,17 +212,21 @@ def mirror_pdb(input_path, output_path=None, chains=None, axis='x',
                         n_renamed += 1
 
                 atoms.append(atom)
+                current_atoms.append(atom)
                 chain_set.add(atom.chain)
-                residue_set.add((atom.chain, atom.resseq, atom.icode))
+                if current_model == first_model:
+                    residue_set.add((atom.chain, atom.resseq, atom.icode))
 
-            elif line.startswith(('HEADER', 'TITLE', 'REMARK', 'CRYST',
-                                  'SCALE', 'ORIGX', 'END', 'TER')):
-                other_lines.append(line)
+            elif line.startswith(('HEADER', 'TITLE', 'COMPND', 'SOURCE',
+                                  'CRYST1', 'SCALE', 'ORIGX')):
+                header_lines.append(line.rstrip('\n'))
 
-    # Extract sequence
-    residues_ordered = sorted(residue_set, key=lambda x: (x[0], x[1]))
+    # Extract sequence from the first model, ordered by (chain, resseq, icode)
+    # so that insertion codes sort deterministically (47 < 47A < 47B < 48).
+    residues_ordered = sorted(residue_set, key=lambda x: (x[0], x[1], x[2]))
+    first_model_atoms = models.get(first_model, []) if models else []
     seq_map = {}
-    for a in atoms:
+    for a in first_model_atoms:
         key = (a.chain, a.resseq, a.icode)
         if key not in seq_map:
             # Get one-letter code from original L resname or D resname
@@ -215,14 +250,24 @@ def mirror_pdb(input_path, output_path=None, chains=None, axis='x',
             f.write("REMARK   All L-amino acids converted to D-enantiomers\n")
             f.write("REMARK   Bond lengths, angles, and torsion magnitudes preserved\n")
             f.write("REMARK   RMSD to ideal mirror = 0.000 A\n")
-            for a in atoms:
-                f.write(a.to_line() + '\n')
+            for line in header_lines:
+                f.write(line + '\n')
+            if saw_model and len(models) > 1:
+                for model_num in sorted(models):
+                    f.write(f"MODEL     {model_num:>4d}\n")
+                    for a in models[model_num]:
+                        f.write(a.to_line() + '\n')
+                    f.write('ENDMDL\n')
+            else:
+                for a in atoms:
+                    f.write(a.to_line() + '\n')
             f.write('END\n')
 
     return {
         'atoms': atoms,
         'n_atoms': len(atoms),
         'n_residues': len(residue_set),
+        'n_models': max(len(models), 1),
         'chains': chain_set,
         'sequence': sequence,
         'output_path': output_path,

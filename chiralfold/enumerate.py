@@ -61,27 +61,26 @@ def _all_patterns(n_stereo: int) -> List[Tuple[str, ...]]:
 def _random_patterns(n_stereo: int, n_samples: int,
                      rng: random.Random) -> List[Tuple[str, ...]]:
     """
-    Sample *n_samples* unique L/D patterns uniformly at random.
+    Sample exactly *n_samples* distinct L/D patterns uniformly at random.
 
-    If 2^n_stereo < n_samples, all patterns are returned (exhaustive).
+    If 2^n_stereo ≤ n_samples, all patterns are returned (exhaustive).
+
+    Each pattern is drawn as a distinct integer in ``[0, 2^n_stereo)`` and
+    decoded bitwise, so the requested count is always delivered. The previous
+    rejection-sampling loop gave up after ``20 * n_samples`` attempts and could
+    silently return fewer patterns than asked for — and the shortfall grew with
+    the collision probability, i.e. exactly when ``2^n_stereo`` was close to
+    ``n_samples``.
     """
     total = 2 ** n_stereo
     if total <= n_samples:
         return _all_patterns(n_stereo)
 
-    seen = set()
-    patterns = []
-    attempts = 0
-    max_attempts = n_samples * 20
-
-    while len(patterns) < n_samples and attempts < max_attempts:
-        pat = tuple(rng.choice("LD") for _ in range(n_stereo))
-        if pat not in seen:
-            seen.add(pat)
-            patterns.append(pat)
-        attempts += 1
-
-    return patterns
+    draws = rng.sample(range(total), n_samples)
+    return [
+        tuple("D" if (value >> bit) & 1 else "L" for bit in range(n_stereo))
+        for value in draws
+    ]
 
 
 def _expand_pattern(

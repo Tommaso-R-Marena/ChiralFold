@@ -71,11 +71,11 @@ def test_wcag_contrast_pairs(label, fg, bg, minimum):
 def test_header_html_includes_theme_toggle():
     from web.theme import header_html
 
-    html = header_html("3.5.1")
+    html = header_html("3.6.0")
     assert "cf-theme-toggle" in html
     assert "?__theme=light" in html
     assert "?__theme=dark" in html
-    assert "v3.5.1" in html
+    assert "v3.6.0" in html
 
 
 def test_theme_includes_report_and_file_contrast_rules():

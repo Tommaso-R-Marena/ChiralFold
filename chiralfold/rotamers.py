@@ -26,6 +26,8 @@ import math
 import numpy as np
 from typing import Optional, List, Dict, Any
 
+from ._pdbio import read_atom_records
+
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Penultimate Rotamer Library — chi1 preferred angle centers (degrees)
@@ -39,10 +41,13 @@ from typing import Optional, List, Dict, Any
 #:   t  = 180°  (trans)
 #:   g- = -60°  (gauche-)
 ROTAMER_LIBRARY: Dict[str, List[float]] = {
-    # VAL, ILE, THR: beta-branched; strongly prefer t and g-
+    # VAL, ILE: beta-branched; strongly prefer t and g-
     'VAL': [180.0, -60.0],
     'ILE': [180.0, -60.0],
-    'THR': [180.0, -60.0],
+    # THR: all three wells are populated, and g+ is the *most* common
+    # (Lovell 2000: p 62° 49%, m -61° 43%, t -175° 7%). Omitting g+ here made
+    # roughly half of all threonines score as chi1 outliers.
+    'THR': [180.0, -60.0, 60.0],
 
     # LEU, PHE, TYR, TRP, HIS, ASP, ASN: prefer g- and t
     'LEU': [-60.0, 180.0],
@@ -68,6 +73,37 @@ ROTAMER_LIBRARY: Dict[str, List[float]] = {
     # GLY, ALA: no chi1 — omitted
 }
 
+#: L → D residue-name map for the rotamer library (D-CCD codes).
+_L_TO_D_RESNAME: Dict[str, str] = {
+    'VAL': 'DVA', 'ILE': 'DIL', 'THR': 'DTH', 'LEU': 'DLE', 'PHE': 'DPN',
+    'TYR': 'DTY', 'TRP': 'DTR', 'HIS': 'DHI', 'ASP': 'DAS', 'ASN': 'DSG',
+    'SER': 'DSN', 'CYS': 'DCY', 'LYS': 'DLY', 'ARG': 'DAR', 'MET': 'MED',
+    'GLU': 'DGL', 'GLN': 'DGN',
+}
+
+# D-amino acids are exact mirror images, so their chi1 rotamer wells are the
+# negated L wells (g+ ↔ g-, trans → trans). Without these entries D-residues
+# had no library entry at all and validate_rotamers() silently reported
+# n_residues_checked = 0 for every D-peptide — the exact case ChiralFold exists
+# to validate.
+for _l3, _d3 in _L_TO_D_RESNAME.items():
+    if _l3 in ROTAMER_LIBRARY:
+        ROTAMER_LIBRARY[_d3] = [
+            # −180° and +180° are the same well; keep the canonical +180.
+            180.0 if abs(abs(centre) - 180.0) < 1e-9 else -centre
+            for centre in ROTAMER_LIBRARY[_l3]
+        ]
+
+#: Common modified-residue names that share a parent chi1 library entry.
+_ROTAMER_ALIASES: Dict[str, str] = {
+    'MSE': 'MET', 'HIE': 'HIS', 'HID': 'HIS', 'HIP': 'HIS',
+    'HSD': 'HIS', 'HSE': 'HIS', 'HSP': 'HIS',
+    'CYX': 'CYS', 'CYM': 'CYS', 'SEP': 'SER', 'TPO': 'THR', 'PTR': 'TYR',
+}
+for _alias, _parent in _ROTAMER_ALIASES.items():
+    if _parent in ROTAMER_LIBRARY and _alias not in ROTAMER_LIBRARY:
+        ROTAMER_LIBRARY[_alias] = list(ROTAMER_LIBRARY[_parent])
+
 #: Atom name for the Cγ-equivalent used to compute chi1 per residue type.
 #: Residues absent from this map have no chi1 (GLY, ALA, PRO).
 _CG_ATOM_NAME: Dict[str, str] = {
@@ -91,6 +127,17 @@ _CG_ATOM_NAME: Dict[str, str] = {
     'GLN': 'CG',
 }
 
+# Mirror the Cγ-equivalent names onto the D-CCD and modified-residue codes.
+for _l3, _d3 in _L_TO_D_RESNAME.items():
+    if _l3 in _CG_ATOM_NAME:
+        _CG_ATOM_NAME.setdefault(_d3, _CG_ATOM_NAME[_l3])
+for _alias, _parent in _ROTAMER_ALIASES.items():
+    if _parent in _CG_ATOM_NAME:
+        _CG_ATOM_NAME.setdefault(_alias, _CG_ATOM_NAME[_parent])
+# MSE (selenomethionine) branches through CG like MET; SEP/TPO/PTR keep the
+# phosphorylated hydroxyl oxygen names of their parents.
+_CG_ATOM_NAME['MSE'] = 'CG'
+
 # Classification thresholds (degrees)
 _FAVORED_THRESHOLD = 40.0
 _ALLOWED_THRESHOLD = 60.0
@@ -108,8 +155,22 @@ def compute_chi1(
 ) -> float:
     """Compute the N–Cα–Cβ–Cγ dihedral angle (chi1) from four 3-D positions.
 
-    Uses the standard IUPAC dihedral convention implemented via the
-    cross-product / atan2 formula (same as geometry.py).
+    Uses the standard IUPAC / BioPython dihedral convention, the same one
+    :func:`chiralfold.auditor._dihedral_deg` implements and the one the
+    Penultimate Rotamer Library centres are quoted in.
+
+    .. note::
+       Releases up to v3.5.1 returned the **negation** of this angle: the first
+       plane normal was built from ``Cα − N`` while the ``atan2`` numerator kept
+       the opposite handedness. Every reported chi1 therefore had inverted sign,
+       so L-residues were scored against effectively mirrored rotamer wells —
+       an L side chain in the common g- rotamer was read as g+ and counted as an
+       outlier. On a representative L complex (3IWY) that put the chi1 outlier
+       rate at 55.7%, versus 13.2% after the fix.
+
+       The implementation below is the "praxeolitic" projection form, identical
+       to :func:`chiralfold.auditor._dihedral_deg`; agreement between the two is
+       asserted in ``tests/test_rotamers.py``.
 
     Args:
         n_pos:  Coordinates of backbone N  atom (array-like, length 3).
@@ -129,30 +190,24 @@ def compute_chi1(
     p3 = np.asarray(cb_pos, dtype=float)
     p4 = np.asarray(cg_pos, dtype=float)
 
-    b1 = p2 - p1
-    b2 = p3 - p2
-    b3 = p4 - p3
+    b0 = p1 - p2          # negated first bond, IUPAC/BioPython sense
+    b1 = p3 - p2          # rotation axis Cα → Cβ
+    b2 = p4 - p3
 
-    # Normals to the two planes
-    n1 = np.cross(b1, b2)
-    n2 = np.cross(b2, b3)
+    b1_norm = np.linalg.norm(b1)
+    if b1_norm < 1e-10:
+        raise ValueError("Degenerate dihedral: collinear atoms or zero-length bond.")
+    b1_unit = b1 / b1_norm
 
-    n1_norm = np.linalg.norm(n1)
-    n2_norm = np.linalg.norm(n2)
-    b2_norm = np.linalg.norm(b2)
-
-    if n1_norm < 1e-10 or n2_norm < 1e-10 or b2_norm < 1e-10:
+    # Components of b0 and b2 orthogonal to the rotation axis
+    v = b0 - np.dot(b0, b1_unit) * b1_unit
+    w = b2 - np.dot(b2, b1_unit) * b1_unit
+    if np.linalg.norm(v) < 1e-10 or np.linalg.norm(w) < 1e-10:
         raise ValueError("Degenerate dihedral: collinear atoms or zero-length bond.")
 
-    n1 = n1 / n1_norm
-    n2 = n2 / n2_norm
-    b2_unit = b2 / b2_norm
-
-    # atan2 formulation for numerical stability
-    x = np.dot(n1, n2)
-    y = np.dot(np.cross(n1, b2_unit), n2)
-    angle_rad = math.atan2(y, x)
-    return math.degrees(angle_rad)
+    x = np.dot(v, w)
+    y = np.dot(np.cross(b1_unit, v), w)
+    return math.degrees(math.atan2(y, x))
 
 
 def _angle_deviation(angle: float, center: float) -> float:
@@ -179,31 +234,32 @@ def _classify_chi1(chi1: float, preferred_centers: List[float]) -> str:
 def _parse_pdb_atoms(pdb_path: str) -> List[Dict[str, Any]]:
     """Read ATOM/HETATM records from a PDB file into a list of dicts.
 
+    Delegates to :mod:`chiralfold._pdbio`, so water is skipped, only the first
+    model of a multi-model deposition is read, and alternate locations are
+    resolved to one self-consistent conformation per residue. The previous
+    inline parser did none of these things: for an NMR ensemble every model's
+    atoms were read and then silently overwritten by the last model in
+    :func:`_group_by_residue`, and alternate conformers overwrote each other.
+
     Returns:
         List of dicts with keys: record, serial, name, resname, chain,
-        resseq, x, y, z.
+        resseq, icode, x, y, z.
     """
-    atoms = []
-    with open(pdb_path, 'r') as fh:
-        for line in fh:
-            if not line.startswith(('ATOM  ', 'HETATM')):
-                continue
-            try:
-                atoms.append({
-                    'record':  line[0:6].strip(),
-                    'serial':  int(line[6:11]),
-                    'name':    line[12:16].strip(),
-                    'resname': line[17:20].strip(),
-                    'chain':   line[21].strip(),
-                    'resseq':  int(line[22:26]),
-                    'icode':   line[26].strip(),
-                    'x':       float(line[30:38]),
-                    'y':       float(line[38:46]),
-                    'z':       float(line[46:54]),
-                })
-            except (ValueError, IndexError):
-                continue
-    return atoms
+    return [
+        {
+            'record':  r.record,
+            'serial':  r.serial,
+            'name':    r.name,
+            'resname': r.resname,
+            'chain':   r.chain.strip(),
+            'resseq':  r.resseq,
+            'icode':   r.icode.strip(),
+            'x':       r.x,
+            'y':       r.y,
+            'z':       r.z,
+        }
+        for r in read_atom_records(pdb_path)
+    ]
 
 
 def _group_by_residue(atoms: List[Dict[str, Any]]) -> Dict[tuple, Dict[str, np.ndarray]]:

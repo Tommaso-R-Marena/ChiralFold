@@ -18,28 +18,28 @@
   "aggregate_corrected_to_expected_signed_volume_pct": 100.0,
   "operations": {
     "detection": {
-      "total_wall_time_s": 0.008236548004788347,
-      "mean_wall_time_s": 0.0027455160015961155,
-      "max_tracemalloc_peak_mb": 0.06839370727539062,
-      "max_process_ru_maxrss_mb": 186.40625
+      "total_wall_time_s": 0.009871525999983533,
+      "mean_wall_time_s": 0.0032905086666611774,
+      "max_tracemalloc_peak_mb": 0.07702255249023438,
+      "max_process_ru_maxrss_mb": 230.45703125
     },
     "correction": {
-      "total_wall_time_s": 0.02238086897705216,
-      "mean_wall_time_s": 0.007460289659017387,
-      "max_tracemalloc_peak_mb": 0.1282825469970703,
-      "max_process_ru_maxrss_mb": 186.40625
+      "total_wall_time_s": 0.024331987999971716,
+      "mean_wall_time_s": 0.00811066266665724,
+      "max_tracemalloc_peak_mb": 0.13940906524658203,
+      "max_process_ru_maxrss_mb": 230.45703125
     },
     "full_correct_af3_output_pipeline": {
-      "total_wall_time_s": 0.03669557000102941,
-      "mean_wall_time_s": 0.012231856667009803,
-      "max_tracemalloc_peak_mb": 0.13750362396240234,
-      "max_process_ru_maxrss_mb": 186.40625
+      "total_wall_time_s": 0.03830502799993951,
+      "mean_wall_time_s": 0.012768342666646504,
+      "max_tracemalloc_peak_mb": 0.1880359649658203,
+      "max_process_ru_maxrss_mb": 230.45703125
     },
     "chiralfold_predict": {
-      "total_wall_time_s": 52.7957485789957,
-      "mean_wall_time_s": 17.598582859665232,
-      "max_tracemalloc_peak_mb": 0.011559486389160156,
-      "max_process_ru_maxrss_mb": 186.40625
+      "total_wall_time_s": 31.916422916000016,
+      "mean_wall_time_s": 10.638807638666671,
+      "max_tracemalloc_peak_mb": 0.012028694152832031,
+      "max_process_ru_maxrss_mb": 230.45703125
     }
   },
   "systems": [
@@ -63,7 +63,9 @@
       ],
       "before": {
         "n_residues": 19,
+        "n_models": 1,
         "n_checked": 19,
+        "n_unassignable": 0,
         "n_violations": 8,
         "pct_violations": 42.10526315789473,
         "violations": [
@@ -71,80 +73,107 @@
             "resnum": 1,
             "resname": "DAS",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.60125
+            "signed_volume": 2.6012500000000003,
+            "basis": "cb"
           },
           {
             "resnum": 4,
             "resname": "DGL",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.601250000000001
+            "signed_volume": 2.601250000000001,
+            "basis": "cb"
           },
           {
             "resnum": 6,
             "resname": "DLE",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.6012499999999994
+            "signed_volume": 2.6012499999999994,
+            "basis": "cb"
           },
           {
             "resnum": 7,
             "resname": "DGL",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.6012499999999994
+            "signed_volume": 2.6012499999999994,
+            "basis": "cb"
           },
           {
             "resnum": 11,
             "resname": "DAR",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.601250000000003
+            "signed_volume": 2.601250000000003,
+            "basis": "cb"
           },
           {
             "resnum": 12,
             "resname": "DTR",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.6012499999999954
+            "signed_volume": 2.6012499999999954,
+            "basis": "cb"
           },
           {
             "resnum": 13,
             "resname": "DPN",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.601250000000003
+            "signed_volume": 2.601250000000003,
+            "basis": "cb"
           },
           {
             "resnum": 17,
             "resname": "DAL",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.6012499999999954
+            "signed_volume": 2.6012499999999954,
+            "basis": "cb"
           }
         ]
       },
       "correction": {
         "n_corrected": 8,
+        "n_skipped": 0,
         "violations_before": 8,
         "violations_after": 0,
-        "output_path": "/workspace/results/.cache/af3_resource_benchmark/DP19_correct_chirality.pdb"
+        "output_path": "/home/user/ChiralFold/results/.cache/af3_resource_benchmark/DP19_correct_chirality.pdb"
       },
       "pipeline": {
         "success": true,
         "summary": "Corrected 8 of 8 violations (42.1% \u2192 0.0%)",
         "after": {
           "n_residues": 19,
+          "n_models": 1,
           "n_checked": 19,
+          "n_unassignable": 0,
           "n_violations": 0,
           "pct_violations": 0.0,
           "violations": []
@@ -165,24 +194,24 @@
       },
       "measurements": {
         "detection": {
-          "wall_time_s": 0.003814809999312274,
-          "tracemalloc_peak_mb": 0.06839370727539062,
-          "process_ru_maxrss_mb": 140.0234375
+          "wall_time_s": 0.003963725000005525,
+          "tracemalloc_peak_mb": 0.07702255249023438,
+          "process_ru_maxrss_mb": 144.8984375
         },
         "correction": {
-          "wall_time_s": 0.01030166499549523,
-          "tracemalloc_peak_mb": 0.1282825469970703,
-          "process_ru_maxrss_mb": 140.2734375
+          "wall_time_s": 0.010633948000020155,
+          "tracemalloc_peak_mb": 0.13940906524658203,
+          "process_ru_maxrss_mb": 145.0234375
         },
         "full_correct_af3_output_pipeline": {
-          "wall_time_s": 0.017004419001750648,
-          "tracemalloc_peak_mb": 0.13750362396240234,
-          "process_ru_maxrss_mb": 140.2734375
+          "wall_time_s": 0.01616838999999004,
+          "tracemalloc_peak_mb": 0.1880359649658203,
+          "process_ru_maxrss_mb": 145.1484375
         },
         "chiralfold_predict": {
-          "wall_time_s": 38.15323043499666,
-          "tracemalloc_peak_mb": 0.011559486389160156,
-          "process_ru_maxrss_mb": 175.78125
+          "wall_time_s": 21.896744761999997,
+          "tracemalloc_peak_mb": 0.012028694152832031,
+          "process_ru_maxrss_mb": 230.45703125
         }
       }
     },
@@ -204,7 +233,9 @@
       ],
       "before": {
         "n_residues": 9,
+        "n_models": 1,
         "n_checked": 9,
+        "n_unassignable": 0,
         "n_violations": 6,
         "pct_violations": 66.66666666666666,
         "violations": [
@@ -212,64 +243,85 @@
             "resnum": 1,
             "resname": "DLE",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.60125
+            "signed_volume": 2.6012500000000003,
+            "basis": "cb"
           },
           {
             "resnum": 3,
             "resname": "DGN",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.6012499999999994
+            "signed_volume": 2.6012499999999994,
+            "basis": "cb"
           },
           {
             "resnum": 5,
             "resname": "DGL",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.6012499999999994
+            "signed_volume": 2.6012499999999994,
+            "basis": "cb"
           },
           {
             "resnum": 7,
             "resname": "DTH",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.6012499999999994
+            "signed_volume": 2.6012499999999994,
+            "basis": "cb"
           },
           {
             "resnum": 8,
             "resname": "DTR",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.601250000000003
+            "signed_volume": 2.601250000000003,
+            "basis": "cb"
           },
           {
             "resnum": 9,
             "resname": "DLY",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.6012499999999994
+            "signed_volume": 2.6012499999999994,
+            "basis": "cb"
           }
         ]
       },
       "correction": {
         "n_corrected": 6,
+        "n_skipped": 0,
         "violations_before": 6,
         "violations_after": 0,
-        "output_path": "/workspace/results/.cache/af3_resource_benchmark/DP9_correct_chirality.pdb"
+        "output_path": "/home/user/ChiralFold/results/.cache/af3_resource_benchmark/DP9_correct_chirality.pdb"
       },
       "pipeline": {
         "success": true,
         "summary": "Corrected 6 of 6 violations (66.7% \u2192 0.0%)",
         "after": {
           "n_residues": 9,
+          "n_models": 1,
           "n_checked": 9,
+          "n_unassignable": 0,
           "n_violations": 0,
           "pct_violations": 0.0,
           "violations": []
@@ -290,24 +342,24 @@
       },
       "measurements": {
         "detection": {
-          "wall_time_s": 0.0020110920013394207,
-          "tracemalloc_peak_mb": 0.03718376159667969,
-          "process_ru_maxrss_mb": 175.78125
+          "wall_time_s": 0.0028430219999791007,
+          "tracemalloc_peak_mb": 0.04141807556152344,
+          "process_ru_maxrss_mb": 230.45703125
         },
         "correction": {
-          "wall_time_s": 0.005498764992807992,
-          "tracemalloc_peak_mb": 0.06897354125976562,
-          "process_ru_maxrss_mb": 175.78125
+          "wall_time_s": 0.006524906999970881,
+          "tracemalloc_peak_mb": 0.07398700714111328,
+          "process_ru_maxrss_mb": 230.45703125
         },
         "full_correct_af3_output_pipeline": {
-          "wall_time_s": 0.008827352998196147,
-          "tracemalloc_peak_mb": 0.07425785064697266,
-          "process_ru_maxrss_mb": 175.78125
+          "wall_time_s": 0.010459822999962398,
+          "tracemalloc_peak_mb": 0.09824275970458984,
+          "process_ru_maxrss_mb": 230.45703125
         },
         "chiralfold_predict": {
-          "wall_time_s": 3.6245946970011573,
-          "tracemalloc_peak_mb": 0.00732421875,
-          "process_ru_maxrss_mb": 186.40625
+          "wall_time_s": 2.9798280269999964,
+          "tracemalloc_peak_mb": 0.007544517517089844,
+          "process_ru_maxrss_mb": 230.45703125
         }
       }
     },
@@ -329,7 +381,9 @@
       ],
       "before": {
         "n_residues": 12,
+        "n_models": 1,
         "n_checked": 11,
+        "n_unassignable": 0,
         "n_violations": 6,
         "pct_violations": 54.54545454545454,
         "violations": [
@@ -337,64 +391,85 @@
             "resnum": 1,
             "resname": "DAS",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.60125
+            "signed_volume": 2.6012500000000003,
+            "basis": "cb"
           },
           {
             "resnum": 6,
             "resname": "DAL",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.6012499999999994
+            "signed_volume": 2.6012499999999994,
+            "basis": "cb"
           },
           {
             "resnum": 8,
             "resname": "DGL",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.601250000000003
+            "signed_volume": 2.601250000000003,
+            "basis": "cb"
           },
           {
             "resnum": 9,
             "resname": "DAL",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.6012499999999994
+            "signed_volume": 2.6012499999999994,
+            "basis": "cb"
           },
           {
             "resnum": 10,
             "resname": "DLE",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.601250000000003
+            "signed_volume": 2.601250000000003,
+            "basis": "cb"
           },
           {
             "resnum": 11,
             "resname": "DLE",
             "chain": "A",
+            "icode": " ",
+            "model": 1,
             "expected_chirality": "D",
             "found_chirality": "L",
-            "signed_volume": 2.601250000000003
+            "signed_volume": 2.601250000000003,
+            "basis": "cb"
           }
         ]
       },
       "correction": {
         "n_corrected": 6,
+        "n_skipped": 0,
         "violations_before": 6,
         "violations_after": 0,
-        "output_path": "/workspace/results/.cache/af3_resource_benchmark/DP12_correct_chirality.pdb"
+        "output_path": "/home/user/ChiralFold/results/.cache/af3_resource_benchmark/DP12_correct_chirality.pdb"
       },
       "pipeline": {
         "success": true,
         "summary": "Corrected 6 of 6 violations (54.5% \u2192 0.0%)",
         "after": {
           "n_residues": 12,
+          "n_models": 1,
           "n_checked": 11,
+          "n_unassignable": 0,
           "n_violations": 0,
           "pct_violations": 0.0,
           "violations": []
@@ -415,33 +490,33 @@
       },
       "measurements": {
         "detection": {
-          "wall_time_s": 0.0024106460041366518,
-          "tracemalloc_peak_mb": 0.04644584655761719,
-          "process_ru_maxrss_mb": 186.40625
+          "wall_time_s": 0.0030647789999989072,
+          "tracemalloc_peak_mb": 0.05155754089355469,
+          "process_ru_maxrss_mb": 230.45703125
         },
         "correction": {
-          "wall_time_s": 0.006580438988748938,
-          "tracemalloc_peak_mb": 0.08601951599121094,
-          "process_ru_maxrss_mb": 186.40625
+          "wall_time_s": 0.00717313299998068,
+          "tracemalloc_peak_mb": 0.09213829040527344,
+          "process_ru_maxrss_mb": 230.45703125
         },
         "full_correct_af3_output_pipeline": {
-          "wall_time_s": 0.010863798001082614,
-          "tracemalloc_peak_mb": 0.09199047088623047,
-          "process_ru_maxrss_mb": 186.40625
+          "wall_time_s": 0.011676814999987073,
+          "tracemalloc_peak_mb": 0.12348175048828125,
+          "process_ru_maxrss_mb": 230.45703125
         },
         "chiralfold_predict": {
-          "wall_time_s": 11.017923446997884,
-          "tracemalloc_peak_mb": 0.00909423828125,
-          "process_ru_maxrss_mb": 186.40625
+          "wall_time_s": 7.039850127000022,
+          "tracemalloc_peak_mb": 0.009615898132324219,
+          "process_ru_maxrss_mb": 230.45703125
         }
       }
     }
   ],
   "outputs": {
-    "json": "/workspace/results/af3_resource_benchmark.json",
-    "csv": "/workspace/results/af3_resource_benchmark.csv",
-    "accuracy_figure": "/workspace/results/af3_accuracy_comparison.png",
-    "speed_memory_figure": "/workspace/results/af3_speed_memory.png",
-    "paper_figure": "/workspace/paper/submission/bioinformatics/figures/fig7_af3_resource_benchmark.png"
+    "json": "/home/user/ChiralFold/results/af3_resource_benchmark.json",
+    "csv": "/home/user/ChiralFold/results/af3_resource_benchmark.csv",
+    "accuracy_figure": "/home/user/ChiralFold/results/af3_accuracy_comparison.png",
+    "speed_memory_figure": "/home/user/ChiralFold/results/af3_speed_memory.png",
+    "paper_figure": "/home/user/ChiralFold/paper/submission/bioinformatics/figures/fig7_af3_resource_benchmark.png"
   }
 }

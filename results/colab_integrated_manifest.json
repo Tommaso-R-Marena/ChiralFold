@@ -1,6 +1,6 @@
 {
   "generated_at": "2026-07-20T18:25:22.783113+00:00",
-  "chiralfold_version": "3.5.1",
+  "chiralfold_version": "3.6.0",
   "dashboard_notebook": "demos/ChiralFold_Results_Dashboard.ipynb",
   "interpretation": {
     "paper_headline_ramachandran": "Manuscript headline: n=362 clean (363 minus 5M2K glycopeptide), Spearman \u03c1=0.521, Pearson r=0.853 on Ramachandran outlier percentage.",

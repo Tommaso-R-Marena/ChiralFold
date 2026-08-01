@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chiralfold"
-version = "3.5.1"
+version = "3.6.0"
 description = "Chirality-correct protein stereochemistry toolkit: PDB auditing, D-peptide construction, AF3 correction, and mirror-image design"
 readme = "README.md"
 license = "MIT"
