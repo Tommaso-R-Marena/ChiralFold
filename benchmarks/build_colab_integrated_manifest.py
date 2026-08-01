@@ -32,7 +32,7 @@ def build_manifest() -> dict:
 
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "chiralfold_version": "3.5.1",
+        "chiralfold_version": "3.6.0",
         "dashboard_notebook": "demos/ChiralFold_Results_Dashboard.ipynb",
         "interpretation": {
             "paper_headline_ramachandran": (

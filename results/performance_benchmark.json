@@ -1,0 +1,454 @@
+{
+  "generated_utc": "2026-07-31T00:11:50+00:00",
+  "environment": {
+    "python": "3.11.15",
+    "platform": "Linux-6.18.5-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "cpu_count": 4,
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "git_commit": "017f5a7"
+  },
+  "base_structure": "3IWY.pdb",
+  "tile_spacing_angstrom": 80.0,
+  "audit_scaling": [
+    {
+      "copies": 1,
+      "n_atoms": 1589,
+      "n_residues": 189,
+      "source_records": 1701,
+      "audit_pdb": {
+        "median_ms": 23.5365,
+        "min_ms": 22.7559,
+        "max_ms": 24.9968,
+        "stdev_ms": 0.8233,
+        "repeats": 7
+      },
+      "parse": {
+        "median_ms": 5.4195,
+        "min_ms": 5.2676,
+        "max_ms": 5.9161,
+        "stdev_ms": 0.2159,
+        "repeats": 7
+      },
+      "residue_table": {
+        "median_ms": 0.5944,
+        "min_ms": 0.562,
+        "max_ms": 0.7837,
+        "stdev_ms": 0.0796,
+        "repeats": 7
+      },
+      "chirality": {
+        "median_ms": 0.1165,
+        "min_ms": 0.0841,
+        "max_ms": 0.145,
+        "stdev_ms": 0.024,
+        "repeats": 7
+      },
+      "bond_geometry": {
+        "median_ms": 0.3209,
+        "min_ms": 0.3031,
+        "max_ms": 0.369,
+        "stdev_ms": 0.0236,
+        "repeats": 7
+      },
+      "ramachandran": {
+        "median_ms": 0.4771,
+        "min_ms": 0.4129,
+        "max_ms": 0.525,
+        "stdev_ms": 0.0397,
+        "repeats": 7
+      },
+      "planarity": {
+        "median_ms": 0.2135,
+        "min_ms": 0.1854,
+        "max_ms": 0.2787,
+        "stdev_ms": 0.0328,
+        "repeats": 7
+      },
+      "clashes": {
+        "median_ms": 14.2274,
+        "min_ms": 12.7914,
+        "max_ms": 30.5759,
+        "stdev_ms": 6.5385,
+        "repeats": 7
+      },
+      "overall_score": 79.6,
+      "clash_score": 13.22,
+      "us_per_atom": 14.812
+    },
+    {
+      "copies": 2,
+      "n_atoms": 3178,
+      "n_residues": 378,
+      "source_records": 3402,
+      "audit_pdb": {
+        "median_ms": 47.1165,
+        "min_ms": 44.8721,
+        "max_ms": 73.3375,
+        "stdev_ms": 10.1973,
+        "repeats": 7
+      },
+      "parse": {
+        "median_ms": 12.5758,
+        "min_ms": 11.2714,
+        "max_ms": 30.9429,
+        "stdev_ms": 7.043,
+        "repeats": 7
+      },
+      "residue_table": {
+        "median_ms": 1.4437,
+        "min_ms": 1.2391,
+        "max_ms": 1.5851,
+        "stdev_ms": 0.1413,
+        "repeats": 7
+      },
+      "chirality": {
+        "median_ms": 0.1427,
+        "min_ms": 0.1111,
+        "max_ms": 0.2117,
+        "stdev_ms": 0.0405,
+        "repeats": 7
+      },
+      "bond_geometry": {
+        "median_ms": 0.4537,
+        "min_ms": 0.4147,
+        "max_ms": 0.5231,
+        "stdev_ms": 0.0397,
+        "repeats": 7
+      },
+      "ramachandran": {
+        "median_ms": 0.6067,
+        "min_ms": 0.5782,
+        "max_ms": 0.6377,
+        "stdev_ms": 0.0229,
+        "repeats": 7
+      },
+      "planarity": {
+        "median_ms": 0.2974,
+        "min_ms": 0.2783,
+        "max_ms": 0.3666,
+        "stdev_ms": 0.0324,
+        "repeats": 7
+      },
+      "clashes": {
+        "median_ms": 28.483,
+        "min_ms": 27.7906,
+        "max_ms": 29.8641,
+        "stdev_ms": 0.7696,
+        "repeats": 7
+      },
+      "overall_score": 79.6,
+      "clash_score": 13.22,
+      "us_per_atom": 14.826
+    },
+    {
+      "copies": 4,
+      "n_atoms": 6356,
+      "n_residues": 756,
+      "source_records": 6804,
+      "audit_pdb": {
+        "median_ms": 114.9373,
+        "min_ms": 96.3161,
+        "max_ms": 161.2921,
+        "stdev_ms": 23.8392,
+        "repeats": 7
+      },
+      "parse": {
+        "median_ms": 25.0952,
+        "min_ms": 24.0908,
+        "max_ms": 47.2919,
+        "stdev_ms": 9.9782,
+        "repeats": 7
+      },
+      "residue_table": {
+        "median_ms": 2.6169,
+        "min_ms": 2.5268,
+        "max_ms": 3.5245,
+        "stdev_ms": 0.3493,
+        "repeats": 7
+      },
+      "chirality": {
+        "median_ms": 0.2712,
+        "min_ms": 0.2012,
+        "max_ms": 0.3886,
+        "stdev_ms": 0.0691,
+        "repeats": 7
+      },
+      "bond_geometry": {
+        "median_ms": 0.7473,
+        "min_ms": 0.7167,
+        "max_ms": 0.8643,
+        "stdev_ms": 0.0488,
+        "repeats": 7
+      },
+      "ramachandran": {
+        "median_ms": 0.8783,
+        "min_ms": 0.7929,
+        "max_ms": 0.9189,
+        "stdev_ms": 0.0437,
+        "repeats": 7
+      },
+      "planarity": {
+        "median_ms": 0.5192,
+        "min_ms": 0.4757,
+        "max_ms": 0.5898,
+        "stdev_ms": 0.0416,
+        "repeats": 7
+      },
+      "clashes": {
+        "median_ms": 62.4686,
+        "min_ms": 57.1493,
+        "max_ms": 83.0871,
+        "stdev_ms": 9.1609,
+        "repeats": 7
+      },
+      "overall_score": 79.6,
+      "clash_score": 13.22,
+      "us_per_atom": 18.083
+    },
+    {
+      "copies": 8,
+      "n_atoms": 12712,
+      "n_residues": 1512,
+      "source_records": 13608,
+      "audit_pdb": {
+        "median_ms": 232.4792,
+        "min_ms": 201.5404,
+        "max_ms": 277.0603,
+        "stdev_ms": 25.7012,
+        "repeats": 7
+      },
+      "parse": {
+        "median_ms": 52.409,
+        "min_ms": 49.24,
+        "max_ms": 74.219,
+        "stdev_ms": 11.5988,
+        "repeats": 7
+      },
+      "residue_table": {
+        "median_ms": 5.4489,
+        "min_ms": 5.3096,
+        "max_ms": 6.2868,
+        "stdev_ms": 0.3479,
+        "repeats": 7
+      },
+      "chirality": {
+        "median_ms": 0.3475,
+        "min_ms": 0.3148,
+        "max_ms": 0.5211,
+        "stdev_ms": 0.0842,
+        "repeats": 7
+      },
+      "bond_geometry": {
+        "median_ms": 1.2289,
+        "min_ms": 1.165,
+        "max_ms": 1.3075,
+        "stdev_ms": 0.0513,
+        "repeats": 7
+      },
+      "ramachandran": {
+        "median_ms": 1.4422,
+        "min_ms": 1.3704,
+        "max_ms": 1.4868,
+        "stdev_ms": 0.0414,
+        "repeats": 7
+      },
+      "planarity": {
+        "median_ms": 0.9956,
+        "min_ms": 0.9328,
+        "max_ms": 1.1139,
+        "stdev_ms": 0.0616,
+        "repeats": 7
+      },
+      "clashes": {
+        "median_ms": 131.4306,
+        "min_ms": 122.7315,
+        "max_ms": 149.4615,
+        "stdev_ms": 10.7284,
+        "repeats": 7
+      },
+      "overall_score": 79.6,
+      "clash_score": 13.22,
+      "us_per_atom": 18.288
+    },
+    {
+      "copies": 16,
+      "n_atoms": 25424,
+      "n_residues": 3024,
+      "source_records": 27216,
+      "audit_pdb": {
+        "median_ms": 468.0821,
+        "min_ms": 440.4309,
+        "max_ms": 494.5844,
+        "stdev_ms": 19.9626,
+        "repeats": 7
+      },
+      "parse": {
+        "median_ms": 128.6378,
+        "min_ms": 103.0959,
+        "max_ms": 138.0873,
+        "stdev_ms": 11.0809,
+        "repeats": 7
+      },
+      "residue_table": {
+        "median_ms": 9.4022,
+        "min_ms": 9.2106,
+        "max_ms": 10.9036,
+        "stdev_ms": 0.6099,
+        "repeats": 7
+      },
+      "chirality": {
+        "median_ms": 1.2268,
+        "min_ms": 0.9131,
+        "max_ms": 1.4219,
+        "stdev_ms": 0.1817,
+        "repeats": 7
+      },
+      "bond_geometry": {
+        "median_ms": 2.902,
+        "min_ms": 2.5402,
+        "max_ms": 3.2774,
+        "stdev_ms": 0.2512,
+        "repeats": 7
+      },
+      "ramachandran": {
+        "median_ms": 3.6128,
+        "min_ms": 3.5288,
+        "max_ms": 3.6936,
+        "stdev_ms": 0.0602,
+        "repeats": 7
+      },
+      "planarity": {
+        "median_ms": 2.84,
+        "min_ms": 2.4797,
+        "max_ms": 3.0361,
+        "stdev_ms": 0.1706,
+        "repeats": 7
+      },
+      "clashes": {
+        "median_ms": 275.998,
+        "min_ms": 250.7251,
+        "max_ms": 285.8496,
+        "stdev_ms": 15.6422,
+        "repeats": 7
+      },
+      "overall_score": 79.6,
+      "clash_score": 13.22,
+      "us_per_atom": 18.411
+    }
+  ],
+  "interface_scaling": [
+    {
+      "copies": 1,
+      "n_interface_pairs": 15410,
+      "salt_bridges": 3,
+      "hbonds": 343,
+      "score_interface": {
+        "median_ms": 28.8977,
+        "min_ms": 28.4516,
+        "max_ms": 47.7802,
+        "stdev_ms": 8.1244,
+        "repeats": 7
+      }
+    },
+    {
+      "copies": 2,
+      "n_interface_pairs": 15410,
+      "salt_bridges": 3,
+      "hbonds": 343,
+      "score_interface": {
+        "median_ms": 39.9765,
+        "min_ms": 38.7124,
+        "max_ms": 56.1575,
+        "stdev_ms": 7.9167,
+        "repeats": 7
+      }
+    },
+    {
+      "copies": 4,
+      "n_interface_pairs": 15410,
+      "salt_bridges": 3,
+      "hbonds": 343,
+      "score_interface": {
+        "median_ms": 75.5415,
+        "min_ms": 59.9861,
+        "max_ms": 79.1042,
+        "stdev_ms": 8.9645,
+        "repeats": 7
+      }
+    },
+    {
+      "copies": 8,
+      "n_interface_pairs": 15410,
+      "salt_bridges": 3,
+      "hbonds": 343,
+      "score_interface": {
+        "median_ms": 122.0577,
+        "min_ms": 106.6446,
+        "max_ms": 177.0178,
+        "stdev_ms": 22.4313,
+        "repeats": 7
+      }
+    },
+    {
+      "copies": 16,
+      "n_interface_pairs": 15410,
+      "salt_bridges": 3,
+      "hbonds": 343,
+      "score_interface": {
+        "median_ms": 261.458,
+        "min_ms": 246.2449,
+        "max_ms": 450.9574,
+        "stdev_ms": 72.7301,
+        "repeats": 7
+      }
+    }
+  ],
+  "pipelines": {
+    "structure": "3IWY.pdb",
+    "n_checked": 173,
+    "n_violations": 0,
+    "n_unassignable": 0,
+    "detect_chirality_violations": {
+      "median_ms": 8.3226,
+      "min_ms": 7.1203,
+      "max_ms": 8.4993,
+      "stdev_ms": 0.5958,
+      "repeats": 7
+    },
+    "correct_af3_output": {
+      "median_ms": 8.8079,
+      "min_ms": 7.6373,
+      "max_ms": 28.0914,
+      "stdev_ms": 7.3274,
+      "repeats": 7
+    },
+    "mirror_pdb": {
+      "median_ms": 17.1764,
+      "min_ms": 10.3816,
+      "max_ms": 17.9072,
+      "stdev_ms": 3.3515,
+      "repeats": 7
+    }
+  },
+  "ramachandran_batch": {
+    "n_points": 20000,
+    "batched": {
+      "median_ms": 6.9284,
+      "min_ms": 6.6355,
+      "max_ms": 7.1288,
+      "stdev_ms": 0.1664,
+      "repeats": 7
+    },
+    "per_residue": {
+      "median_ms": 175.0861,
+      "min_ms": 161.6672,
+      "max_ms": 188.5049,
+      "stdev_ms": 18.9771,
+      "repeats": 2
+    },
+    "speedup": 25.27
+  },
+  "peak_rss_mb": 194.9
+}

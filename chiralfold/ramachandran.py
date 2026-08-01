@@ -21,7 +21,7 @@ References:
 from __future__ import annotations
 
 import math
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 import numpy as np
 
@@ -183,6 +183,33 @@ def _in_any_region(phi: float, psi: float,
     return False
 
 
+# Region tables as (n_regions, 4) float arrays, built once at import time so
+# that batch classification never re-materialises the Python tuple lists.
+_REGION_ARRAYS: dict = {}
+
+
+def _region_array(regions: List[Tuple[float, float, float, float]]) -> np.ndarray:
+    key = id(regions)
+    arr = _REGION_ARRAYS.get(key)
+    if arr is None:
+        arr = np.asarray(regions, dtype=float).reshape(-1, 4)
+        _REGION_ARRAYS[key] = arr
+    return arr
+
+
+def _in_any_region_v(phi: np.ndarray, psi: np.ndarray,
+                     regions: List[Tuple[float, float, float, float]]) -> np.ndarray:
+    """Vectorised :func:`_in_any_region` over equal-length φ/ψ arrays."""
+    box = _region_array(regions)
+    if box.size == 0 or phi.size == 0:
+        return np.zeros(phi.shape, dtype=bool)
+    inside = (
+        (phi[:, None] >= box[None, :, 0]) & (phi[:, None] <= box[None, :, 1])
+        & (psi[:, None] >= box[None, :, 2]) & (psi[:, None] <= box[None, :, 3])
+    )
+    return inside.any(axis=1)
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 # Empirical probability grid (built from PDB data)
 # ═══════════════════════════════════════════════════════════════════════════
@@ -298,16 +325,7 @@ def score_ramachandran(phi: float, psi: float,
 
 def _score_rectangular(phi: float, psi: float, residue_type: str) -> str:
     """Score using rectangular region definitions (L and D variants)."""
-    if residue_type == 'glycine':
-        fav, alw = _GLY_FAVORED, _GLY_ALLOWED
-    elif residue_type == 'proline':
-        fav, alw = _PRO_FAVORED, _PRO_ALLOWED
-    elif residue_type == 'D-general':
-        fav, alw = _D_GENERAL_FAVORED, _D_GENERAL_ALLOWED
-    elif residue_type == 'D-proline':
-        fav, alw = _D_PRO_FAVORED, _D_PRO_ALLOWED
-    else:
-        fav, alw = _GENERAL_FAVORED, _GENERAL_ALLOWED
+    fav, alw = _REGION_TABLES.get(residue_type, _REGION_TABLES['general'])
 
     if _in_any_region(phi, psi, fav):
         return 'favored'
@@ -315,6 +333,95 @@ def _score_rectangular(phi: float, psi: float, residue_type: str) -> str:
         return 'allowed'
     else:
         return 'outlier'
+
+
+#: Region tables per residue type, in (favored, allowed) order.
+_REGION_TABLES = {
+    "glycine":   (_GLY_FAVORED, _GLY_ALLOWED),
+    "proline":   (_PRO_FAVORED, _PRO_ALLOWED),
+    "D-general": (_D_GENERAL_FAVORED, _D_GENERAL_ALLOWED),
+    "D-proline": (_D_PRO_FAVORED, _D_PRO_ALLOWED),
+    "general":   (_GENERAL_FAVORED, _GENERAL_ALLOWED),
+}
+
+
+def _score_empirical_v(phi: np.ndarray, psi: np.ndarray) -> Optional[np.ndarray]:
+    """Vectorised empirical-grid lookup; ``None`` when the grid is unavailable."""
+    if _EMPIRICAL_GRID is None or _EMPIRICAL_THRESHOLDS is None:
+        return None
+    grid = _EMPIRICAL_GRID['counts']
+    phi_idx = np.searchsorted(_EMPIRICAL_GRID['phi_edges'], phi) - 1
+    psi_idx = np.searchsorted(_EMPIRICAL_GRID['psi_edges'], psi) - 1
+    out = np.full(phi.shape, 2, dtype=np.int8)  # 0 favored, 1 allowed, 2 outlier
+    in_grid = (
+        (phi_idx >= 0) & (phi_idx < grid.shape[0])
+        & (psi_idx >= 0) & (psi_idx < grid.shape[1])
+    )
+    if in_grid.any():
+        prob = grid[phi_idx[in_grid], psi_idx[in_grid]]
+        codes = np.where(
+            prob >= _EMPIRICAL_THRESHOLDS['favored'], 0,
+            np.where(prob > 0, 1, 2),
+        ).astype(np.int8)
+        out[in_grid] = codes
+    return out
+
+
+#: Integer codes used internally by the batch classifier.
+_REGION_NAMES = ("favored", "allowed", "outlier")
+
+
+def classify_regions(phi, psi, residue_types) -> List[str]:
+    """Classify many (φ, ψ) pairs at once.
+
+    Semantically identical to calling :func:`score_ramachandran` per residue,
+    but groups residues by type and evaluates each region table with a single
+    broadcast comparison. This is the path the auditor uses; the scalar
+    function remains the documented single-residue API.
+
+    Args:
+        phi: array-like of φ angles in degrees.
+        psi: array-like of ψ angles in degrees (same length as *phi*).
+        residue_types: sequence of type strings, one per residue.
+
+    Returns:
+        List of ``'favored'`` / ``'allowed'`` / ``'outlier'`` strings.
+    """
+    phi_arr = np.asarray(phi, dtype=float)
+    psi_arr = np.asarray(psi, dtype=float)
+    n = phi_arr.size
+    if n == 0:
+        return []
+    if psi_arr.size != n or len(residue_types) != n:
+        raise ValueError("phi, psi and residue_types must have equal length")
+
+    codes = np.full(n, 2, dtype=np.int8)
+    nan_mask = np.isnan(phi_arr) | np.isnan(psi_arr)
+
+    types_arr = np.asarray(residue_types, dtype=object)
+    for rtype in set(residue_types):
+        sel = (types_arr == rtype) & ~nan_mask
+        if not sel.any():
+            continue
+        fav_regions, alw_regions = _REGION_TABLES.get(
+            rtype, _REGION_TABLES["general"]
+        )
+        sub_phi = phi_arr[sel]
+        sub_psi = psi_arr[sel]
+        fav = _in_any_region_v(sub_phi, sub_psi, fav_regions)
+        alw = _in_any_region_v(sub_phi, sub_psi, alw_regions)
+        sub = np.where(fav, 0, np.where(alw, 1, 2)).astype(np.int8)
+
+        # L-general residues additionally consult the empirical PDB grid and
+        # take the more generous of the two verdicts (see score_ramachandran).
+        if rtype == "general":
+            _load_empirical_grid()
+            emp = _score_empirical_v(sub_phi, sub_psi)
+            if emp is not None:
+                sub = np.minimum(sub, emp)
+        codes[sel] = sub
+
+    return [_REGION_NAMES[c] for c in codes]
 
 
 def score_ramachandran_batch(dihedrals, residue_types=None):
@@ -328,12 +435,16 @@ def score_ramachandran_batch(dihedrals, residue_types=None):
     Returns:
         dict with 'pct_favored', 'pct_allowed', 'pct_outlier', 'per_residue'.
     """
+    pairs = list(dihedrals)
     if residue_types is None:
-        residue_types = ['general'] * len(dihedrals)
+        residue_types = ['general'] * len(pairs)
 
-    results = []
-    for (phi, psi), rtype in zip(dihedrals, residue_types):
-        results.append(score_ramachandran(phi, psi, rtype))
+    if pairs:
+        phis = [p for p, _ in pairs]
+        psis = [q for _, q in pairs]
+        results = classify_regions(phis, psis, list(residue_types))
+    else:
+        results = []
 
     n = len(results)
     if n == 0:

@@ -24,7 +24,7 @@ Single notebook covering all headline metrics:
 | mmCIF re-verification | 29/29 known errors recovered; universe scan (9BC4) |
 | Lean / interpretation | Machine-checked no-go theorems summary |
 
-Manifest: `results/colab_integrated_manifest.json` (version 3.5.1).
+Manifest: `results/colab_integrated_manifest.json` (version 3.6.0).
 
 ## 3. mmCIF expansion (optional; network)
 

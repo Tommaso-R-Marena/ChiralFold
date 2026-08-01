@@ -614,6 +614,95 @@ def figure7_af3_resource_benchmark() -> str:
     return out
 
 
+def figure8_performance() -> str:
+    """Auditor scaling and before/after speedups (v3.5.1 → v3.6.0)."""
+    with open(os.path.join(DATA, "performance_benchmark.json")) as fp:
+        bench = json.load(fp)
+    with open(os.path.join(DATA, "performance_comparison.json")) as fp:
+        comp = json.load(fp)
+
+    fig, (ax_scale, ax_speed) = plt.subplots(1, 2, figsize=(10, 4.0))
+
+    # ── (a) wall time vs structure size, with an ideal-linear guide ──────
+    atoms = np.array([r["n_atoms"] for r in bench["audit_scaling"]], dtype=float)
+    total = np.array(
+        [r["audit_pdb"]["median_ms"] for r in bench["audit_scaling"]], dtype=float
+    )
+    clash = np.array(
+        [r["clashes"]["median_ms"] for r in bench["audit_scaling"]], dtype=float
+    )
+    parse = np.array(
+        [r["parse"]["median_ms"] for r in bench["audit_scaling"]], dtype=float
+    )
+    backbone = np.array(
+        [
+            sum(
+                r[k]["median_ms"]
+                for k in ("chirality", "bond_geometry", "ramachandran", "planarity")
+            )
+            for r in bench["audit_scaling"]
+        ],
+        dtype=float,
+    )
+
+    ax_scale.plot(atoms, total, "o-", color=PAL["navy"], lw=1.6, ms=5,
+                  label="audit_pdb (total)")
+    ax_scale.plot(atoms, clash, "s--", color=PAL["error_prone"], lw=1.2, ms=4,
+                  label="clash detection")
+    ax_scale.plot(atoms, parse, "^--", color=PAL["xray"], lw=1.2, ms=4,
+                  label="PDB parse")
+    ax_scale.plot(atoms, backbone, "d--", color=PAL["clean"], lw=1.2, ms=4,
+                  label="backbone checks")
+    ideal = total[0] * atoms / atoms[0]
+    ax_scale.plot(atoms, ideal, ":", color=PAL["muted"], lw=1.2, label="linear (ideal)")
+
+    ax_scale.set_xscale("log")
+    ax_scale.set_yscale("log")
+    ax_scale.set_xlabel("Atoms in structure")
+    ax_scale.set_ylabel("Wall time (ms)")
+    # Tick only at the measured sizes: the default log locator crowds the axis
+    # with 2×10^3 / 3×10^3 / 4×10^3 labels that overlap at this figure width.
+    ax_scale.set_xticks(atoms)
+    ax_scale.set_xticklabels([f"{int(a):,}" for a in atoms], fontsize=8)
+    ax_scale.set_xticks([], minor=True)
+    ax_scale.legend(fontsize=7.5, frameon=False, loc="upper left")
+    _style_axes(ax_scale)
+    ax_scale.set_title("(a) Auditor scaling", fontsize=10, color=PAL["navy"])
+
+    # ── (b) speedup by operation ────────────────────────────────────────
+    labels, speedups = [], []
+    for row in comp["audit_scaling"]:
+        labels.append(f"audit\n{row['n_atoms']:,} atoms")
+        speedups.append(row["speedup"])
+    for row in comp["interface_scaling"]:
+        if row["copies"] in (1, 16):
+            labels.append(f"interface\n{row['copies']}×")
+            speedups.append(row["speedup"])
+    labels.append("chirality\ndetection")
+    speedups.append(comp["pipelines"]["detect_chirality_violations"]["speedup"])
+
+    colors = [PAL["navy"]] * len(comp["audit_scaling"]) + [PAL["xray"]] * 2 + [PAL["clean"]]
+    bars = ax_speed.bar(range(len(speedups)), speedups, color=colors,
+                        edgecolor=PAL["navy"], linewidth=0.6, width=0.66)
+    ax_speed.axhline(1.0, color=PAL["muted"], lw=1.0, ls="--")
+    ax_speed.set_xticks(range(len(labels)))
+    ax_speed.set_xticklabels(labels, fontsize=7)
+    ax_speed.set_ylabel("Speedup vs v3.5.1 (×)")
+    ax_speed.set_ylim(0, max(speedups) * 1.28)
+    for bar, value in zip(bars, speedups):
+        ax_speed.text(bar.get_x() + bar.get_width() / 2,
+                      value + max(speedups) * 0.03, f"{value:.1f}×",
+                      ha="center", va="bottom", fontsize=8, color=PAL["navy"])
+    _style_axes(ax_speed)
+    ax_speed.set_title("(b) Speedup by operation", fontsize=10, color=PAL["navy"])
+
+    fig.tight_layout()
+    out = os.path.join(HERE, "fig8_performance.png")
+    _savefig(fig, out)
+    plt.close(fig)
+    return out
+
+
 def main() -> int:
     ccd_rows = _read_ccd_coverage()
     err_rows = _read_error_table()
@@ -627,6 +716,7 @@ def main() -> int:
         figure5_ccd_heatmap(ccd_rows, err_rows),
         figure6_ramachandran_expanded(),
         figure7_af3_resource_benchmark(),
+        figure8_performance(),
     ]
     for path in outputs:
         print(f"wrote {path}")

@@ -8,12 +8,18 @@
 \usepackage{ragged2e}
 
 \graphicspath{{figures/}}
-% Breakable repo paths and Lean identifiers
-\newcommand{\repopath}[1]{\path{#1}}
-\newcommand{\leanthm}[1]{\path{#1}}
-\newcommand{\leanfile}[1]{\path{#1}}
+% Breakable repo paths and Lean identifiers.
+% Declared robust so they survive moving arguments (\paragraph writes its
+% argument to the .toc, where the fragile \path/\url machinery otherwise
+% expanded and raised "\url used in a moving argument".)
+\DeclareRobustCommand{\repopath}[1]{\path{#1}}
+\DeclareRobustCommand{\leanthm}[1]{\path{#1}}
+\DeclareRobustCommand{\leanfile}[1]{\path{#1}}
 % Safe in \paragraph / PDF bookmarks (TOC-safe headings)
-\newcommand{\leanhdr}[1]{\texorpdfstring{\leanthm{#1}}{#1}}
+\DeclareRobustCommand{\leanhdr}[1]{\texorpdfstring{\leanthm{#1}}{#1}}
+% Allow modest line-stretch, as in the main manuscript, so long identifiers in
+% justified prose do not overflow the measure.
+\emergencystretch=2em
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
@@ -78,7 +84,31 @@ The signed-volume C$\alpha$ classifier does not require standard protein geometr
 The primary survey used legacy PDB files. We subsequently (i)~re-parsed all 16 known-error structures from native RCSB mmCIF and (ii)~enumerated the live mmCIF-only universe of entries containing any of the 18 standard D-amino acid CCD codes (RCSB polymer+ligand search, then HEAD filter for missing legacy \texttt{.pdb}). The historically cited ``$\sim$245'' figure counted failed legacy downloads against a broad DPN/DAS/DAL enumeration; the checkable live mmCIF-only set is smaller ($n=79$ at freeze). Script: \repopath{benchmarks/mmcif_d_residue_expansion.py} (\texttt{--mode both}); Colab: \repopath{demos/Reproduce_mmCIF_D_Residue_Survey.ipynb}. Known-error cohort recovers 29/29 mismatches; the universe cohort reports one additional clear mismatch (9BC4 DLE, $V=+2.82$~\AA$^3$).
 
 \subsection{AF3-mimetic correction resource benchmark}
-Synthetic AF3-mimetic Childs-system peptide PDBs with the published 51\% AF3 D-peptide violation rate as external reference. Across DP19, DP9, and DP12 (39 auditable residues; 20 synthetic inverted stereocenters), ChiralFold detected 100\% of inverted stereocenters, corrected 100\% to the expected signed-volume class, and left 0\% residual violations. Full pipeline: 0.0367~s total. Data: \repopath{results/af3_resource_benchmark.json}.
+Synthetic AF3-mimetic Childs-system peptide PDBs with the published 51\% AF3 D-peptide violation rate as external reference. Across DP19, DP9, and DP12 (39 auditable residues; 20 synthetic inverted stereocenters), ChiralFold detected 100\% of inverted stereocenters, corrected 100\% to the expected signed-volume class, and left 0\% residual violations. Full pipeline: 0.038~s total. Data: \repopath{results/af3_resource_benchmark.json}.
+
+\subsection{Implementation performance and scaling}
+\label{sec:si_performance}
+All five auditor checks share one column-oriented per-residue coordinate table, built once per structure, and evaluate signed volumes, bond lengths, bond angles and backbone dihedrals as batched array operations. Clash candidates are enumerated with a KD-tree whose radius is the largest distance that can produce an overlap, $2\max_i r_i - 0.4$~\AA\ rather than $2\max_i r_i$ (about 27\% fewer candidate pairs by volume), then filtered by a vectorised overlap test, then by a \texttt{searchsorted} lookup against the covalent-exclusion set packed as \texttt{int64} keys $i\,n+j$, and only then by the per-pair Probe-style hydrogen-bond geometry test. Reordering is exact because the H-bond rule can only suppress a clash, never create one. Same-residue $1$--$2$/$1$--$3$/$1$--$4$ exclusions are memoised per distinct (residue name, atom-name signature) pair rather than recomputed by breadth-first search for every residue, and Reduce-style HN/H$\alpha$ placement is planned in one pass then evaluated in three batched calls. Agreement of every batched kernel with its scalar reference is asserted to machine precision in \repopath{tests/test_regressions_v360.py}.
+
+Measured on a tiled-3IWY series (Fig.~S5): \repopath{audit_pdb} costs 15--18~$\mu$s per atom and is linear in atom count from 1{,}589 to 25{,}424 atoms; clash detection accounts for 59\% of the total at the largest size, PDB parsing 27\%, and the four backbone checks together under 3\%. Against v3.5.1 the auditor is $3.5$--$3.9\times$ faster, \repopath{score_interface} $3.1$--$6.1\times$, chirality detection $1.3\times$, and batched Ramachandran classification $25\times$ at 20{,}000 $\varphi/\psi$ points. Receptor:ligand contacts are enumerated with a KD-tree instead of a dense $N_\mathrm{rec}\times N_\mathrm{lig}$ distance matrix: two 8{,}000-atom chains previously needed 1{,}349~MB and 5.6~s and now need 192~MB and 0.9~s, and pairs large enough to exhaust memory are now scorable. Reproduce with \repopath{benchmarks/performance_benchmark.py} (absolute) and \repopath{benchmarks/compare_baseline_performance.py} (before/after via a git worktree at the baseline revision, timing identical public-API code in both checkouts). Reports: \repopath{results/performance_benchmark.json}, \repopath{results/performance_comparison.json}.
+
+\subsection{Implementation correctness audit (v3.6.0)}
+\label{sec:si_correctness}
+The toolkit's internal checks were re-derived against reference conventions. Defects found and fixed, each with a dedicated regression test:
+
+\begin{itemize}\itemsep2pt
+\item \textbf{$\chi_1$ sign convention.} \repopath{compute_chi1} returned the negation of the IUPAC/BioPython dihedral, so L side chains were scored against mirrored rotamer wells and a residue in the common $g^-$ rotamer was read as $g^+$. On 3IWY the $\chi_1$ outlier rate falls $55.7\%\to5.4\%$ and favoured rises $43.7\%\to93.4\%$. \repopath{compute_chi1} now matches \repopath{auditor._dihedral_deg} to machine precision.
+\item \textbf{No D-residue rotamer library.} \repopath{validate_rotamers} reported zero residues checked for every D-peptide. D-CCD codes now carry the mirrored $\chi_1$ wells (Penultimate Rotamer Library; Lovell \emph{et al.}, \emph{Proteins} \textbf{40}:389--408, 2000); MSE, HIE/HID/HIP, CYX/CYM and SEP/TPO/PTR alias to their parents. THR's $g^+$ well (62$^\circ$, the most populated for threonine) had been omitted, making roughly half of all threonines outliers.
+\item \textbf{Pseudo-C$\beta$ classification.} Residues without C$\beta$ were classified from an idealised \emph{L}-configured pseudo-C$\beta$ built from N/C$\alpha$/C. That construction fixes the side of the plane, so $V>0$ always: every D-residue with an unmodelled side chain was reported as a violation, and the corresponding ``correction'' reflected C$\alpha$ across an invented plane without inverting the real stereocentre. Detection now uses H$\alpha$ when C$\beta$ is absent (opposite sign convention, verified against ideal tetrahedral geometry) and otherwise reports the residue as unassignable. A $|V|<0.05$~\AA$^3$ planarity guard, previously present only in the auditor, now applies to the corrector as well.
+\item \textbf{Residue identity keys.} Violations were keyed on (chain, residue number) only, so a violation at residue 47 also ``corrected'' residue 47A, and \repopath{interface_scorer} de-duplicated atoms on (chain, residue number, atom name), merging residues that differ only by insertion code. Keys now include the insertion code and model number throughout.
+\item \textbf{Multi-model handling.} Three modules read every model of an NMR ensemble and then collapsed them by atom-name key, analysing $n$ superimposed copies as one structure; the auditor read only model~1. \repopath{mirror_pdb} discarded \texttt{MODEL}/\texttt{ENDMDL}, emitting an $n$-model input as a single model containing $n$ copies of every residue. A single shared reader (\repopath{chiralfold/_pdbio.py}) now defines model, water, insertion-code and alternate-location handling for all consumers; \repopath{mirror_pdb} preserves model framing and header records.
+\item \textbf{Alternate locations.} Selection was per atom with the hard-coded accept-list $\{\,\text{blank},\text{A},\text{1}\,\}$, which deletes every atom of a residue modelled only as altloc B/C, can retain a minority-occupancy conformer, and can mix atoms from different alternates within one residue. Selection is now per residue by summed occupancy. Scope is measured, not assumed: across the repository structure corpus 12 of 13 structures are bit-identical under both policies, and Ramachandran outlier percentages are unchanged on \emph{all} of them, including the one whose majority conformer is not altloc~A (that structure's peptide-planarity figure changes from 74.47\% to 75.53\% within 6$^\circ$). \repopath{_pdbio.select_altlocs(policy="legacy")} reproduces the previous behaviour so the effect on any number can be measured directly; harness: \repopath{benchmarks/altloc_policy_sensitivity.py}, report \repopath{results/altloc_policy_sensitivity.json}.
+\item \textbf{Salt bridges.} \repopath{interface_scorer} tested C$\alpha$--C$\alpha$ distance against a 4.0~\AA\ cutoff. C$\alpha$ atoms on opposite sides of an interface essentially never come that close, so the term returned zero on real complexes and never contributed to the composite score. Ion pairs are now measured between charged side-chain group atoms (Lys~NZ; Arg~NE/NH1/NH2; His~ND1/NE2 versus Asp~OD1/OD2, Glu~OE1/OE2) at 4.0~\AA\ following Barlow \& Thornton (\emph{J. Mol. Biol.} \textbf{168}:867--885, 1983), counted once per residue pair, with a C$\alpha$ fallback for backbone-only models.
+\item \textbf{C-terminal glycine.} The peptide SMILES builder appended two fragments for a trailing glycine---a malformed carbamate \texttt{NC(=O)O} and the real \texttt{NCC(=O)O}---so every sequence ending in G was built one residue too long (\repopath{d_peptide_smiles("G")} returned a two-unit molecule rather than glycine, \texttt{C2H5NO2}). The three Childs-system sequences contain no glycine, so the 478-residue / 0-violation comparison is unaffected.
+\item \textbf{Quoted mmCIF atom names} retained their quotes, so nucleic-acid names arrived as \texttt{"O5'} and matched no downstream lookup. \textbf{Diastereomer sampling} used rejection sampling that gave up after $20n$ attempts and could silently return fewer patterns than requested; it is now exact.
+\end{itemize}
+
+None of these paths participates in the PDB-wide survey, which is computed by a numpy-only script that imports no ChiralFold code; it was re-run after every change and reproduces 12{,}573 checkable residues, 29 mismatches and 16 structures exactly.
 
 \subsection{Experimental Childs-system deposited structures}
 Deposited experimental coordinates for Childs et al.\ systems (3IWY, 5N8T, 7YH8) were audited as a resource check; this does \emph{not} redistribute AF3 predictions. Clash and composite scores in \repopath{results/af3_experimental_systems.json} were regenerated after the Probe-style hydrogen and H-bond geometry updates.
@@ -286,13 +316,19 @@ See Table~\ref{tab:lean_full} above (Notes~S1) for the full catalog. The main te
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.95\textwidth]{fig7_af3_resource_benchmark.png}
-\caption{\textbf{Figure S4.} Synthetic AF3-mimetic correction benchmark (three Childs-system peptides). Left: detection recall, correction-to-expected-sign, and residual violation rate (\%). Right: wall times (ms) for detection, correction, and the full \texttt{correct\_af3\_output} pipeline (36.7~ms total). Supports correction as a fast stereochemistry post-process, not AF3 re-inference.}
+\caption{\textbf{Figure S4.} Synthetic AF3-mimetic correction benchmark (three Childs-system peptides). Left: detection recall, correction-to-expected-sign, and residual violation rate (\%). Right: wall times (ms) for detection, correction, and the full \texttt{correct\_af3\_output} pipeline (38.3~ms total). Supports correction as a fast stereochemistry post-process, not AF3 re-inference.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\textwidth]{fig8_performance.png}
+\caption{\textbf{Figure S5.} Implementation performance. (a)~\repopath{audit_pdb} wall time versus structure size on a tiled-3IWY series (log--log), with the per-check breakdown and an ideal-linear guide; total cost is linear in atom count at 15--18~$\mu$s per atom. (b)~Speedup over v3.5.1 by operation. Medians of 7 timed repetitions after warm-up. See Supplementary Methods~\ref{sec:si_performance}.}
 \end{figure}
 
 \section{Extended statistics}
 Ramachandran $n=362$ (post-5M2K exclusion): \repopath{results/ramachandran_279struct_chainfix_summary.json} --- Spearman $\rho=0.52$; Pearson $r=0.85$ (0.33 if 5M2K retained). Pilot $n=31$ Bland--Altman and bootstrap CIs: \repopath{paper/stats_extended.json} via \repopath{paper/stats_analysis.py} (seed 42). Deposition-year logistic OR$=1.60$/year; CCD clustering $\chi^2=113.78$ ($p=2.33\times10^{-16}$).
 
 \section*{Acknowledgments (formal proofs)}
-Formal verification was assisted by Aristotle (Harmonic). Lean sources and this Notes~S1 narrative are part of the ChiralFold v3.5.1 release.
+Formal verification was assisted by Aristotle (Harmonic). Lean sources and this Notes~S1 narrative are part of the ChiralFold v3.6.0 release.
 
 \end{document}

@@ -146,13 +146,13 @@ def mixed_peptide_smiles(seq, chirality_pattern):
         tail = 'C(=O)O' if last else 'C(=O)'
 
         if aa == 'G':
-            # Glycine: achiral regardless of chirality specification
-            parts.append(f'N{tail}' if last else 'NCC(=O)')
-            if last:
-                parts.append('')  # handled above
-                parts[-1] = 'NCC(=O)O'
-            else:
-                parts[-1] = 'NCC(=O)'
+            # Glycine: achiral regardless of chirality specification.
+            # NOTE: releases up to v3.5.1 appended two fragments here for a
+            # C-terminal glycine — a malformed carbamate 'NC(=O)O' followed by
+            # the real 'NCC(=O)O' — so every sequence ending in G was built one
+            # residue too long. Regression test: tests/test_chirality.py::
+            # test_c_terminal_glycine_residue_count.
+            parts.append(f'NC{tail}')
             continue
 
         if aa == 'P':
@@ -172,6 +172,48 @@ def mixed_peptide_smiles(seq, chirality_pattern):
             parts.append(f'N[C@@H]({sc}){tail}')
 
     return ''.join(parts)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Isometry verification
+# ═══════════════════════════════════════════════════════════════════════════
+
+#: Above this atom count, the pairwise-distance isometry check is evaluated on
+#: a deterministic random subset of atom pairs instead of all O(n²) of them.
+_ISOMETRY_EXACT_MAX_ATOMS = 1500
+_ISOMETRY_SAMPLE_PAIRS = 200_000
+
+
+def _max_pairwise_distance_error(a: np.ndarray, b: np.ndarray,
+                                 seed: int = 0) -> float:
+    """Largest absolute change in any interatomic distance between *a* and *b*.
+
+    Zero exactly when the map from *a* to *b* is an isometry, which is the
+    substantive claim behind "mirror transformation preserves geometry". For
+    structures above :data:`_ISOMETRY_EXACT_MAX_ATOMS` atoms the full
+    ``n(n-1)/2`` distance set is replaced by a fixed-seed random sample of
+    :data:`_ISOMETRY_SAMPLE_PAIRS` pairs so the check stays linear in memory.
+    """
+    a = np.asarray(a, dtype=float)
+    b = np.asarray(b, dtype=float)
+    n = a.shape[0]
+    if n < 2 or b.shape != a.shape:
+        return 0.0
+
+    if n <= _ISOMETRY_EXACT_MAX_ATOMS:
+        iu = np.triu_indices(n, k=1)
+        da = np.linalg.norm(a[iu[0]] - a[iu[1]], axis=1)
+        db = np.linalg.norm(b[iu[0]] - b[iu[1]], axis=1)
+        return float(np.max(np.abs(da - db)))
+
+    rng = np.random.default_rng(seed)
+    i = rng.integers(0, n, size=_ISOMETRY_SAMPLE_PAIRS)
+    j = rng.integers(0, n, size=_ISOMETRY_SAMPLE_PAIRS)
+    keep = i != j
+    i, j = i[keep], j[keep]
+    da = np.linalg.norm(a[i] - a[j], axis=1)
+    db = np.linalg.norm(b[i] - b[j], axis=1)
+    return float(np.max(np.abs(da - db))) if da.size else 0.0
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -280,7 +322,15 @@ class ChiralFold:
             l_sequence: Amino acid sequence of the L-peptide.
 
         Returns:
-            dict with 'd_coords', 'rmsd_to_ideal_mirror', 'chirality_preserved'.
+            dict with keys:
+              - 'd_coords': reflected coordinates
+              - 'l_coords': input coordinates
+              - 'rmsd_to_ideal_mirror': 0.0 by construction
+              - 'max_pairwise_distance_error': largest change in any
+                interatomic distance (Å). This is the *checkable* content of
+                the isometry claim; the RMSD-to-ideal-mirror comparison is
+                tautological because both sides are the same reflection.
+              - 'chirality_preserved', 'violation_rate', 'proof'
         """
         d_coords = l_coords.copy()
         d_coords[:, 0] = -d_coords[:, 0]
@@ -289,11 +339,17 @@ class ChiralFold:
         expected[:, 0] = -expected[:, 0]
         rmsd = np.sqrt(np.mean(np.sum((d_coords - expected) ** 2, axis=1)))
 
+        # Verify the substantive property: reflection is an isometry, so every
+        # interatomic distance must be preserved exactly. Checked directly for
+        # small inputs; sampled for large ones to keep the check O(n).
+        max_dist_err = _max_pairwise_distance_error(l_coords, d_coords)
+
         return {
             'd_coords': d_coords,
             'l_coords': l_coords,
             'sequence': l_sequence,
             'rmsd_to_ideal_mirror': rmsd,
+            'max_pairwise_distance_error': max_dist_err,
             'chirality_preserved': True,
             'violation_rate': 0.0,
             'proof': (
@@ -327,6 +383,7 @@ class ChiralFold:
 
         if len(cids) == 0:
             params2 = AllChem.ETKDGv3()
+            params2.numThreads = 0
             params2.useRandomCoords = True
             params2.randomSeed = 42
             cids = AllChem.EmbedMultipleConfs(
@@ -336,13 +393,19 @@ class ChiralFold:
         if len(cids) == 0:
             return None, []
 
-        # Optimize with force field
+        # Optimize with force field. numThreads=0 uses every available core:
+        # embedding was already multithreaded, but minimisation ran on one
+        # thread and dominated wall time for ensembles of tens of conformers.
         conformer_data = []
         try:
             if self.force_field == 'MMFF94':
-                results = AllChem.MMFFOptimizeMoleculeConfs(mol_h, maxIters=2000)
+                results = AllChem.MMFFOptimizeMoleculeConfs(
+                    mol_h, maxIters=2000, numThreads=0
+                )
             else:
-                results = AllChem.UFFOptimizeMoleculeConfs(mol_h, maxIters=2000)
+                results = AllChem.UFFOptimizeMoleculeConfs(
+                    mol_h, maxIters=2000, numThreads=0
+                )
 
             for i, (converged, energy) in enumerate(results):
                 conformer_data.append({
@@ -389,7 +452,13 @@ class MirrorImagePredictor:
 
     @staticmethod
     def verify_mirror_chirality(original_coords, reflected_coords):
-        """Verify that reflection correctly inverts all chiral centers."""
+        """Verify that reflection correctly inverts all chiral centers.
+
+        Reports both the (tautological) RMSD against the ideal reflection and
+        ``max_pairwise_distance_error``, which is 0 exactly when the map is an
+        isometry — the property that makes clashscore and bonded geometry
+        invariant under mirroring.
+        """
         expected = original_coords.copy()
         expected[:, 0] = -expected[:, 0]
         rmsd = np.sqrt(np.mean(np.sum(
@@ -397,6 +466,9 @@ class MirrorImagePredictor:
         )))
         return {
             'rmsd_to_expected': rmsd,
+            'max_pairwise_distance_error': _max_pairwise_distance_error(
+                original_coords, reflected_coords
+            ),
             'chirality_inverted': True,
         }
 

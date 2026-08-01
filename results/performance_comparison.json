@@ -1,0 +1,91 @@
+{
+  "generated_utc": "2026-07-31T00:11:42+00:00",
+  "baseline_ref": "master",
+  "baseline_commit": "017f5a7",
+  "current_commit": "017f5a7",
+  "repeats": 7,
+  "audit": {
+    "results/3IWY.pdb": {
+      "n_atoms": 1589,
+      "before_ms": 87.2629,
+      "after_ms": 22.2129,
+      "speedup": 3.93
+    },
+    "results/1UBQ_D_mirror.pdb": {
+      "n_atoms": 602,
+      "before_ms": 33.7034,
+      "after_ms": 9.1643,
+      "speedup": 3.68
+    },
+    "chiralfold/data/examples/toy_ubiquitin_fragment.pdb": {
+      "n_atoms": 78,
+      "before_ms": 3.9901,
+      "after_ms": 2.1678,
+      "speedup": 1.84
+    }
+  },
+  "audit_scaling": [
+    {
+      "copies": 1,
+      "n_atoms": 1589,
+      "before_ms": 84.2763,
+      "after_ms": 21.7808,
+      "speedup": 3.87
+    },
+    {
+      "copies": 4,
+      "n_atoms": 6356,
+      "before_ms": 371.043,
+      "after_ms": 106.3645,
+      "speedup": 3.49
+    },
+    {
+      "copies": 16,
+      "n_atoms": 25424,
+      "before_ms": 1628.0675,
+      "after_ms": 448.5344,
+      "speedup": 3.63
+    }
+  ],
+  "interface_scaling": [
+    {
+      "copies": 1,
+      "before_ms": 97.5775,
+      "after_ms": 31.5511,
+      "speedup": 3.09
+    },
+    {
+      "copies": 4,
+      "before_ms": 351.6246,
+      "after_ms": 65.7957,
+      "speedup": 5.34
+    },
+    {
+      "copies": 16,
+      "before_ms": 1424.8845,
+      "after_ms": 232.8867,
+      "speedup": 6.12
+    }
+  ],
+  "pipelines": {
+    "detect_chirality_violations": {
+      "before_ms": 8.1692,
+      "after_ms": 6.4181,
+      "speedup": 1.27
+    },
+    "correct_af3_output": {
+      "before_ms": 8.4479,
+      "after_ms": 6.5943,
+      "speedup": 1.28
+    },
+    "mirror_pdb": {
+      "before_ms": 8.553,
+      "after_ms": 7.9398,
+      "speedup": 1.08
+    }
+  },
+  "peak_rss_mb": {
+    "before": 1259.6,
+    "after": 183.0
+  }
+}

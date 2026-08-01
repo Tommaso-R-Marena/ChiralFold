@@ -1,0 +1,193 @@
+{
+  "generated_utc": "2026-08-01T01:40:29+00:00",
+  "n_structures": 13,
+  "n_identical_under_both_policies": 12,
+  "policies": [
+    "residue",
+    "legacy"
+  ],
+  "structures": [
+    {
+      "structure": "synthetic_l_ala_correct.pdb",
+      "census": {
+        "n_atom_records": 5,
+        "n_lettered_altloc_atoms": 0,
+        "n_residues": 1,
+        "n_residues_with_alternates": 0,
+        "n_residues_majority_not_A": 0,
+        "n_residues_lost_under_legacy": 0
+      },
+      "identical": true,
+      "deltas": {}
+    },
+    {
+      "structure": "synthetic_l_ala_inverted.pdb",
+      "census": {
+        "n_atom_records": 6,
+        "n_lettered_altloc_atoms": 0,
+        "n_residues": 1,
+        "n_residues_with_alternates": 0,
+        "n_residues_majority_not_A": 0,
+        "n_residues_lost_under_legacy": 0
+      },
+      "identical": true,
+      "deltas": {}
+    },
+    {
+      "structure": "toy_ubiquitin_fragment.pdb",
+      "census": {
+        "n_atom_records": 78,
+        "n_lettered_altloc_atoms": 0,
+        "n_residues": 10,
+        "n_residues_with_alternates": 0,
+        "n_residues_majority_not_A": 0,
+        "n_residues_lost_under_legacy": 0
+      },
+      "identical": true,
+      "deltas": {}
+    },
+    {
+      "structure": "1CRN_D_mirror.pdb",
+      "census": {
+        "n_atom_records": 327,
+        "n_lettered_altloc_atoms": 0,
+        "n_residues": 46,
+        "n_residues_with_alternates": 0,
+        "n_residues_majority_not_A": 0,
+        "n_residues_lost_under_legacy": 0
+      },
+      "identical": true,
+      "deltas": {}
+    },
+    {
+      "structure": "1L2Y_D_mirror.pdb",
+      "census": {
+        "n_atom_records": 11552,
+        "n_lettered_altloc_atoms": 0,
+        "n_residues": 20,
+        "n_residues_with_alternates": 0,
+        "n_residues_majority_not_A": 0,
+        "n_residues_lost_under_legacy": 0
+      },
+      "identical": true,
+      "deltas": {}
+    },
+    {
+      "structure": "1SHG_D_mirror.pdb",
+      "census": {
+        "n_atom_records": 472,
+        "n_lettered_altloc_atoms": 0,
+        "n_residues": 57,
+        "n_residues_with_alternates": 0,
+        "n_residues_majority_not_A": 0,
+        "n_residues_lost_under_legacy": 0
+      },
+      "identical": true,
+      "deltas": {}
+    },
+    {
+      "structure": "1UBQ_D_mirror.pdb",
+      "census": {
+        "n_atom_records": 602,
+        "n_lettered_altloc_atoms": 0,
+        "n_residues": 76,
+        "n_residues_with_alternates": 0,
+        "n_residues_majority_not_A": 0,
+        "n_residues_lost_under_legacy": 0
+      },
+      "identical": true,
+      "deltas": {}
+    },
+    {
+      "structure": "3IWY.pdb",
+      "census": {
+        "n_atom_records": 1595,
+        "n_lettered_altloc_atoms": 12,
+        "n_residues": 189,
+        "n_residues_with_alternates": 1,
+        "n_residues_majority_not_A": 0,
+        "n_residues_lost_under_legacy": 0
+      },
+      "identical": true,
+      "deltas": {}
+    },
+    {
+      "structure": "3IWY_D_mirror.pdb",
+      "census": {
+        "n_atom_records": 682,
+        "n_lettered_altloc_atoms": 0,
+        "n_residues": 82,
+        "n_residues_with_alternates": 0,
+        "n_residues_majority_not_A": 0,
+        "n_residues_lost_under_legacy": 0
+      },
+      "identical": true,
+      "deltas": {}
+    },
+    {
+      "structure": "5HHD_D_mirror.pdb",
+      "census": {
+        "n_atom_records": 814,
+        "n_lettered_altloc_atoms": 86,
+        "n_residues": 98,
+        "n_residues_with_alternates": 5,
+        "n_residues_majority_not_A": 1,
+        "n_residues_lost_under_legacy": 0
+      },
+      "identical": false,
+      "deltas": {
+        "planarity_pct_within_6deg": {
+          "legacy": 74.47,
+          "residue": 75.53
+        },
+        "bl_rmsd": {
+          "legacy": 0.00614,
+          "residue": 0.0062
+        },
+        "overall_score": {
+          "legacy": 80.9,
+          "residue": 81.1
+        }
+      }
+    },
+    {
+      "structure": "synthetic_d_ala_inverted.pdb",
+      "census": {
+        "n_atom_records": 5,
+        "n_lettered_altloc_atoms": 0,
+        "n_residues": 1,
+        "n_residues_with_alternates": 0,
+        "n_residues_majority_not_A": 0,
+        "n_residues_lost_under_legacy": 0
+      },
+      "identical": true,
+      "deltas": {}
+    },
+    {
+      "structure": "synthetic_l_ala_correct.pdb",
+      "census": {
+        "n_atom_records": 5,
+        "n_lettered_altloc_atoms": 0,
+        "n_residues": 1,
+        "n_residues_with_alternates": 0,
+        "n_residues_majority_not_A": 0,
+        "n_residues_lost_under_legacy": 0
+      },
+      "identical": true,
+      "deltas": {}
+    },
+    {
+      "structure": "synthetic_l_ala_inverted.pdb",
+      "census": {
+        "n_atom_records": 6,
+        "n_lettered_altloc_atoms": 0,
+        "n_residues": 1,
+        "n_residues_with_alternates": 0,
+        "n_residues_majority_not_A": 0,
+        "n_residues_lost_under_legacy": 0
+      },
+      "identical": true,
+      "deltas": {}
+    }
+  ]
+}

@@ -79,6 +79,14 @@ def mmcif_to_pdb(cif_text: str) -> Optional[str]:
         if idx is None or idx >= len(parts):
             return default
         val = parts[idx]
+        if val in (".", "?"):
+            return default
+        # mmCIF quotes any value containing a space or a leading special
+        # character. Nucleic-acid atom names in particular are written as
+        # "O5'" / "C1'", and leaving the quotes in produced atom names like
+        # ``"O5'`` that no downstream name lookup could match.
+        if len(val) >= 2 and val[0] == val[-1] and val[0] in ("'", '"'):
+            val = val[1:-1]
         return default if val in (".", "?") else val
 
     def _raw_chain(parts: List[str]) -> str:

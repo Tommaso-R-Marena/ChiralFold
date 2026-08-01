@@ -248,7 +248,9 @@ def _volumes_by_residue(pdb_path: Path) -> Dict[Tuple[str, int], Dict[str, objec
     _, atoms = _parse_pdb_full(str(pdb_path))
     residues = _group_by_residue(atoms)
     volumes = {}
-    for (chain, resseq, _icode, resname), res_atoms in residues.items():
+    # _group_by_residue keys are (model, chain, resseq, icode, resname) as of
+    # v3.6.0 — the model number was added so multi-model files stay separate.
+    for (_model, chain, resseq, _icode, resname), res_atoms in residues.items():
         atom_by_name = {atom.name: atom for atom in res_atoms}
         if {"N", "CA", "C", "CB"} - set(atom_by_name):
             continue

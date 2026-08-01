@@ -54,7 +54,7 @@ def test_mmcif_universe_survey_artifacts():
 
 def test_colab_manifest_is_current():
     m = json.loads(_read_text(ROOT / "results/colab_integrated_manifest.json"))
-    assert m["chiralfold_version"] == "3.5.1"
+    assert m["chiralfold_version"] == "3.6.0"
     assert "in progress" not in m["interpretation"]["aristotle_lean"].lower()
     assert "mmcif_reverification" in m["interpretation"]
     assert "9BC4" in m["interpretation"]["mmcif_reverification"] or "universe" in m["interpretation"]["mmcif_reverification"].lower()
@@ -70,7 +70,7 @@ def test_dashboard_notebook_has_fixed_af3_key():
     src = "\n".join("".join(c.get("source", [])) for c in nb["cells"])
     assert "violations_after" in src
     assert "s['after']['n_violations']" not in src
-    assert "chiralfold==3.5.1" in src or "chiralfold==3.5.1" in src.replace(" ", "")
+    assert "chiralfold==3.6.0" in src or "chiralfold==3.6.0" in src.replace(" ", "")
     assert "Formal verification in progress" not in src
     # Cell 4 must use d_survey (not undefined alias d)
     assert "d_survey['checkable_residues']" in src

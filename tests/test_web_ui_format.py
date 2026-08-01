@@ -17,7 +17,7 @@ def test_audit_result_markdown_uses_pre_not_fence():
 
 
 def test_footer_html_shows_full_pip_command():
-    html = footer_html("3.5.1")
+    html = footer_html("3.6.0")
     assert "pip install chiralfold" in html
     assert "cf-install-cmd" in html
     assert "cf-footer-note" in html

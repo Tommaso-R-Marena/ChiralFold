@@ -33,7 +33,7 @@ Works on **Linux, macOS, and Windows** (Python 3.9–3.12).
 
 ```bash
 pip install -U pip
-pip install "chiralfold==3.5.1"
+pip install "chiralfold==3.6.0"
 python -c "import chiralfold; print(chiralfold.__version__)"
 chiralfold --help
 ```
@@ -54,7 +54,7 @@ pip install -e ".[viz]"    # matplotlib/seaborn
 ```bash
 conda env create -f environment.yml   # or: conda install -c conda-forge rdkit
 conda activate chiralfold             # if using environment.yml
-pip install "chiralfold==3.5.1"
+pip install "chiralfold==3.6.0"
 ```
 
 Conda package recipe: [`conda-recipe/`](conda-recipe/).
@@ -62,10 +62,10 @@ Conda package recipe: [`conda-recipe/`](conda-recipe/).
 ### Docker
 
 ```bash
-docker pull ghcr.io/tommaso-r-marena/chiralfold:3.5.1
+docker pull ghcr.io/tommaso-r-marena/chiralfold:3.6.0
 docker compose up web    # Gradio on http://localhost:7860
 # or
-docker run --rm -p 7860:7860 ghcr.io/tommaso-r-marena/chiralfold:3.5.1
+docker run --rm -p 7860:7860 ghcr.io/tommaso-r-marena/chiralfold:3.6.0
 ```
 
 Dockerfiles: `Dockerfile` (CLI/library), `Dockerfile.web` (Gradio).
@@ -78,7 +78,7 @@ Source: [`hf_space/`](hf_space/). Local Gradio: `pip install "chiralfold[web]" &
 
 ### Colab
 
-Open any notebook under [`demos/`](demos/). Most auto-install `chiralfold==3.5.1` or gemmi/numpy for survey scripts.
+Open any notebook under [`demos/`](demos/). Most auto-install `chiralfold==3.6.0` or gemmi/numpy for survey scripts.
 
 Platform notes: [`docs/INSTALL.md`](docs/INSTALL.md) · PyPI publishing: [`docs/PYPI_PUBLISHING.md`](docs/PYPI_PUBLISHING.md).
 
@@ -131,9 +131,32 @@ CLI (same fetchers): `chiralfold fetch P04637`, `chiralfold audit --id 1UBQ`,
 | mmCIF-only universe survey | **79** live mmCIF-only D-AA entries · **1** new clear error (**9BC4** DLE, V=+2.82) | `results/mmcif_only_universe_ids.json` |
 | Experimental validation | **14/14** non-borderline pass (2 borderline) | `results/experimental_validation_report.json` |
 | Ramachandran vs wwPDB (paper) | **n=362** · Spearman **ρ=0.52** · Pearson **r=0.853** | `results/ramachandran_279struct_chainfix_summary.json` |
-| AF3 synthetic correction | **100%** detection · **0%** residual · ~37 ms | `results/af3_resource_benchmark.json` |
+| AF3 synthetic correction | **100%** detection · **0%** residual · ~38 ms | `results/af3_resource_benchmark.json` |
 | Mirror clashscore | **Unchanged** (isometry) | `tests/test_clash_preservation.py` |
 | Lean 4 chirality no-go | Distance-only reps cannot recover signed orientation (no `sorry`) | [`formal/chirality_nogo/`](formal/chirality_nogo/) |
+| Auditor throughput (v3.6.0) | **3.5–3.9×** faster · ~18 µs/atom · linear to 25k atoms | `results/performance_benchmark.json` |
+| Interface scoring (v3.6.0) | **3.1–6.1×** faster · peak RSS 1,260 → 183 MB | `results/performance_comparison.json` |
+
+### Performance and correctness (v3.6.0)
+
+`audit_pdb` is 3.5–3.9× faster and scales linearly (≈18 µs/atom up to 25k atoms);
+`score_interface` is 3.1–6.1× faster and no longer allocates a dense
+receptor × ligand distance matrix (two 8k-atom chains: 1,349 MB → 192 MB).
+Reproduce both offline:
+
+```bash
+python benchmarks/performance_benchmark.py               # scaling + throughput
+python benchmarks/compare_baseline_performance.py --baseline v3.5.1   # before/after
+```
+
+v3.6.0 also fixes several correctness defects — a C-terminal glycine built one
+residue too many, an inverted chi1 sign convention (3IWY chi1 outliers 55.7% →
+5.4%), missing D-residue rotamer wells, a pseudo-Cβ fallback that produced false
+D-residue violations, insertion-code collisions, NMR-model flattening in
+`mirror_pdb`, and Cα-based salt-bridge detection. Full list and measured effects:
+[`CHANGELOG.md`](CHANGELOG.md). The PDB-wide survey numbers are unaffected — that
+result comes from a numpy-only script that imports no ChiralFold code and was
+re-verified (`python benchmarks/reproduce_d_residue_errors.py` → PASS).
 
 MolProbity does **not** flag the D-residue annotation errors (L-only Cα check).
 

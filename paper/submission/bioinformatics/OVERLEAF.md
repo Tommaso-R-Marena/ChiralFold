@@ -19,10 +19,10 @@ Supplementary: compile `supplementary_material.tex` as a second document (or upl
 ## Contents
 
 - `chiralfold_bioinformatics.tex` — main paper (≤7 pages target; currently 7)
-- `supplementary_material.tex` — methods (including clashscore + fetch/I/O) + Lean Notes S1 + extended figures
-- `figures/fig1`–`fig7` PNGs (300 DPI)
+- `supplementary_material.tex` — methods (clashscore, fetch/I/O, performance & scaling, implementation correctness audit) + Lean Notes S1 + extended figures
+- `figures/fig1`–`fig8` PNGs (300 DPI; `fig8` = implementation performance)
 - `references.bib`, OUP class/bst
-- Bundled `data/` for figure regeneration (includes regenerated `molprobity_comparison.json`)
+- Bundled `data/` for figure regeneration (includes `molprobity_comparison.json`, `performance_benchmark.json`, `performance_comparison.json`, `altloc_policy_sensitivity.json`)
 
 ## Local rebuild of the zip
 

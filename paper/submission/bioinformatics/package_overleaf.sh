@@ -7,12 +7,15 @@ ZIP=ChiralFold_Bioinformatics_Overleaf.zip
 REPO_ROOT="$(cd ../../.. && pwd)"
 
 echo "==> Syncing bundled benchmark data..."
-if [ -f "$REPO_ROOT/results/d_residue_verification.csv" ]; then
-  cp "$REPO_ROOT/results/d_residue_verification.csv" data/d_residue_verification.csv
-fi
-if [ -f "$REPO_ROOT/results/af3_resource_benchmark.json" ]; then
-  cp "$REPO_ROOT/results/af3_resource_benchmark.json" data/af3_resource_benchmark.json
-fi
+for f in d_residue_verification.csv \
+         af3_resource_benchmark.json \
+         performance_benchmark.json \
+         performance_comparison.json \
+         altloc_policy_sensitivity.json; do
+  if [ -f "$REPO_ROOT/results/$f" ]; then
+    cp "$REPO_ROOT/results/$f" "data/$f"
+  fi
+done
 
 echo "==> Regenerating figures (optional; uses bundled data/)..."
 if python3 figures/generate_figures.py 2>/dev/null; then
@@ -32,10 +35,13 @@ zip -r "$ZIP" \
   figures/*.png \
   figures/generate_figures.py \
   data/af3_resource_benchmark.json \
+  data/altloc_policy_sensitivity.json \
   data/ccd_code_coverage_summary.csv \
   data/d_residue_verification.csv \
   data/error_table_verified.csv \
   data/molprobity_comparison.json \
+  data/performance_benchmark.json \
+  data/performance_comparison.json \
   data/ramachandran_279struct_chainfix_comparison.csv \
   README_SUBMISSION.md \
   OVERLEAF.md
